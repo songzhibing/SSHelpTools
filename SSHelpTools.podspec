@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'SSHelpTools'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of SSHelpTools.'
+  s.summary          = '常用工具'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,25 +18,50 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+TODO: 代码逐渐完善中，欢迎提出问题.
                        DESC
 
-  s.homepage         = 'https://github.com/宋直兵/SSHelpTools'
+  s.homepage         = 'https://github.com/songzhibing/SSHelpTools'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
+  s.license          = { :type => 'MIT', :file => 'SSHELPTOOLSLICENSE' }
   s.author           = { '宋直兵' => '569204317@qq.com' }
-  s.source           = { :git => 'https://github.com/宋直兵/SSHelpTools.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/songzhibing/SSHelpTools.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-
-  s.ios.deployment_target = '9.0'
-
-  s.source_files = 'SSHelpTools/Classes/**/*'
+  s.ios.deployment_target = '10.0'
   
-  # s.resource_bundles = {
-  #   'SSHelpTools' => ['SSHelpTools/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  # SSHelpTools 常用工具库
+  s.subspec 'SSHelpTools' do |tools|
+    tools.source_files = 'SSHelpTools/Classes/SSHelpTools/**/*.{h,m}'
+    tools.public_header_files = 'SSHelpTools/Classes/SSHelpTools/**/*.h'
+    tools.resource = 'SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.bundle'
+    tools.frameworks = 'UIKit','Foundation','CoreLocation','AVFoundation'
+    tools.dependency 'Masonry'
+    tools.dependency 'SDWebImage'
+  end
+  
+  # SSHelpWebView 库
+  s.subspec 'SSHelpWebView' do |web|
+    web.source_files = 'SSHelpTools/Classes/SSHelpWebView/**/*'
+    web.public_header_files = 'SSHelpTools/Classes/SSHelpWebView/*.h'
+    web.frameworks = 'WebKit'
+    web.dependency 'SSHelpTools/SSHelpTools'  #需要用到SSHelpTools库
+    web.dependency 'WebViewJavascriptBridge'
+  end
+  
+  # SSHelpLog 日志系统库
+  s.subspec 'SSHelpLog' do |log|
+    log.source_files = 'SSHelpTools/Classes/SSHelpLog/**/*'
+    log.public_header_files = 'SSHelpTools/Classes/SSHelpLog/*.h'
+    log.dependency 'CocoaLumberjack'
+    log.dependency 'GCDWebServer', :configurations => ['Debug','Release']
+  end
+  
+  # SSHelpNetwork 网络封装库
+  s.subspec 'SSHelpNetwork' do |network|
+    network.source_files = 'SSHelpTools/Classes/SSHelpNetwork/**/*'
+    network.public_header_files = 'SSHelpTools/Classes/SSHelpNetwork/*.h'
+    network.frameworks = 'CoreTelephony'
+    network.dependency 'AFNetworking'
+  end
+  
 end

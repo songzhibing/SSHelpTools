@@ -1,0 +1,95 @@
+PODS:
+  - AFNetworking (4.0.1):
+    - AFNetworking/NSURLSession (= 4.0.1)
+    - AFNetworking/Reachability (= 4.0.1)
+    - AFNetworking/Security (= 4.0.1)
+    - AFNetworking/Serialization (= 4.0.1)
+    - AFNetworking/UIKit (= 4.0.1)
+  - AFNetworking/NSURLSession (4.0.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
+  - AFNetworking/UIKit (4.0.1):
+    - AFNetworking/NSURLSession
+  - CocoaAsyncSocket (7.6.5)
+  - CocoaHTTPServer (2.3):
+    - CocoaAsyncSocket
+    - CocoaLumberjack
+  - CocoaLumberjack (3.7.4):
+    - CocoaLumberjack/Core (= 3.7.4)
+  - CocoaLumberjack/Core (3.7.4)
+  - FBSnapshotTestCase (2.1.4):
+    - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
+  - FBSnapshotTestCase/Core (2.1.4)
+  - FBSnapshotTestCase/SwiftSupport (2.1.4):
+    - FBSnapshotTestCase/Core
+  - GCDWebServer (3.5.4):
+    - GCDWebServer/Core (= 3.5.4)
+  - GCDWebServer/Core (3.5.4)
+  - Masonry (1.1.0)
+  - SDWebImage (5.12.3):
+    - SDWebImage/Core (= 5.12.3)
+  - SDWebImage/Core (5.12.3)
+  - SSHelpTools (0.1.0):
+    - SSHelpTools/SSHelpLog (= 0.1.0)
+    - SSHelpTools/SSHelpNetwork (= 0.1.0)
+    - SSHelpTools/SSHelpTools (= 0.1.0)
+    - SSHelpTools/SSHelpWebView (= 0.1.0)
+  - SSHelpTools/SSHelpLog (0.1.0):
+    - CocoaLumberjack
+    - GCDWebServer
+  - SSHelpTools/SSHelpNetwork (0.1.0):
+    - AFNetworking
+  - SSHelpTools/SSHelpTools (0.1.0):
+    - Masonry
+    - SDWebImage
+  - SSHelpTools/SSHelpWebView (0.1.0):
+    - SSHelpTools/SSHelpTools
+    - WebViewJavascriptBridge
+  - WebViewJavascriptBridge (6.0.3)
+  - YYKit (1.0.9):
+    - YYKit/no-arc (= 1.0.9)
+  - YYKit/no-arc (1.0.9)
+
+DEPENDENCIES:
+  - CocoaHTTPServer
+  - FBSnapshotTestCase
+  - SSHelpTools (from `../`)
+  - YYKit
+
+SPEC REPOS:
+  trunk:
+    - AFNetworking
+    - CocoaAsyncSocket
+    - CocoaHTTPServer
+    - CocoaLumberjack
+    - FBSnapshotTestCase
+    - GCDWebServer
+    - Masonry
+    - SDWebImage
+    - WebViewJavascriptBridge
+    - YYKit
+
+EXTERNAL SOURCES:
+  SSHelpTools:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
+  CocoaHTTPServer: 5624681fc3473d43b18202f635f9b3abb013b530
+  CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
+  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  SDWebImage: 53179a2dba77246efa8a9b85f5c5b21f8f43e38f
+  SSHelpTools: 25954866bcc6ef8dfebaca3877c4d0fc96dccd39
+  WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
+  YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
+
+PODFILE CHECKSUM: 05048a0dce0735e99c0617160625ebe97be01079
+
+COCOAPODS: 1.11.2

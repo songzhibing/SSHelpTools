@@ -1,0 +1,6 @@
+framework module Pods_SSHelpTools_Tests {
+  umbrella header "Pods-SSHelpTools_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

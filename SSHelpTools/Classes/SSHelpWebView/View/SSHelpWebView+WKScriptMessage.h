@@ -1,0 +1,16 @@
+//
+//  SSHelpWebView+WKScriptMessage.h
+//  SSHelpTools
+//
+//  Created by 宋直兵 on 2022/2/21.
+//
+
+#import "SSHelpWebView.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface SSHelpWebView (WKScriptMessage)
+
+@end
+
+NS_ASSUME_NONNULL_END

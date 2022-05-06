@@ -1,0 +1,6 @@
+framework module SSHelpTools {
+  umbrella header "SSHelpTools-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -8,6 +8,6 @@
 
 @import UIKit;
 
-@interface SSViewController : UIViewController
+@interface SSViewController : SSHelpViewController
 
 @end

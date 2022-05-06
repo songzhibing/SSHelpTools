@@ -7,12 +7,19 @@
 //
 
 #import "SSAppDelegate.h"
+#import <SSHelpLogManager.h>
 
 @implementation SSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[SSHelpNetworkInfoManager sharedManager] startMonitoring];
+    
+    [SSHelpLogHttpServer startServer];
+    
+    [SSHelpToolsConfig sharedConfig].enableLog = YES;
     // Override point for customization after application launch.
+    SSLogDebug(@"应用程序初始化完成。");
     return YES;
 }
 

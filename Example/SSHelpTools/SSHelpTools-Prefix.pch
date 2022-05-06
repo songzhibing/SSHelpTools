@@ -13,4 +13,8 @@
 #ifdef __OBJC__
     @import UIKit;
     @import Foundation;
+    #import <SSHelpTools/SSHelpTools.h>
+    #import <SSHelpTools/SSHelpNetwork.h>
+    #import <SSHelpTools/SSHelpWebViewController.h>
+    #import <SSHelpTools/SSHelpLog.h>
 #endif

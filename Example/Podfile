@@ -1,6 +1,10 @@
+
+#GitHub开源库
+source 'https://cdn.cocoapods.org/'
+
 use_frameworks!
 
-platform :ios, '9.0'
+platform :ios, '10.0'
 
 target 'SSHelpTools_Example' do
   pod 'SSHelpTools', :path => '../'
@@ -9,5 +13,7 @@ target 'SSHelpTools_Example' do
     inherit! :search_paths
 
     pod 'FBSnapshotTestCase'
+    pod 'YYKit'
+    pod 'CocoaHTTPServer'
   end
 end
