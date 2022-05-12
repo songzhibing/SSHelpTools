@@ -12,6 +12,7 @@
 @interface SSTestViewController ()
 //@property(nonatomic, strong) SSHelpLocationManager *locationManager;
 
+@property(nonatomic, strong) dispatch_semaphore_t t;
 @end
 
 @implementation SSTestViewController
@@ -34,25 +35,11 @@
     tapBtn.backgroundColor = [UIColor groupTableViewBackgroundColor];
     [self.view addSubview:tapBtn];
 
-    tapBtn.onClick = ^(SSHelpButton * _Nonnull sender) {
-        SSLogDebug(@"444");
-    };
     @weakify(self);
     [tapBtn setOnClick:^(SSHelpButton *sender) {
-//        @strongify(self);
-        SSLogDebug(@"1111");
-
-//        [self testNetwork];
+        @strongify(self);
+        [self testNetwork];
     }];
-    
-    [tapBtn setOnClick:^(SSHelpButton *sender) {
-//        @strongify(self);
-        SSLogDebug(@"222");
-    }];
-    [tapBtn ss_removeTouchUpInsideBlock];
-    tapBtn.onClick = ^(SSHelpButton * _Nonnull sender) {
-        SSLogDebug(@"333");
-    };
 }
 
 - (void)testSSHelpViewController
@@ -86,7 +73,7 @@
         SSLogDebug(@"请求：%@",error);
     }];
     
-    return;
+//    return;
     
     [[SSHelpNetworkCenter defaultCenter] sendBatchRequest:^(SSHelpNetworkBatchRequest * _Nonnull batchRequest) {
         SSHelpNetworkRequest *request1 = [SSHelpNetworkRequest request];
@@ -101,7 +88,7 @@
         request2.url = @"https://www.bing.com/HPImageArchive.aspx?format=js&idx=1&n=1&mkt=en-US";
           // set other properties for request2
 
-        SSHelpNetworkRequest *request3 = [SSHelpNetworkRequest request];
+//        SSHelpNetworkRequest *request3 = [SSHelpNetworkRequest request];
 //        request3.url = @"https://www.bing.com/HPImageArchive.aspx?format=js";
           // set other properties for request2
 

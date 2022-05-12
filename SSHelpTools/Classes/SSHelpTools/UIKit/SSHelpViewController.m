@@ -5,16 +5,6 @@
 //  Created by 宋直兵 on 2021/8/27.
 //
 
-/*
-    UIViewController生命周期：
-    ->viewDidLoad
-    ->viewWillAppear
-    ->viewSafeAreaInsetsDidChange
-    ->viewWillLayoutSubviews
-    ->viewDidLayoutSubviews
-    ->viewDidAppear
- */
-
 #import "SSHelpViewController.h"
 #import "UIView+SSHelp.h"
 #import "SSHelpDefines.h"
@@ -86,6 +76,19 @@
             CGFloat originY = navbarRect.origin.y+navbarRect.size.height;
             contentRect = CGRectMake(0, originY, self.view.ss_width, self.view.ss_height-originY);
         }
+        
+        //计算导航栏尺寸并调整
+        _hiddenNavigationBar = YES; //必须隐藏自定义导航栏
+        CGRect customNavbarRect = navbarRect;
+        if (_hiddenNavigationBar) {
+            //隐藏则上移，参照系统方式
+            navbarRect.origin.y = -(customNavbarRect.size.height);
+        }
+        if (_navigationBar) {
+            _navigationBar.frame = customNavbarRect;
+            _navigationBar.hidden = _hiddenNavigationBar;
+        }
+        
     } else {
         //未使用系统导航栏
         
@@ -104,6 +107,7 @@
             }
         }
         
+        //计算导航栏尺寸并调整
         CGRect navbarRect =  CGRectMake(0, 0, self.view.ss_width, statusBarHeight+_kNavBarHeight);
         if (_hiddenNavigationBar) {
             //隐藏则上移，参照系统方式
@@ -114,14 +118,15 @@
             _navigationBar.hidden = _hiddenNavigationBar;
         }
         
+        //计算"有效内容"区域尺寸
         if (@available(iOS 11.0, *)) {
             /// Example iPhone11 Pro Max
             /// 横屏 layoutFrame = {{40, 0}, {732, 354}}, frame = (0 0; 812 375);
             /// 竖屏 layoutFrame = {{0, 40}, {375, 741.33333333333337}}, frame = (0 0; 375 812);
             CGFloat originX = self.view.safeAreaLayoutGuide.layoutFrame.origin.x;
             CGFloat originY = self.view.safeAreaLayoutGuide.layoutFrame.origin.y+(_hiddenNavigationBar?0:_kNavBarHeight);
-            CGFloat width = self.view.safeAreaLayoutGuide.layoutFrame.size.width;
-            CGFloat height = self.view.safeAreaLayoutGuide.layoutFrame.size.height-(_hiddenNavigationBar?0:_kNavBarHeight);
+            CGFloat width   = self.view.safeAreaLayoutGuide.layoutFrame.size.width;
+            CGFloat height  = self.view.safeAreaLayoutGuide.layoutFrame.size.height-(_hiddenNavigationBar?0:_kNavBarHeight);
             contentRect = CGRectMake(originX, originY, width, height);
         } else {
             CGFloat originY = navbarRect.origin.y+navbarRect.size.height;
@@ -129,6 +134,7 @@
         }
     }
     
+    //最后调整"有效内容"区域
     if (_safeContentView) {
         _safeContentView.frame = contentRect;
     }

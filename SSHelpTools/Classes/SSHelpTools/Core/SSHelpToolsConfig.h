@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SSHelpNavigationBarAppearance.h"
+#import "SSHelpTabBarApparance.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +33,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 默认视图背景色
 @property(nonatomic, assign, readwrite) UIColor *viewDefaultBackgroundColor;
+
+
+@property(nonatomic, strong) SSHelpNavigationBarAppearance *navbarAppearance;
+
+@property(nonatomic, strong) SSHelpTabBarApparance *tabAppearance;
+
+- (void)resetNavigationBarAppearance:(SSHelpNavigationBarAppearance *)appearance;
+
+- (void)resetTabBarAppearance:(SSHelpTabBarApparance *)appearance;
 
 @end
 

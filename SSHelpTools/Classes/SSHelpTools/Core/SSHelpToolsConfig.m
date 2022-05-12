@@ -22,6 +22,16 @@
     return _config;
 }
 
+- (void)resetNavigationBarAppearance:(SSHelpNavigationBarAppearance *)appearance
+{
+    
+}
+
+- (void)resetTabBarAppearance:(SSHelpTabBarApparance *)appearance
+{
+    
+}
+
 #pragma mark - Private Method
 
 - (void)setupConfig
@@ -36,7 +46,6 @@
     _navigationBarLeftBackImg = [NSBundle ss_navigationBackImage];
     
     _viewDefaultBackgroundColor = [UIColor whiteColor];
-    
 }
 
 #pragma mark - Lazy load
