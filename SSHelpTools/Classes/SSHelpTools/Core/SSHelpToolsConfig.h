@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) SSHelpNavigationBarAppearance *navbarAppearance;
 
-@property(nonatomic, strong) SSHelpTabBarApparance *tabAppearance;
+@property(nonatomic, strong) SSHelpTabBarApparance *tabBarAppearance;
 
 - (void)resetNavigationBarAppearance:(SSHelpNavigationBarAppearance *)appearance;
 

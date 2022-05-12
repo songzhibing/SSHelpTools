@@ -26,11 +26,11 @@ typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView *tableView, __kindof UI
 
 @interface SSHelpTabViewSectionModel : NSObject
 
-@property(nonatomic, strong) SSHelpTabViewHeaderModel *headerModel;
+@property(nonatomic, strong) SSHelpTabViewHeaderModel * _Nullable headerModel;
 
 @property(nonatomic, strong) NSMutableArray <SSHelpTabViewCellModel *> *cellModels;
 
-@property(nonatomic, strong) SSHelpTabViewFooterModel *footerModel;
+@property(nonatomic, strong) SSHelpTabViewFooterModel * _Nullable footerModel;
 
 @end
 
