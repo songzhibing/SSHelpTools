@@ -17,15 +17,13 @@
 
 - (void)dealloc
 {
-    SSToolsLog(@"%@ dealloc ...",self);
+    SSToolsLog(@"%@ dealloc %td...",self,_kRetainCount(self));
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [SSHelpToolsConfig sharedConfig].viewDefaultBackgroundColor;
-    [self.view addSubview:self.navigationBar];
-    [self.view addSubview:self.safeContentView];
+    self.view.backgroundColor = SSHELPTOOLSCONFIG.backgroundColor;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -55,88 +53,84 @@
     [self updateSubviewsDisplay];
 }
 
+//- (UIStatusBarStyle)preferredStatusBarStyle
+//{
+//    BOOL kIsDark = NO;
+//    if (@available(iOS 13.0, *)) {
+//        if ( NO ) {
+//            return UIStatusBarStyleDefault;
+//        } else {
+//            return kIsDark ? UIStatusBarStyleLightContent : UIStatusBarStyleDarkContent;
+//        }
+//    } else {
+//        return kIsDark ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
+//    }
+//}
+
+#pragma mark -
+
 /// 控制器视图尺寸发生变化回调，更新自定义视图布局
 - (void)updateSubviewsDisplay NS_REQUIRES_SUPER
 {
-    CGFloat statusBarHeight = 20; //状态栏高度
-    CGFloat homeIndicatorHeight = 0; //底部"Home键"高度
-    CGRect  contentRect = CGRectZero;
+    CGFloat statusBarHeight = 20;     //状态栏高度
+    CGFloat homeIndicatorHeight = 0;  //底部"Home键"高度
+    CGRect  contentRect = CGRectZero; //有效内容区域
 
+    //使用系统导航栏
     if (self.navigationController && !self.navigationController.isNavigationBarHidden) {
-        //使用系统导航栏
-
-        CGRect navbarRect =  self.navigationController.navigationBar.frame;
+        CGRect navbarRect = self.navigationController.navigationBar.frame;
         if (@available(iOS 11.0, *)) {
-            CGFloat originX = self.view.safeAreaLayoutGuide.layoutFrame.origin.x;
-            CGFloat originY = self.view.safeAreaLayoutGuide.layoutFrame.origin.y;
-            CGFloat width = self.view.safeAreaLayoutGuide.layoutFrame.size.width;
-            CGFloat height = self.view.safeAreaLayoutGuide.layoutFrame.size.height;
-            contentRect = CGRectMake(originX, originY, width, height);
+            contentRect = self.view.safeAreaLayoutGuide.layoutFrame;
         } else {
             CGFloat originY = navbarRect.origin.y+navbarRect.size.height;
             contentRect = CGRectMake(0, originY, self.view.ss_width, self.view.ss_height-originY);
         }
-        
-        //计算导航栏尺寸并调整
-        _hiddenNavigationBar = YES; //必须隐藏自定义导航栏
-        CGRect customNavbarRect = navbarRect;
-        if (_hiddenNavigationBar) {
-            //隐藏则上移，参照系统方式
-            navbarRect.origin.y = -(customNavbarRect.size.height);
-        }
         if (_navigationBar) {
-            _navigationBar.frame = customNavbarRect;
-            _navigationBar.hidden = _hiddenNavigationBar;
+            //调整自定义导航栏
+            _navigationBar.frame = navbarRect;
+            _navigationBar.ss_originY = -_navigationBar.ss_height; //上移
+            _navigationBar.hidden = YES; //隐藏
         }
-        
     } else {
         //未使用系统导航栏
-        
-        //Tip:statusBarFrame在self.prefersStatusBarHidden=YES时，高度是0，但在viewDidAppear之前可能是40
-
         if (@available(iOS 11.0, *)) {
             statusBarHeight = self.view.safeAreaLayoutGuide.layoutFrame.origin.y;
-            homeIndicatorHeight = self.view.bounds.size.height- self.view.safeAreaLayoutGuide.layoutFrame.origin.y-self.view.safeAreaLayoutGuide.layoutFrame.size.height;
         } else {
             statusBarHeight = 20; //iOS11之前的设备无“刘海”，且状态栏固定高度;
-            
             UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
             if (orientation==UIInterfaceOrientationLandscapeLeft ||
                 orientation==UIInterfaceOrientationLandscapeRight) {
                 statusBarHeight = 0; //横屏状态:高度为0
             }
         }
-        
         //计算导航栏尺寸并调整
-        CGRect navbarRect =  CGRectMake(0, 0, self.view.ss_width, statusBarHeight+_kNavBarHeight);
-        if (_hiddenNavigationBar) {
-            //隐藏则上移，参照系统方式
-            navbarRect.origin.y = -(navbarRect.size.height);
-        }
+        CGRect navbarRect = CGRectMake(0, 0, self.view.ss_width, statusBarHeight+_kNavBarHeight);
         if (_navigationBar) {
             _navigationBar.frame = navbarRect;
-            _navigationBar.hidden = _hiddenNavigationBar;
+            _navigationBar.hidden = NO;
         }
         
         //计算"有效内容"区域尺寸
         if (@available(iOS 11.0, *)) {
-            /// Example iPhone11 Pro Max
-            /// 横屏 layoutFrame = {{40, 0}, {732, 354}}, frame = (0 0; 812 375);
-            /// 竖屏 layoutFrame = {{0, 40}, {375, 741.33333333333337}}, frame = (0 0; 375 812);
-            CGFloat originX = self.view.safeAreaLayoutGuide.layoutFrame.origin.x;
-            CGFloat originY = self.view.safeAreaLayoutGuide.layoutFrame.origin.y+(_hiddenNavigationBar?0:_kNavBarHeight);
-            CGFloat width   = self.view.safeAreaLayoutGuide.layoutFrame.size.width;
-            CGFloat height  = self.view.safeAreaLayoutGuide.layoutFrame.size.height-(_hiddenNavigationBar?0:_kNavBarHeight);
-            contentRect = CGRectMake(originX, originY, width, height);
+            contentRect = self.view.safeAreaLayoutGuide.layoutFrame;
+            if (_navigationBar) {
+                contentRect.origin.y += _kNavBarHeight;
+                contentRect.size.height -= _kNavBarHeight;
+            }
         } else {
             CGFloat originY = navbarRect.origin.y+navbarRect.size.height;
             contentRect = CGRectMake(0, originY, self.view.ss_width, self.view.ss_height-originY);
         }
     }
     
+    //计算底部Home区域高度
+    if (@available(iOS 11.0, *)) {
+        homeIndicatorHeight = self.view.bounds.size.height- self.view.safeAreaLayoutGuide.layoutFrame.origin.y-self.view.safeAreaLayoutGuide.layoutFrame.size.height;
+    }
+    
     //最后调整"有效内容"区域
-    if (_safeContentView) {
-        _safeContentView.frame = contentRect;
+    if (_contentView) {
+        _contentView.frame = contentRect;
     }
 }
 
@@ -198,17 +192,22 @@
 /// 返回上级页面
 - (void)tryGoBack
 {
-    if (self.navigationController){
-        if ([self.navigationController presentationController].presentedViewController== self){
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }else{
-            if (self.navigationController.topViewController==self){
+    if (_hookGoBack) {
+        _hookGoBack(self);
+        return;
+    }
+    
+    if (self.navigationController) {
+        if ([self.navigationController presentationController].presentedViewController == self) {
+            [self dismissViewControllerAnimated:YES completion:NULL];
+        } else {
+            if (self.navigationController.topViewController == self) {
                 [self.navigationController popViewControllerAnimated:YES];
             }
         }
-    }else{
+    } else {
         if (self.presentingViewController) {
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self dismissViewControllerAnimated:YES completion:NULL];
         }
     }
 }
@@ -232,24 +231,24 @@
 
 - (SSHelpNavigationBar *)navigationBar
 {
-    if (!_navigationBar)
-    {
-        CGRect rect = CGRectMake(0, 0, _kScreenWidth, _kNavBarHeight+_kStatusBarHeight);
+    if (!_navigationBar) {
+        CGRect rect = CGRectMake(0, 0, self.view.ss_width, _kNavBarHeight+_kStatusBarHeight);
         _navigationBar = [[SSHelpNavigationBar alloc] initWithFrame:rect style:SSNavigationBarWithLeftBack];
         _navigationBar.delegate = self;
+        [self.view addSubview:_navigationBar];
     }
     return _navigationBar;
 }
 
-- (SSHelpView *)safeContentView
+- (SSHelpView *)contentView
 {
-    if (!_safeContentView) {
+    if (!_contentView) {
         CGFloat navbarHeight = _kNavBarHeight+_kStatusBarHeight;
-        CGRect rect = CGRectMake(0, navbarHeight, _kScreenWidth, _kScreenHeight-navbarHeight);
-        _safeContentView = [[SSHelpView alloc] initWithFrame:rect];
-        _safeContentView.userInteractionEnabled = YES;
+        CGRect rect = CGRectMake(0, navbarHeight, self.view.ss_width, self.view.ss_height-navbarHeight);
+        _contentView = [[SSHelpView alloc] initWithFrame:rect];
+        [self.view addSubview:_contentView];
     }
-    return _safeContentView;
+    return _contentView;
 }
 
 /*

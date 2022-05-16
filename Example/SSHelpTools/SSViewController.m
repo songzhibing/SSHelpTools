@@ -34,7 +34,7 @@
     self.navigationBar.leftButton.hidden = YES;
     self.navigationBar.titleLabel.text = @"11";
     
-    self.safeContentView.backgroundColor = [[UIColor yellowColor] colorWithAlphaComponent:0.25];
+    self.contentView.backgroundColor = [[UIColor yellowColor] colorWithAlphaComponent:0.25];
 //    [UIApplication sharedApplication].statusBarHidden = YES;
 //    [UIViewController prefersStatusBarHidden];
     //    SSHelpView *backView = [[SSHelpView alloc] initWithFrame:CGRectZero];

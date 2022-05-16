@@ -17,8 +17,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _tableView = [[SSHelpTableView alloc] initWithFrame:self.safeContentView.bounds];
-    [self.safeContentView addSubview:_tableView];
+    _tableView = [[SSHelpTableView alloc] initWithFrame:self.contentView.bounds];
+    [self.contentView addSubview:_tableView];
     [_tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];

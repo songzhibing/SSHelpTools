@@ -8,7 +8,7 @@
 #import "SSHelpNavigationController.h"
 #import "SSHelpDefines.h"
 
-@interface SSHelpNavigationController ()<UINavigationControllerDelegate>
+@interface SSHelpNavigationController ()<UINavigationControllerDelegate,UIGestureRecognizerDelegate>
 
 @end
 
@@ -16,29 +16,39 @@
 
 - (void)dealloc
 {
-    
+    SSToolsLog(@"%@ dealloc %td...",self,_kRetainCount(self));
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [_kRandomColor colorWithAlphaComponent:0.25f];
     
-    //导航栏适配
-//    UIColor *bgColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
-////    if (@available(iOS 15.0, *)) {
-//        UINavigationBarAppearance *navBar = [[UINavigationBarAppearance alloc] init];
-//        navBar.backgroundColor = bgColor;
-//        navBar.backgroundEffect = nil;
-//        self.navigationController.navigationBar.scrollEdgeAppearance = navBar;
-//        self.navigationController.navigationBar.standardAppearance = navBar;
-////    } else {
-////        // 常规配置方式
-////        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:bgColor]
-////                                                      forBarMetrics:UIBarMetricsDefault];
-////    }
+    self.view.backgroundColor = SSHELPTOOLSCONFIG.backgroundColor;
     
-    //侧滑返回手势
+    /// 适配>>导航栏
+    if (@available(iOS 13.0, *)) {
+        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+        appearance.titleTextAttributes = SSHELPTOOLSCONFIG.navbarAppearance.titleTextAttributes;
+        appearance.backgroundColor = SSHELPTOOLSCONFIG.navbarAppearance.backgroundColor;
+        appearance.backgroundImage = SSHELPTOOLSCONFIG.navbarAppearance.backgroundImage;
+        appearance.backgroundEffect = SSHELPTOOLSCONFIG.navbarAppearance.backgroundEffect;
+        appearance.shadowColor = SSHELPTOOLSCONFIG.navbarAppearance.shadowColor;
+        appearance.shadowImage = SSHELPTOOLSCONFIG.navbarAppearance.shadowImage;
+
+        self.navigationBar.standardAppearance = appearance;
+        self.navigationBar.scrollEdgeAppearance = appearance;
+
+    } else {
+        [self.navigationBar setTitleTextAttributes:SSHELPTOOLSCONFIG.navbarAppearance.titleTextAttributes];
+        [self.navigationBar setBarTintColor:SSHELPTOOLSCONFIG.navbarAppearance.backgroundColor];
+        [self.navigationBar setBackgroundImage:SSHELPTOOLSCONFIG.navbarAppearance.backgroundImage
+                                 forBarMetrics:UIBarMetricsDefault];
+        [self.navigationBar setTranslucent:NO];
+        [self.navigationBar setShadowImage:SSHELPTOOLSCONFIG.navbarAppearance.shadowImage];
+    }
+
+    /// 适配>>边缘返回手势
+    /// Tip:https://developer.aliyun.com/article/853626
     if (!self.interactivePopGestureRecognizerDisable && [self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         __weak typeof(self) __weak_self = self;
         self.interactivePopGestureRecognizer.delegate = (id)__weak_self;
@@ -50,6 +60,21 @@
     [super viewWillAppear:animated];
 }
 
+- (UIViewController *)childViewControllerForStatusBarStyle
+{
+    return self.topViewController;
+}
+
+- (UIViewController *)childViewControllerForStatusBarHidden
+{
+    return self.topViewController;
+}
+
+//- (BOOL)shouldForceEnableInteractivePopGestureRecognizer
+//{
+//
+//    return YES;
+//}
 #pragma mark - Autorotation support.
 
 - (BOOL)shouldAutorotate
@@ -67,10 +92,10 @@
     return [self.visibleViewController preferredInterfaceOrientationForPresentation];
 }
 
-/// Push到下一级页面，默认隐藏底部工具栏
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     if (self.childViewControllers.count==1) {
+        //Push到下一级页面，默认隐藏底部工具栏
         viewController.hidesBottomBarWhenPushed = YES;
     }
     [super pushViewController:viewController animated:animated];

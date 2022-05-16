@@ -114,7 +114,7 @@
     @weakify(self);
     
     self.userInteractionEnabled = YES;
-    self.backgroundColor = [SSHelpToolsConfig sharedConfig].navigationBarBackgroundColor;
+    self.backgroundColor = [SSHelpToolsConfig sharedConfig].tertiaryFillColor;
         
     _contentView = [[UIView alloc] init];
     _contentView.userInteractionEnabled = YES;
@@ -130,7 +130,7 @@
     ///标题
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.textAlignment = NSTextAlignmentCenter;
-    _titleLabel.textColor = [UIColor whiteColor];
+    _titleLabel.textColor = SSHELPTOOLSCONFIG.labelColor;
     _titleLabel.backgroundColor = [UIColor clearColor];
     [_contentView addSubview:_titleLabel];
     [_titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {

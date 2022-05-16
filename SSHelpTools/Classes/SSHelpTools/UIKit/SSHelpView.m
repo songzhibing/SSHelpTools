@@ -18,7 +18,7 @@
 {
     self = [super init];
     if (self) {
-        self.backgroundColor = [SSHelpToolsConfig sharedConfig].viewDefaultBackgroundColor;
+        self.backgroundColor = SSHELPTOOLSCONFIG.backgroundColor;
     }
     return self;
 }
@@ -27,7 +27,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor =  [SSHelpToolsConfig sharedConfig].viewDefaultBackgroundColor;
+        self.backgroundColor =  SSHELPTOOLSCONFIG.backgroundColor;
     }
     return self;
 }

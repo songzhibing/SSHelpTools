@@ -8,6 +8,7 @@
 
 #import "SSTestViewController.h"
 #import <SSHelpTools/SSHelpNetwork.h>
+#import <SSHelpTools/SSHelpTableViewController.h>
 
 @interface SSTestViewController ()
 //@property(nonatomic, strong) SSHelpLocationManager *locationManager;
@@ -27,7 +28,7 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    
+        
     SSHelpButton *tapBtn = [SSHelpButton buttonWithType:UIButtonTypeCustom];
     tapBtn.frame = CGRectMake(10, 88, 88, 44);
     tapBtn.normalTitle = @"PushTest";

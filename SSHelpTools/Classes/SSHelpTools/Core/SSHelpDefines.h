@@ -62,19 +62,21 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 
 //颜色
 
-#define _kColorRGB(R, G, B)  [UIColor colorWithRed:(R)/255.0 \
-                                             green:(G)/255.0 \
-                                              blue:(B)/255.0 alpha:1.0]
+#define _kColorRGB(R, G, B)      [UIColor colorWithRed:(R)/255.0 \
+                                                 green:(G)/255.0 \
+                                                  blue:(B)/255.0 \
+                                                 alpha:1.0]
 
 #define _kColorRGBA(R, G, B, A)  [UIColor colorWithRed:(R)/255.0 \
                                                  green:(G)/255.0 \
-                                                 blue:(B)/255.0 alpha:A]
+                                                  blue:(B)/255.0 \
+                                                 alpha:A]
 
-#define _kColorFromHexRGB(hexString)  [UIColor ss_colorWithHexString:hexString alpha:1]
+#define _kColorFromHexRGB(hexString)      [UIColor ss_colorWithHexString:hexString alpha:1]
 
 #define _kColorFromHexRGBA(hexString, a)  [UIColor ss_colorWithHexString:hexString alpha:a]
 
-#define _kColorFromHexNumber(hexNumber)  [UIColor ss_colorWithHex:hexNumber alpha:1]
+#define _kColorFromHexNumber(hexNumber)   [UIColor ss_colorWithHex:hexNumber alpha:1]
 
 #define _kRandomColor  [UIColor ss_randomColor]
 

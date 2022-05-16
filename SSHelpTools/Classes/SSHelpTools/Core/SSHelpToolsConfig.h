@@ -12,6 +12,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define SSHELPTOOLSCONFIG [SSHelpToolsConfig sharedConfig]
+
 @interface SSHelpToolsConfig : NSObject
 
 + (SSHelpToolsConfig *)sharedConfig;
@@ -25,15 +27,32 @@ NS_ASSUME_NONNULL_BEGIN
 /// "home键"高度
 @property(nonatomic, assign, readonly) CGFloat homeIndicatorHeight;
 
-/// 默认导航栏背景色
-@property(nonatomic, strong, readwrite) UIColor *navigationBarBackgroundColor;
-
 /// 默认导航栏左侧返回按钮背景图片，白色
 @property(nonatomic, strong, readwrite) UIImage *navigationBarLeftBackImg;
 
-/// 默认视图背景色
-@property(nonatomic, assign, readwrite) UIColor *viewDefaultBackgroundColor;
+/// 视图背景色
+@property(nonatomic, assign, readwrite) UIColor *backgroundColor;
 
+/// 二级视图背景色
+@property(nonatomic, assign, readwrite) UIColor *secondaryBackgroundColor;
+
+/// BarItem图标色值
+@property(nonatomic, assign, readwrite) UIColor *secondaryFillColor;
+
+/// Bar背景色
+@property(nonatomic, assign, readwrite) UIColor *tertiaryFillColor;
+
+@property(nonatomic, assign, readwrite) UIColor *blueColor;
+
+@property(nonatomic, assign, readwrite) UIColor *labelColor;
+
+@property(nonatomic, assign, readwrite) UIColor *secondaryLabelColor;
+
+@property(nonatomic, assign, readwrite) UIColor *linkColor;
+
+@property(nonatomic, assign, readwrite) UIColor *groupedBackgroundColor;
+
+@property(nonatomic, assign, readwrite) UIColor *secondaryGroupedBackgroundColor;
 
 @property(nonatomic, strong) SSHelpNavigationBarAppearance *navbarAppearance;
 

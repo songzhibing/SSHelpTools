@@ -11,23 +11,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIColor (SSHelp)
 
-/**
- 16进制颜色转换为UIColor
+/// 0XFFFFFF，#FFFFFF 转 Color
++ (UIColor *)ss_colorWithHexString:(NSString *)hexString alpha:(float)alpha;
 
- @param hexColor 16进制字符串（可以以0x开头，可以以#开头，也可以就是6位的16进制）
- @param alpha 透明度
- @return 16进制字符串对应的颜色,异常返回 blackColor
- */
-+(UIColor *)ss_colorWithHexString:(NSString *)hexColor alpha:(float)alpha;
+/// RGBA 转 Color
++ (UIColor *)ss_colorWithString:(NSString *)hexString;
 
-/**
- 0x开头的十六进制数值转换成的颜色,透明度可调整
- */
+/// 0xFFFFFF 转 Color
 + (UIColor *)ss_colorWithHex:(long)hexValue alpha:(float)alpha;
 
-/**
- @return a random Color.
- */
+/// Return a random Color.
 + (UIColor *)ss_randomColor;
 
 @end
