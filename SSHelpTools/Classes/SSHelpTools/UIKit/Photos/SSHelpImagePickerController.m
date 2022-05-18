@@ -82,7 +82,7 @@ UIImagePickerControllerDelegate>
 - (void)dealloc
 {
     self.delegate = nil;
-    SSToolsLog(@"%@ dealloc ... ",self);
+    SSLifeCycleLog(@"%@ dealloc ... ",self);
 }
 
 - (void)viewDidLoad

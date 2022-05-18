@@ -59,7 +59,7 @@
 
 - (void)dealloc
 {
-    SSToolsLog(@"%@ dealloc ... ",self);
+    SSLifeCycleLog(@"%@ dealloc ... ",self);
 }
 
 + (instancetype)buttonWithStyle:(SSHelpButtonStyle)buttonStyle

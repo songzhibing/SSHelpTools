@@ -39,6 +39,8 @@
 {
     /// 打印日志
     _enableLog = NO;
+    
+    _enableLifeCycleLog = NO;
 
     if (@available(iOS 13.0, *)) {
         _backgroundColor = [UIColor systemBackgroundColor];
@@ -99,25 +101,9 @@
     } else {
         _tertiaryFillColor = [UIColor ss_colorWithString:@"#7676801E"];
     }
-    
-    //https://zhuanlan.zhihu.com/p/68455187
-    //https://www.jianshu.com/p/645abdc370ca
-    //https://www.jianshu.com/p/fd31bccd7410
-    
-    //if (@available(iOS 13.0, *)) {
-    //    UIColor * rightColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
-    //        if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) { //浅色模式
-    //            return [UIColor whiteColor];
-    //        } else { //深色模式
-    //            return [UIColor blackColor];
-    //        }
-    //    }];
-    //    self.bgView.backgroundColor = rightColor; //根据当前模式(光明\暗黑)-展示相应颜色
-    //}
-    
+        
     _navbarAppearance = [[SSHelpNavigationBarAppearance alloc] init];
     _navbarAppearance.backgroundColor = _blueColor;
-    
     _navbarAppearance.backgroundImage = nil;
 
     /// 基于backgroundColor或backgroundImage的磨砂效果
@@ -133,15 +119,15 @@
     _navbarAppearance.shadowColor = [UIColor clearColor];
     
 #ifdef DEBUG
-//    if (@available(iOS 13.0, *)) {
-//        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
-//        _navbarAppearance.backgroundColor = appearance.backgroundColor;
-//        _navbarAppearance.backgroundEffect = appearance.backgroundEffect;
-//        _navbarAppearance.backgroundImage = appearance.backgroundImage;
-//        _navbarAppearance.titleTextAttributes = appearance.titleTextAttributes;
-//        _navbarAppearance.shadowImage = appearance.shadowImage;
-//        _navbarAppearance.shadowColor = appearance.shadowColor;
-//    }
+    if (@available(iOS 13.0, *)) {
+        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+        _navbarAppearance.backgroundColor = appearance.backgroundColor;
+        _navbarAppearance.backgroundEffect = appearance.backgroundEffect;
+        _navbarAppearance.backgroundImage = appearance.backgroundImage;
+        _navbarAppearance.titleTextAttributes = appearance.titleTextAttributes;
+        _navbarAppearance.shadowImage = appearance.shadowImage;
+        _navbarAppearance.shadowColor = appearance.shadowColor;
+    }
 #endif
     /// 导航栏左侧返回按钮图片
     _navigationBarLeftBackImg = [NSBundle ss_navigationBackImage];

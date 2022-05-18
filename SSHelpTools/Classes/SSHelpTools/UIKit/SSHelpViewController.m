@@ -17,7 +17,7 @@
 
 - (void)dealloc
 {
-    SSToolsLog(@"%@ dealloc %td...",self,_kRetainCount(self));
+    SSLifeCycleLog(@"%@ dealloc %td...",self,_kRetainCount(self));
 }
 
 - (void)viewDidLoad
@@ -52,20 +52,6 @@
     [super viewSafeAreaInsetsDidChange];
     [self updateSubviewsDisplay];
 }
-
-//- (UIStatusBarStyle)preferredStatusBarStyle
-//{
-//    BOOL kIsDark = NO;
-//    if (@available(iOS 13.0, *)) {
-//        if ( NO ) {
-//            return UIStatusBarStyleDefault;
-//        } else {
-//            return kIsDark ? UIStatusBarStyleLightContent : UIStatusBarStyleDarkContent;
-//        }
-//    } else {
-//        return kIsDark ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
-//    }
-//}
 
 #pragma mark -
 

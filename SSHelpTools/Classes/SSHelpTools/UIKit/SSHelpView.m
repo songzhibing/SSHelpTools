@@ -11,7 +11,7 @@
 
 - (void)dealloc
 {
-    SSToolsLog(@"%@ dealloc ... ", self);
+    SSLifeCycleLog(@"%@ dealloc ... ", self);
 }
 
 - (instancetype)init

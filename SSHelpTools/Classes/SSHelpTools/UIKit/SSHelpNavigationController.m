@@ -16,7 +16,7 @@
 
 - (void)dealloc
 {
-    SSToolsLog(@"%@ dealloc %td...",self,_kRetainCount(self));
+    SSLifeCycleLog(@"%@ dealloc %td...",self,_kRetainCount(self));
 }
 
 - (void)viewDidLoad
@@ -70,11 +70,6 @@
     return self.topViewController;
 }
 
-//- (BOOL)shouldForceEnableInteractivePopGestureRecognizer
-//{
-//
-//    return YES;
-//}
 #pragma mark - Autorotation support.
 
 - (BOOL)shouldAutorotate

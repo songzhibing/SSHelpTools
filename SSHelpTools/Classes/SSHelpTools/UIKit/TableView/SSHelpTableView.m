@@ -28,6 +28,11 @@
 
 @implementation SSHelpTableView
 
+- (void)dealloc
+{
+    SSLifeCycleLog(@"%@ dealloc .... ",self);
+}
+
 - (instancetype)init
 {
     self = [super init];

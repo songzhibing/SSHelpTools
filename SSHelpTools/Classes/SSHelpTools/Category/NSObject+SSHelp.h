@@ -29,10 +29,24 @@ FOUNDATION_EXTERN NSArray * _Nullable SSEncodeArrayFromDict(NSDictionary *dict, 
 /// @param key 目标字段
 FOUNDATION_EXTERN NSArray * _Nullable SSEncodeArrayFromDictUsingBlock(NSDictionary *dic, NSString *key, id(^usingBlock)(NSDictionary *item));
 
+/// 判断对象是否为空或空值 如：nil、Nil、NSNull、@""、@"<null>"、@[]、@{}、0Data
+FOUNDATION_EXTERN BOOL SSEqualToEmpty(id object);
+
+/// 非空对象
+FOUNDATION_EXTERN BOOL SSEqualToNotEmpty(id object);
+
+/// 非空字符串
+FOUNDATION_EXTERN BOOL SSEqualToNotEmptyString(id string);
+
+/// 非空数组
+FOUNDATION_EXTERN BOOL SSEqualToNotEmptyArray(id array);
+
+/// 非空字典
+FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 @interface NSObject (SSHelp)
 
-/// 判断对象是否为空
+/// 判断对象是否为空或空值
 /// 常见的：nil、NSNull、@""、@"<null>"、@[]、@{}、0Data
 /// @param object 判断目标
 /// @return YES 为空  NO 为非空对象

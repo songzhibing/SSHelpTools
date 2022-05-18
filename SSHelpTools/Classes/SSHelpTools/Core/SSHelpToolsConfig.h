@@ -18,8 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (SSHelpToolsConfig *)sharedConfig;
 
-/// 输出日志, default is NO
+/// 输出日志, default is YES
 @property(nonatomic, assign) BOOL enableLog;
+
+/// OC对象生命周期日志输出,方便调试内存泄露等问题,default is NO
+@property(nonatomic, assign) BOOL enableLifeCycleLog;
 
 /// Default is [UIApplication sharedApplication].delegate.window
 @property(nonatomic, strong, readwrite, nullable) UIWindow *window;
@@ -36,10 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 二级视图背景色
 @property(nonatomic, assign, readwrite) UIColor *secondaryBackgroundColor;
 
-/// BarItem图标色值
+/// TabBarItem图标色值
 @property(nonatomic, assign, readwrite) UIColor *secondaryFillColor;
 
-/// Bar背景色
+/// TabBar背景色
 @property(nonatomic, assign, readwrite) UIColor *tertiaryFillColor;
 
 @property(nonatomic, assign, readwrite) UIColor *blueColor;

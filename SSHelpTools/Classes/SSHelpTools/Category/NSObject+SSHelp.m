@@ -90,6 +90,83 @@ NSMutableArray * _Nullable SSEncodeArrayFromDictUsingBlock(NSDictionary *dic, NS
     return nil;
 }
 
+BOOL SSEqualToEmpty(id object)
+{
+    if (object == nil || [object isEqual:[NSNull null]])
+    {
+        return YES;
+    }
+    else if ([object isKindOfClass:[NSString class]])
+    {
+        if ([object isEqualToString:@""] || [object isEqualToString:@"<null>"]) {
+            return YES;
+        }
+    }
+    else if ([object isKindOfClass:[NSArray class]])
+    {
+        if ([object respondsToSelector:@selector(count)])
+        {
+            return 0==[object count];
+        }
+    }
+    else if ([object isKindOfClass:[NSDictionary class]])
+    {
+        if ([object respondsToSelector:@selector(allKeys)])
+        {
+            return 0==[object allKeys];
+        }
+    }
+    else if ([object isKindOfClass:[NSData class]])
+    {
+        if ([object respondsToSelector:@selector(length)])
+        {
+            return 0==[object length];
+        }
+    }
+    return NO;
+}
+
+BOOL SSEqualToNotEmpty(id object)
+{
+    return !SSEqualToEmpty(object);
+}
+
+BOOL SSEqualToNotEmptyString(id string)
+{
+    if (SSEqualToNotEmpty(string))
+    {
+        if([[string class] isSubclassOfClass:[NSString class]])
+        {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+BOOL SSEqualToNotEmptyArray(id array)
+{
+    if (SSEqualToNotEmpty(array))
+    {
+        if([[array class] isSubclassOfClass:[NSArray class]])
+        {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+BOOL SSEqualToNotEmptyDictionary(id dictionary)
+{
+    if (SSEqualToNotEmpty(dictionary))
+    {
+        if([[dictionary class] isSubclassOfClass:[NSDictionary class]])
+        {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 @implementation NSObject (SSHelp)
 
 /// 判断对象是否为空
