@@ -22,8 +22,9 @@ static NSString *logCurrentTime(void)
     static NSDateFormatter *dateFromatter;
     dispatch_once(&onceToken, ^{
         dateFromatter = [NSDateFormatter new];
-        dateFromatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"];
-        [dateFromatter setDateFormat:@"YYYY.MM.dd.HH.mm.ss.SSS"];
+        dateFromatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        dateFromatter.calendar = [[NSCalendar  alloc] initWithCalendarIdentifier:NSCalendarIdentifierISO8601];
+        dateFromatter.dateFormat = @"yyyy.MM.dd.HH.mm.ss.SSS";
     });
     return [dateFromatter stringFromDate:NSDate.date];
 }
