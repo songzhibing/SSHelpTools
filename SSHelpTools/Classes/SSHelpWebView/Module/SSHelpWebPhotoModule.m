@@ -19,7 +19,7 @@
             if (image) {
                 NSData *imageData = nil;
                 NSString *mimeType = nil;
-                  if ([self imageHasAlpha: image]) {
+                  if ([SSHelpWebPhotoModule imageHasAlpha:image]) {
                       imageData = UIImagePNGRepresentation(image);
                       mimeType =  @"PNG";
                   } else {
@@ -37,7 +37,7 @@
     }];
 }
 
-- (BOOL) imageHasAlpha: (UIImage *) image
++ (BOOL)imageHasAlpha:(UIImage *)image
 {
     CGImageAlphaInfo alpha = CGImageGetAlphaInfo(image.CGImage);
     return (alpha == kCGImageAlphaFirst ||

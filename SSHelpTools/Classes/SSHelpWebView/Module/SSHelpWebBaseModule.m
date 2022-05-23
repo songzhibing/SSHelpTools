@@ -70,7 +70,7 @@
             if (responseCallback && response) {
                 if ([response isKindOfClass:[SSHelpWebObjcResponse class]]) {
                     SSHelpWebObjcResponse *objcResponse = (SSHelpWebObjcResponse *)response;
-                    responseCallback(objcResponse.finalJsonString);
+                    responseCallback(objcResponse.toJsonString);
                 }else if([response isKindOfClass:[NSDictionary class]]){
                     NSString *jsonString = ((NSDictionary *)response).ss_jsonStringEncoded;
                     responseCallback(jsonString);

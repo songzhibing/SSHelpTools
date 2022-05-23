@@ -126,7 +126,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 清除缓存数据
 + (void)clearWebsiteDataStore;
 
-/// 相关配置，可自定义，默认都提供一个单列实例
+/// WKWebView相关配置，可自定义，默认都提供一个单列实例
 - (WKWebsiteDataStore *)websiteDataStore;
 
 - (WKProcessPool *)sharedProcessPool;

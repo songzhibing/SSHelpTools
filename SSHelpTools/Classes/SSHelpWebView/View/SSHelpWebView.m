@@ -68,10 +68,27 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 
 #pragma mark - Public Method
 
+- (NSURLRequest *)beforeLoadRequest:(NSURLRequest *)request
+{
+    NSMutableURLRequest *newRequest = request.mutableCopy;
+    if (@available(iOS 11.0, *)) {
+    } else {
+        /// 在request header中设置Cookie,解决首个请求Cookie丢失问题
+        NSArray *availableCookie = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:newRequest.URL];
+        if (availableCookie && availableCookie.count > 0) {
+            NSDictionary *reqHeader = [NSHTTPCookie requestHeaderFieldsWithCookies:availableCookie];
+            NSString *cookieStr = [reqHeader objectForKey:@"Cookie"];
+            [newRequest setValue:cookieStr forHTTPHeaderField:@"Cookie"];
+        }
+    }
+    return newRequest;
+}
+
 /// @abstract Navigates to a requested URL.
 /// @param request The request specifying the URL to which to navigate.
 - (void)loadRequest:(NSURLRequest *)request;
 {
+    request = [self beforeLoadRequest:request];
     WKNavigation *navigation = [self.webView loadRequest:request];
     SSWebLog(@"SSHelpWebView loadRequest %@ ... ",navigation);
 }
@@ -207,10 +224,15 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
             }];
         }
         
-        [_webView addObserver:self forKeyPath:@"estimatedProgress"
-                      options:NSKeyValueObservingOptionNew context:NULL];
-        [_webView addObserver:self forKeyPath:@"title"
-                      options:NSKeyValueObservingOptionNew context:NULL];
+        [_webView addObserver:self
+                   forKeyPath:@"estimatedProgress"
+                      options:NSKeyValueObservingOptionNew
+                      context:NULL];
+        
+        [_webView addObserver:self
+                   forKeyPath:@"title"
+                      options:NSKeyValueObservingOptionNew
+                      context:NULL];
         
         
         /**
@@ -283,13 +305,12 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     //加载进度值
-    if ([keyPath isEqualToString:@"estimatedProgress"]){
-        if (object == _webView){
+    if ([keyPath isEqualToString:@"estimatedProgress"]) {
+        if (object == _webView) {
             if (_loadingPogressView) {
                 [_loadingPogressView setAlpha:1.0f];
                 [_loadingPogressView setProgress:_webView.estimatedProgress animated:YES];
-                if(_webView.estimatedProgress >= 1.0f)
-                {
+                if (_webView.estimatedProgress >= 1.0f) {
                     [UIView animateWithDuration:0.5f
                                           delay:0.3f
                                         options:UIViewAnimationOptionCurveEaseOut
@@ -301,19 +322,19 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
                                      }];
                 }
             }
-        }else{
+        } else {
             [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
         }
-    }else if ([keyPath isEqualToString:@"title"]){ //网页title
+    } else if ([keyPath isEqualToString:@"title"]) { //网页title
         if (object == _webView){
             NSString *newTitle = _webView.title;
             if (_webViewDelegate && [_webViewDelegate respondsToSelector:@selector(webviewDidChangeTitle:)]) {
                 [_webViewDelegate webviewDidChangeTitle:newTitle];
             }
-        }else{
+        } else {
             [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
         }
-    }else{
+    } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
@@ -330,7 +351,7 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 
 - (nullable NSMutableArray <NSHTTPCookie *> *)getAllCookies
 {
-    NSMutableArray <NSHTTPCookie *>*_cookies = [NSMutableArray array];
+    NSMutableArray <NSHTTPCookie *>* _cookies = [NSMutableArray array];
     
     // 获取NSHTTPCookieStorage中的Cookie
     NSHTTPCookieStorage *shareCookie = [NSHTTPCookieStorage sharedHTTPCookieStorage];
