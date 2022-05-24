@@ -111,6 +111,7 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 
 #define SSToolsLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"[SSTOOLSLOG][%s]:[line-%d] %s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
 
+// WKWebView日志
 #define SSWebLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"[SSWEBLOG][%s]:[line-%d] %s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
 
 #define SSLifeCycleLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLifeCycleLog)?((void)fprintf(stderr,"[SSLIFECYCLE][%s]:[line-%d] %s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };

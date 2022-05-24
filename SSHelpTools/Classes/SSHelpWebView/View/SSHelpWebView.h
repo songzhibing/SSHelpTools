@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import <SSHelpTools/SSHelpTools.h>
 #import <WebKit/WebKit.h>
+
 #import "SSHelpWebBaseModule.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -78,6 +79,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+typedef NS_OPTIONS(NSUInteger, SSHelpWebViewCookiePolicy) {
+    SSHelpWebViewCookieEnableSystem    = 1 << 0,
+    SSHelpWebViewCookieEnableJs        = 1 << 1,
+    SSHelpWebViewCookieEnablePHP       = 1 << 2,
+    SSHelpWebViewCookieSyncCookieStore = 1 << 3
+};
+
 @interface SSHelpWebView : SSHelpView
 
 /// 是否隐藏加载进度条，默认NO=显示
@@ -86,11 +94,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否允许右滑返回上个链接，左滑前进, 默认不允许
 @property(nonatomic, assign) BOOL allowsBackForwardNavigationGestures;
 
+/// Cookie管理
+@property(nonatomic, assign) SSHelpWebViewCookiePolicy cookiePolicy;
+
 /// 自定义WKWeb UserAgent
 @property(nonatomic, copy, nullable) NSString *customUserAgent;
 
 /// 在页面初始前，预加载一些js（页面加载之后再设置无效）
-@property(nonatomic, strong, nullable) NSArray <WKUserScript *> *customUserScripts;
+@property(nonatomic, strong, nullable) NSMutableArray <WKUserScript *> *customUserScripts;
 
 /// WKWebView代理
 @property(nonatomic, weak) id <SSWebViewDelegate> webViewDelegate;

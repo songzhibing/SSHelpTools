@@ -65,8 +65,32 @@
 /// @param navigation 导航
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
+    if (@available(iOS 11.0, *)) {
+        [webView.configuration.websiteDataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull item) {
+            //SSWebLog(@"cookie:%@",item);
+        }];
+    }
     SSWebLog(@"加载完成：%@",webView.URL);
 }
+
+/// 在提交的主frame导航期间发生错误时调用
+/// @param webView 调用委托方法的web视图
+/// @param navigation 导航
+/// @param error 错误信息
+- (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+{
+    SSWebLog(@"加载失败：%@",error.localizedDescription);
+}
+
+/// 当开始为主frame加载数据时发生错误时调用。
+/// @param webView 调用委托方法的web视图
+/// @param navigation 导航
+/// @param error 错误信息
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
+{
+    SSWebLog(@"加载失败：%@",error.localizedDescription);
+}
+
 /*
 #pragma mark - Navigation
 

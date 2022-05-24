@@ -27,7 +27,10 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 
 @property(nonatomic, strong) WKUserContentController *userContent;
  
-//Native & h5 交互
+/// Cookies 管理
+@property(nonatomic, strong) NSArray <NSHTTPCookie *> *cookies;
+
+/// Native & h5 交互
 @property(nonatomic, strong) WKWebViewJavascriptBridge *bridge;
 
 @property(nonatomic, strong) NSMutableDictionary <NSString *, SSBridgeJsHandler> *messageHandlers;
@@ -36,13 +39,29 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 
 @property(nonatomic, strong) NSMutableArray <__kindof SSHelpWebBaseModule *> *moduleImpInstances;
 
-@property(nonatomic,   copy) NSString *cookieDefaultsKey;
-
 @end
 
 @implementation SSHelpWebView
 
 #pragma mark - System Method
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _cookiePolicy = SSHelpWebViewCookieEnableSystem;
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _cookiePolicy = SSHelpWebViewCookieEnableSystem;
+    }
+    return self;
+}
 
 - (void)dealloc
 {
@@ -64,33 +83,80 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
         [_webView removeObserver:self forKeyPath:@"estimatedProgress"];
         [_webView removeObserver:self forKeyPath:@"title"];
     }
+    SSWebLog(@"%@ dealloc ... ",self);
 }
 
 #pragma mark - Public Method
-
-- (NSURLRequest *)beforeLoadRequest:(NSURLRequest *)request
-{
-    NSMutableURLRequest *newRequest = request.mutableCopy;
-    if (@available(iOS 11.0, *)) {
-    } else {
-        /// 在request header中设置Cookie,解决首个请求Cookie丢失问题
-        NSArray *availableCookie = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:newRequest.URL];
-        if (availableCookie && availableCookie.count > 0) {
-            NSDictionary *reqHeader = [NSHTTPCookie requestHeaderFieldsWithCookies:availableCookie];
-            NSString *cookieStr = [reqHeader objectForKey:@"Cookie"];
-            [newRequest setValue:cookieStr forHTTPHeaderField:@"Cookie"];
-        }
-    }
-    return newRequest;
-}
-
+ 
 /// @abstract Navigates to a requested URL.
 /// @param request The request specifying the URL to which to navigate.
-- (void)loadRequest:(NSURLRequest *)request;
+- (void)loadRequest:(NSMutableURLRequest *)request;
 {
-    request = [self beforeLoadRequest:request];
-    WKNavigation *navigation = [self.webView loadRequest:request];
-    SSWebLog(@"SSHelpWebView loadRequest %@ ... ",navigation);
+    NSMutableURLRequest *mutaleRequest = request.mutableCopy;
+    
+    _cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:mutaleRequest.URL];
+
+    if (self.cookiePolicy & SSHelpWebViewCookieEnablePHP) {
+        // Tip1: 在request header中设置Cookie,解决首个请求Cookie丢失问题,页面PHP等动态语言能够获取到（js获取不到）
+        if (_cookies) {
+            NSDictionary *cookieDict =  [NSHTTPCookie requestHeaderFieldsWithCookies:_cookies]; // @{Cookie = "dotcom_user=xxx; logged_in=yes; __Host-user_session_same_site=xxx; user_session=xxx; _octo=GH1.1.xx.xx; _device_id=xx"; }
+            NSString *cookieString = [cookieDict objectForKey:@"Cookie"];
+            [mutaleRequest addValue:cookieString forHTTPHeaderField:@"Cookie"];
+        }
+    }
+    
+    if (self.cookiePolicy & SSHelpWebViewCookieEnableJs) {
+        // Tip2: 页面js可获取Cookie（PHP等动态语言获取不到）
+        if (_cookies) {
+            __block NSMutableString *jsCookiesString = @"".mutableCopy;
+            [_cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * _Nonnull cookie, NSUInteger idx, BOOL * _Nonnull stop) {
+                [jsCookiesString appendString:[NSString stringWithFormat:@"document.cookie = '%@=%@';", cookie.name, cookie.value]];
+            }];
+            if (jsCookiesString.length) {
+                WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:jsCookiesString injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
+                [self.customUserScripts addObject:cookieScript];
+            }
+        }
+    }
+    @weakify(self);
+    void (^__startLoadingRequest)(void) = ^(void){
+        dispatch_main_async_safe(^{
+#ifdef DEBUG
+            if (@available(iOS 11.0, *)) {
+                [self_weak_.webView.configuration.websiteDataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull data) {
+                    //SSWebLog(@"Sync Cookie After:%@",data);
+                }];
+            }
+#endif
+            WKNavigation *navigation = [self_weak_.webView loadRequest:mutaleRequest];
+            SSWebLog(@"SSHelpWebView loadRequest %@ %@ ... ",[NSThread currentThread],navigation);
+        });
+    };
+    
+    if (self.cookiePolicy & SSHelpWebViewCookieSyncCookieStore) {
+        // Tip3: NSHTTPCookieStorage-->同步到-->WKHTTPCookieStore
+        if (@available(iOS 11.0, *)) {
+            NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+            if (cookies.count) {
+#ifdef DEBUG
+                [self.webView.configuration.websiteDataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull data) {
+                    //SSWebLog(@"Sync Cookie Before:%@",data);
+                }];
+#endif
+                dispatch_group_t group = dispatch_group_create();
+                for (NSInteger index=0; index<cookies.count; index++) {
+                    dispatch_group_enter(group);
+                    NSHTTPCookie * _Nonnull cookie = cookies[index];
+                    [self.webView.configuration.websiteDataStore.httpCookieStore setCookie:cookie completionHandler:^{
+                        dispatch_group_leave(group);
+                    }];
+                }
+                dispatch_group_notify(group, dispatch_get_main_queue(), __startLoadingRequest);
+                return;
+            }
+        }
+    }
+    __startLoadingRequest();
 }
 
 /// @abstract Navigates to the requested file URL on the filesystem.
@@ -168,9 +234,11 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
         [_userContent addUserScript:touchClloutScript];
         [_userContent addUserScript:selectScript];
         [_userContent addUserScript:reloadScript];
+        
         for (WKUserScript *scriptItem in _customUserScripts) {
             [_userContent addUserScript:scriptItem]; ///自定义的js
         }
+        
         id handler = [[SSHelpWeakProxy alloc] initWithTarget:self];
         for (NSString *key in _messageHandlers.allKeys) { ///添加js方法
             [_userContent addScriptMessageHandler:handler name:key]; //注意，需要手动释放
@@ -214,13 +282,13 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
          */
         if (_hiddenProgressView==NO) {
             _loadingPogressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-            _loadingPogressView.frame = CGRectMake(0, 0, self.ss_width, 6);
-            _loadingPogressView.trackTintColor = [UIColor grayColor]; //设置进度条颜色
-            _loadingPogressView.progressTintColor = [UIColor greenColor]; //设置进度条上进度的颜色
+            _loadingPogressView.frame = CGRectMake(0, 0, self.ss_width, 3);
+            _loadingPogressView.progressTintColor = SSHELPTOOLSCONFIG.blueColor;
+            _loadingPogressView.trackTintColor = [UIColor clearColor];
             [self addSubview:_loadingPogressView];
             [_loadingPogressView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.left.right.mas_equalTo(0);
-                make.height.mas_equalTo(6);
+                make.height.mas_equalTo(3);
             }];
         }
         
@@ -339,68 +407,6 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
     }
 }
 
-#pragma mark - Cookie
-
-- (NSString *)cookieDefaultsKey
-{
-    if (!_cookieDefaultsKey) {
-        _cookieDefaultsKey = [[NSBundle mainBundle].bundleIdentifier stringByAppendingString:@".defaults.cookies.key"];
-    }
-    return _cookieDefaultsKey;
-}
-
-- (nullable NSMutableArray <NSHTTPCookie *> *)getAllCookies
-{
-    NSMutableArray <NSHTTPCookie *>* _cookies = [NSMutableArray array];
-    
-    // 获取NSHTTPCookieStorage中的Cookie
-    NSHTTPCookieStorage *shareCookie = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    for (NSHTTPCookie *cookie in shareCookie.cookies){
-        [_cookies addObject:cookie];
-    }
-
-    // 获取存储的Cookie
-    NSData *defaultsCookieData = [[NSUserDefaults standardUserDefaults] objectForKey:self.cookieDefaultsKey];
-    NSMutableArray <NSHTTPCookie*>* defaultsCookieArray = nil;
-    if (defaultsCookieData) {
-        if (@available(iOS 11.0, *)) {
-            defaultsCookieArray = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:defaultsCookieData error:NULL];
-        }else{
-            defaultsCookieArray = [NSKeyedUnarchiver unarchiveObjectWithData:defaultsCookieData];
-        }
-    }
-    NSDate *nowDate = [NSDate date]; //时区 UTC
-    SSWebLog(@"defaultsCookieData=%@",defaultsCookieData);
-    [defaultsCookieArray enumerateObjectsUsingBlock:^(NSHTTPCookie * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (!obj.expiresDate) {
-            [_cookies addObject:obj];
-        }else{
-            if ([obj.expiresDate compare:nowDate]) {
-                [_cookies addObject:obj];
-            }else{
-                //[defaultsCookieArray removeObject:obj];
-            }
-        }
-    }];
-    
-    //更新存储的数据
-    NSData *newCookiesData = nil;
-    if (_cookies && _cookies.count) {
-        if (@available(iOS 11.0, *)) {
-            newCookiesData = [NSKeyedArchiver archivedDataWithRootObject:_cookies requiringSecureCoding:YES error:NULL];
-        }else{
-            newCookiesData = [NSKeyedArchiver archivedDataWithRootObject:_cookies];
-        }
-        if (newCookiesData) {
-            [[NSUserDefaults standardUserDefaults] setObject:newCookiesData forKey:self.cookieDefaultsKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-    }
-
-    return _cookies;
-}
-
-
 #pragma mark - WebViewConfiguraion
 
 /**
@@ -467,5 +473,14 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
     });
     return preferences;
 }
+
+- (NSMutableArray <WKUserScript *> *)customUserScripts
+{
+    if (!_customUserScripts) {
+        _customUserScripts = [[NSMutableArray alloc] initWithCapacity:1];
+    }
+    return _customUserScripts;
+}
+
 
 @end
