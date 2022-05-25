@@ -91,17 +91,17 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 /// @abstract Navigates to a requested URL.
 /// @param request The request specifying the URL to which to navigate.
 - (void)loadRequest:(NSMutableURLRequest *)request;
-{
-    NSMutableURLRequest *mutaleRequest = request.mutableCopy;
+{    
+    NSMutableURLRequest *mutableRequest = request.mutableCopy;
     
-    _cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:mutaleRequest.URL];
+    _cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:mutableRequest.URL];
 
     if (self.cookiePolicy & SSHelpWebViewCookieEnablePHP) {
         // Tip1: 在request header中设置Cookie,解决首个请求Cookie丢失问题,页面PHP等动态语言能够获取到（js获取不到）
         if (_cookies) {
             NSDictionary *cookieDict =  [NSHTTPCookie requestHeaderFieldsWithCookies:_cookies]; // @{Cookie = "dotcom_user=xxx; logged_in=yes; __Host-user_session_same_site=xxx; user_session=xxx; _octo=GH1.1.xx.xx; _device_id=xx"; }
             NSString *cookieString = [cookieDict objectForKey:@"Cookie"];
-            [mutaleRequest addValue:cookieString forHTTPHeaderField:@"Cookie"];
+            [mutableRequest addValue:cookieString forHTTPHeaderField:@"Cookie"];
         }
     }
     
@@ -118,6 +118,7 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
             }
         }
     }
+    
     @weakify(self);
     void (^__startLoadingRequest)(void) = ^(void){
         dispatch_main_async_safe(^{
@@ -128,8 +129,8 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
                 }];
             }
 #endif
-            WKNavigation *navigation = [self_weak_.webView loadRequest:mutaleRequest];
-            SSWebLog(@"SSHelpWebView loadRequest %@ %@ ... ",[NSThread currentThread],navigation);
+            WKNavigation *navigation = [self_weak_.webView loadRequest:mutableRequest];
+            SSWebLog(@"SSHelpWebView loadRequest %@ %@ ... ",[NSThread currentThread],mutableRequest);
         });
     };
     
@@ -199,7 +200,7 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
     }
     if ([_moduleImpClasses containsObject:className]) {
         return NO;
-    }else{
+    } else {
         [_moduleImpClasses addObject:className];
         return YES;
     }

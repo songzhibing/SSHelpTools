@@ -32,6 +32,11 @@
     [self.webView registerJsHandlerImpClass:[SSHelpWebTestJsBridgeModule class]];
     [self.webView registerJsHandlerImpClass:[SSHelpWebLocationModule class]];
     [self.webView registerJsHandlerImpClass:[SSHelpWebPhotoModule class]];
+
+    if (SSEqualToNotEmptyString(self.indexString)) {
+        NSString *url = [self.indexString stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        self.indexRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    }
     
     [self.webView loadRequest:self.indexRequest];
 }
