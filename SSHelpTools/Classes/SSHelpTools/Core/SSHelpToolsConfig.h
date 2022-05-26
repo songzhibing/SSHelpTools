@@ -34,28 +34,28 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, readwrite) UIImage *navigationBarLeftBackImg;
 
 /// 视图背景色
-@property(nonatomic, assign, readwrite) UIColor *backgroundColor;
+@property(nonatomic, strong, readwrite) UIColor *backgroundColor;
 
 /// 二级视图背景色
-@property(nonatomic, assign, readwrite) UIColor *secondaryBackgroundColor;
+@property(nonatomic, strong, readwrite) UIColor *secondaryBackgroundColor;
 
 /// TabBarItem图标色值
-@property(nonatomic, assign, readwrite) UIColor *secondaryFillColor;
+@property(nonatomic, strong, readwrite) UIColor *secondaryFillColor;
 
 /// TabBar背景色
-@property(nonatomic, assign, readwrite) UIColor *tertiaryFillColor;
+@property(nonatomic, strong, readwrite) UIColor *tertiaryFillColor;
 
-@property(nonatomic, assign, readwrite) UIColor *blueColor;
+@property(nonatomic, strong, readwrite) UIColor *blueColor;
 
-@property(nonatomic, assign, readwrite) UIColor *labelColor;
+@property(nonatomic, strong, readwrite) UIColor *labelColor;
 
-@property(nonatomic, assign, readwrite) UIColor *secondaryLabelColor;
+@property(nonatomic, strong, readwrite) UIColor *secondaryLabelColor;
 
-@property(nonatomic, assign, readwrite) UIColor *linkColor;
+@property(nonatomic, strong, readwrite) UIColor *linkColor;
 
-@property(nonatomic, assign, readwrite) UIColor *groupedBackgroundColor;
+@property(nonatomic, strong, readwrite) UIColor *groupedBackgroundColor;
 
-@property(nonatomic, assign, readwrite) UIColor *secondaryGroupedBackgroundColor;
+@property(nonatomic, strong, readwrite) UIColor *secondaryGroupedBackgroundColor;
 
 @property(nonatomic, strong) SSHelpNavigationBarAppearance *navbarAppearance;
 

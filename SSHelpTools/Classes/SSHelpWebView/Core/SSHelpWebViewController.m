@@ -19,15 +19,17 @@
 
 @implementation SSHelpWebViewController
 
+- (void)dealloc
+{
+    SSWebLog(@"%@ dealloc ... ",self);
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.webView = [[SSHelpWebView alloc] initWithFrame:self.contentView.bounds];
+    self.webView = [[SSHelpWebView alloc] initWithFrame:self.view.bounds];
     self.webView.webViewDelegate = self;
-    [self.contentView addSubview:self.webView];
-    [self.webView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.contentView);
-    }];
+    [self.view addSubview:self.webView];
 
     [self.webView registerJsHandlerImpClass:[SSHelpWebTestJsBridgeModule class]];
     [self.webView registerJsHandlerImpClass:[SSHelpWebLocationModule class]];
@@ -38,7 +40,27 @@
         self.indexRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     }
     
+//    if ([self.indexRequest.URL.scheme isEqualToString:@"file"]) {
+//        [self.webView loadFileURL:self.indexRequest.URL allowingReadAccessToURL:[NSBundle mainBundle].bundleURL];
+//        return;
+//    }
     [self.webView loadRequest:self.indexRequest];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self resetDeviceOrientation:UIDeviceOrientationLandscapeLeft];
+    });
+}
+
+- (void)updateSubviewsDisplayWithOptions:(SSHelpViewUpdateDisplayOptions)options
+{
+    if (options & SSViewSafeAreaInsetsDidChange) {
+        // 调用父类
+        [super updateSubviewsDisplayWithOptions:options];
+        // 调整位置
+        [self.webView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsMake(self.viewSafeAreaInsets.top, self.viewSafeAreaInsets.left, 0, self.viewSafeAreaInsets.right));
+        }];
+    }
 }
 
 #pragma mark - WebView Delegate

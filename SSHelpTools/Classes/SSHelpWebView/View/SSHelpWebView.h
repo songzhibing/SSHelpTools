@@ -106,7 +106,7 @@ typedef NS_OPTIONS(NSUInteger, SSHelpWebViewCookiePolicy) {
 /// WKWebView代理
 @property(nonatomic, weak) id <SSWebViewDelegate> webViewDelegate;
 
-/// js功能代理
+/// js功能模块代理
 @property(nonatomic, weak) id <SSWebModuleDelegate> moduleDelegate;
 
 /// 注册"js handler"功能方法

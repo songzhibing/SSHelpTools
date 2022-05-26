@@ -20,43 +20,126 @@
     SSLifeCycleLog(@"%@ dealloc %td...",self,_kRetainCount(self));
 }
 
+/**
+ view 被加载到内存后调用 viewDidLoad()；
+ 重写该方法需要首先调用父类该方法；
+ 该方法中可以额外初始化控件，例如添加子控件，添加约束；
+ 该方法被调用意味着控制器有可能（并非一定）在未来会显示；
+ 在控制器生命周期中，该方法只会被调用一次；
+ */
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.view.backgroundColor = SSHELPTOOLSCONFIG.backgroundColor;
+    _viewSafeAreaInsets = UIEdgeInsetsZero;
 }
 
+/**
+ 可以主动显式触发加载视图的方法；
+ 只要是触发了 view 加载, 加载完成后就会触发 viewDidLoad 方法；
+ 此时视图控制器的主视图可能还未加入到视图树中, 且绝大多数情况下都是(此时 view 的 window 属性还是 nil)!
+ 不应在 viewDidLoad 中进行一些依赖于屏幕尺寸或窗口尺寸的操作(初学者常犯的错误)；
+ */
+- (void)loadViewIfNeeded
+{
+    [super loadViewIfNeeded];
+}
+
+/**
+ 该方法在控制器 view 即将添加到视图层次时以及展示 view 时所有动画配置前被调用；
+ 重写该方法需要首先调用父类该方法；
+ 该方法中可以进行操作即将显示的 view，例如改变状态栏的取向，类型；
+ 该方法被调用意味着控制器将一定会显示；
+ 在控制器生命周期中，该方法可能会被多次调用；
+ */
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     if (@available(iOS 11.0, *)) {
         // iOS11之后使用 - (void)viewSafeAreaInsetsDidChange
     } else {
-        [self updateSubviewsDisplay];
+        [self updateSubviewsDisplayWithOptions:SSViewWillAppear];
     }
 }
 
+/**
+ iOS 11后新API，根视图的边距变更时会触发该方法的回调
+ */
+- (void)viewLayoutMarginsDidChange NS_REQUIRES_SUPER API_AVAILABLE(ios(11.0), tvos(11.0))
+{
+    [super viewLayoutMarginsDidChange];
+    [self updateSubviewsDisplayWithOptions:SSViewLayoutMarginsDidChange];
+}
+
+/**
+ iOS 11后新API，此时可以获取安全区的信息
+ */
+- (void)viewSafeAreaInsetsDidChange NS_REQUIRES_SUPER API_AVAILABLE(ios(11.0), tvos(11.0))
+{
+    [super viewSafeAreaInsetsDidChange];
+    [self updateSubviewsDisplayWithOptions:SSViewSafeAreaInsetsDidChange];
+}
+
+/**
+ 该方法在通知控制器将要布局 view 的子控件时调用；
+ 每当视图的 bounds 改变，view 将调整其子控件位置；
+ 该方法可重写以在 view 布局子控件前做出改变；
+ 该方法的默认实现为空；
+ 该方法调用时，AutoLayout 未起作用；
+ 在控制器生命周期中，该方法可能会被多次调用；
+ */
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+}
+
+/**
+ 该方法在通知控制器已经布局 view 的子控件时调用；
+ 该方法可重写以在 view 布局子控件后做出改变；
+ 该方法的默认实现为空；
+ 该方法调用时，AutoLayout 已经完成；
+ 在控制器生命周期中，该方法可能会被多次调用；
+ */
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+}
+
+/**
+ 该方法在控制器 view 已经添加到视图层次时被调用；
+ 重写该方法需要首先调用父类该方法；
+ 该方法可重写以进行有关正在展示的视图操作；
+ 在控制器生命周期中，该方法可能会被多次调用；
+ */
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 }
 
-- (void)viewLayoutMarginsDidChange NS_REQUIRES_SUPER API_AVAILABLE(ios(11.0), tvos(11.0))
+/**
+ 该方法在控制器 view 将要从视图层次移除时被调用；
+ 该方法可重写以提交变更，取消视图第一响应者状态；
+ */
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewLayoutMarginsDidChange];    
-    [self updateSubviewsDisplay];
+    [super viewWillDisappear:animated];
 }
 
-- (void)viewSafeAreaInsetsDidChange NS_REQUIRES_SUPER API_AVAILABLE(ios(11.0), tvos(11.0))
+/**
+ 该方法在控制器 view 已经从视图层次移除时被调用；
+ 该方法可重写以清除或隐藏控件；
+ */
+- (void)viewDidDisappear:(BOOL)animated
 {
-    [super viewSafeAreaInsetsDidChange];
-    [self updateSubviewsDisplay];
+    [super viewDidDisappear:animated];
 }
 
-#pragma mark -
+#pragma mark - Public Method
 
-/// 控制器视图尺寸发生变化回调，更新自定义视图布局
-- (void)updateSubviewsDisplay NS_REQUIRES_SUPER
+/**
+ 控制器视图尺寸发生变化回调
+ */
+- (void)updateSubviewsDisplayWithOptions:(SSHelpViewUpdateDisplayOptions)options API_AVAILABLE(ios(10.0)) NS_REQUIRES_SUPER
 {
     CGFloat statusBarHeight = 20;     //状态栏高度
     CGFloat homeIndicatorHeight = 0;  //底部"Home键"高度
@@ -114,6 +197,13 @@
         homeIndicatorHeight = self.view.bounds.size.height- self.view.safeAreaLayoutGuide.layoutFrame.origin.y-self.view.safeAreaLayoutGuide.layoutFrame.size.height;
     }
     
+    //计算view边距
+    _viewSafeAreaInsets = UIEdgeInsetsMake(contentRect.origin.y,
+                                           contentRect.origin.x,
+                                           homeIndicatorHeight,
+                                           self.view.ss_width-contentRect.origin.x-contentRect.size.width);
+
+    
     //最后调整"有效内容"区域
     if (_contentView) {
         _contentView.frame = contentRect;
@@ -155,23 +245,26 @@
 /// 设置屏幕方向
 - (void)resetDeviceOrientation:(UIDeviceOrientation)orientation
 {
+    // 方式1：
     UIDevice *currentDevice = [UIDevice currentDevice];
     if([currentDevice respondsToSelector:@selector(setOrientation:)]) {
         // 需要 - (BOOL)shouldAutorotate 返回YES，才能启作用
         [currentDevice setValue:[NSNumber numberWithInteger:orientation] forKey:@"orientation"];
     }
     
+    
     /*
-    if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
-        SEL selector = NSSelectorFromString(@"setOrientation:");
-        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[UIDevice
-        instanceMethodSignatureForSelector:selector]];
-        [invocation setSelector:selector];
-        [invocation setTarget:[UIDevice currentDevice]];
-        int val = orientation;
-        [invocation setArgument:&val atIndex:2];
-        [invocation invoke];
-    }
+        // 方式2：
+        if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
+            SEL selector = NSSelectorFromString(@"setOrientation:");
+            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[UIDevice
+            instanceMethodSignatureForSelector:selector]];
+            [invocation setSelector:selector];
+            [invocation setTarget:[UIDevice currentDevice]];
+            int val = orientation;
+            [invocation setArgument:&val atIndex:2];
+            [invocation invoke];
+        }
     */
 }
 

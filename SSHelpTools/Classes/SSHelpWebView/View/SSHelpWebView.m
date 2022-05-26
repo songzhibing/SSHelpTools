@@ -17,7 +17,7 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
     return websiteDataStore;
 }
 
-@interface SSHelpWebView()<WKUIDelegate,WKNavigationDelegate,SSWebModuleDelegate>
+@interface SSHelpWebView()<WKUIDelegate,WKNavigationDelegate>
 
 @property(nonatomic, strong) UIProgressView *loadingPogressView;
 
@@ -129,7 +129,7 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
                 }];
             }
 #endif
-            WKNavigation *navigation = [self_weak_.webView loadRequest:mutableRequest];
+            [self_weak_.webView loadRequest:mutableRequest];
             SSWebLog(@"SSHelpWebView loadRequest %@ %@ ... ",[NSThread currentThread],mutableRequest);
         });
     };
@@ -321,7 +321,7 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
                 __kindof SSHelpWebBaseModule *jsModuleObj = [[jsModuleClass alloc] init];
                 jsModuleObj.webView = _webView;
                 jsModuleObj.bridge = _bridge;
-                jsModuleObj.moduleDelegate = self;
+                jsModuleObj.moduleDelegate = _moduleDelegate;
                 if ([jsModuleObj respondsToSelector:@selector(moduleRegisterJsHandler)]) {
                     [jsModuleObj moduleRegisterJsHandler];
                 }else{
@@ -333,40 +333,6 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
         }
     }
     return _webView;
-}
-
-#pragma mark - Js交互代理
-
-/// 是否要自定义api
-/// @param identifier 模块标识符
-/// @param api jsName
-- (NSString *)webModule:(NSString *)identifier hookJsName:(NSString *)api
-{
-    if (_moduleDelegate && [_moduleDelegate respondsToSelector:@selector(webModule:hookJsName:)]) {
-        return [_moduleDelegate webModule:identifier hookJsName:api];
-    }
-    return api;
-}
-
-/// 是否要自定义api实现逻辑
-/// @param identifier 模块标识符
-/// @param jsHandler 参数实例
-/// @param moduleHandler 模块回调
-- (void)webModule:(NSString *)identifier hookJsHandler:(SSHelpWebObjcJsHandler *)jsHandler moduleHandler:(SSBridgeJsHandler)moduleHandler
-{
-    if (_moduleDelegate && [_moduleDelegate respondsToSelector:@selector(webModule:hookJsHandler:moduleHandler:)]) {
-        [_moduleDelegate webModule:identifier hookJsHandler:jsHandler moduleHandler:moduleHandler];
-    }
-}
-
-/// 功能模块实现不了，需要调用者实现
-/// @param identifier 模块标识符
-/// @param jsHandler 参数实例
-- (void)webModule:(NSString *)identifier invokeJsHandler:(SSHelpWebObjcJsHandler *)jsHandler
-{
-    if (_moduleDelegate && [_moduleDelegate respondsToSelector:@selector(webModule:invokeJsHandler:)]) {
-        [_moduleDelegate webModule:identifier invokeJsHandler:jsHandler];
-    }
 }
 
 #pragma mark - KVO的监听代理
@@ -390,9 +356,8 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
                                          [self.loadingPogressView setProgress:0.0f animated:NO];
                                      }];
                 }
+                return;
             }
-        } else {
-            [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
         }
     } else if ([keyPath isEqualToString:@"title"]) { //网页title
         if (object == _webView){
@@ -400,12 +365,10 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
             if (_webViewDelegate && [_webViewDelegate respondsToSelector:@selector(webviewDidChangeTitle:)]) {
                 [_webViewDelegate webviewDidChangeTitle:newTitle];
             }
-        } else {
-            [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+            return;
         }
-    } else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
+    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 #pragma mark - WebViewConfiguraion

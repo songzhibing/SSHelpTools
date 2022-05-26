@@ -8,6 +8,7 @@
 #import "SSHelpImagePickerController.h"
 #import "SSHelpPhotoManager.h"
 #import "SSHelpDefines.h"
+#import <PhotosUI/PhotosUI.h>
 
 @interface SSHelpImagePickerController ()<UINavigationControllerDelegate,
 UIImagePickerControllerDelegate>
@@ -50,6 +51,20 @@ UIImagePickerControllerDelegate>
 /// @param completion 回调
 + (void)selectPhoto:(void(^)(UIImage *_Nullable image))completion presentingViewController:(__kindof UIViewController *)controller
 {
+//    PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
+//    
+//    
+//    if (@available(iOS 14, *)) {
+//
+//        PHPickerConfiguration *configuration = [[PHPickerConfiguration alloc] initWithPhotoLibrary:[PHPhotoLibrary sharedPhotoLibrary]];
+//        configuration.selectionLimit = 2;
+//        configuration.filter = nil;
+//        PHPickerViewController *picker = [[PHPickerViewController alloc] initWithConfiguration:configuration];
+//        [controller presentViewController:picker animated:YES completion:nil];
+//    } else {
+//        // Fallback on earlier versions
+//    }
+    
     [SSHelpPhotoManager enableAccessPhotoAlbum:^(BOOL enable) {
         if (enable) {
             SSHelpImagePickerController *pickerController = [[SSHelpImagePickerController alloc]init];

@@ -166,5 +166,6 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 
 //Other
 
+#define _kRandSixValue [NSString stringWithFormat:@"%06d",arc4random() % 100000]
 
 #endif /* SSHelpDefines_h */

@@ -34,7 +34,7 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     tools.source_files = 'SSHelpTools/Classes/SSHelpTools/**/*.{h,m}'
     tools.public_header_files = 'SSHelpTools/Classes/SSHelpTools/**/*.h'
     tools.resource = 'SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.bundle'
-    tools.frameworks = 'UIKit','Foundation','CoreLocation','AVFoundation'
+    tools.frameworks = 'UIKit','Foundation','CoreLocation','AVFoundation','PhotosUI'
     tools.dependency 'Masonry'
     tools.dependency 'SDWebImage'
   end

@@ -109,7 +109,7 @@
     /// 基于backgroundColor或backgroundImage的磨砂效果
     _navbarAppearance.backgroundEffect = nil;
     
-    _navbarAppearance.titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor blackColor],NSFontAttributeName:[UIFont systemFontOfSize:16]};
+    _navbarAppearance.titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:16]};
     
     /// 阴影图片。template图像:[img imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
     _navbarAppearance.shadowImage = [UIImage new];
