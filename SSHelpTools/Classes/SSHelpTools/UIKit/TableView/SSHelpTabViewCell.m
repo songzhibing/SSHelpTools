@@ -7,7 +7,15 @@
 
 #import "SSHelpTabViewCell.h"
 #import <Masonry/Masonry.h>
+
 #import "SSHelpDefines.h"
+#import "SSHelpTableViewModel.h"
+
+@interface SSHelpTabViewCell()
+
+@property(nonatomic, strong) UILabel *debugTitleLab;
+
+@end
 
 @implementation SSHelpTabViewCell
 
@@ -15,26 +23,35 @@
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-    self.titleLab.text = @"";
+    if (_debugTitleLab) {
+        _debugTitleLab.text = @"";
+    }
 }
 
 /// 刷新
 - (void)refresh
 {
-    self.titleLab.text = [NSString stringWithFormat:@"Title index %td-%td",_currentIndexPath.section,_currentIndexPath.item];
-    self.contentView.backgroundColor = [_kRandomColor colorWithAlphaComponent:0.25f];
+    NSString *title = [self.currentModel.data objectForKey:@"title"];
+    if (title.length) {
+        self.debugTitleLab.text = title;
+    } else {
+#ifdef DEBUG
+        self.debugTitleLab.text = [NSString stringWithFormat:@"Title index %td-%td",_currentIndexPath.section,_currentIndexPath.item];
+        self.contentView.backgroundColor = [_kRandomColor colorWithAlphaComponent:0.25f];
+#endif
+    }
 }
 
-- (UILabel *)titleLab
+- (UILabel *)debugTitleLab
 {
-    if (!_titleLab) {
-        _titleLab = [[UILabel alloc] init];
-        [self.contentView addSubview:_titleLab];
-        [_titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
+    if (!_debugTitleLab) {
+        _debugTitleLab = [[UILabel alloc] init];
+        [self.contentView addSubview:_debugTitleLab];
+        [_debugTitleLab mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(UIEdgeInsetsMake(2, 2, 2, 2));
         }];
     }
-    return _titleLab;;
+    return _debugTitleLab;;
 }
 
 @end

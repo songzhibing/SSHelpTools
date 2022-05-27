@@ -34,14 +34,6 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 
 #define _kNotificationCenter   [NSNotificationCenter defaultCenter]
 
-#define _kPostNotice(name,obj,info) [_kNotificationCenter postNotificationName:name \
-                                                                        object:obj \
-                                                                      userInfo:info];
-
-#define _kListenNotice(name, observer, sel) [_kNotificationCenter addObserver:observer \
-                                                                     selector:sel \
-                                                                         name:name \
-                                                                       object:nil];
 //设备
 
 #define _kDeviceIsiPad ([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)

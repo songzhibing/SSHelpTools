@@ -12,8 +12,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIImage (SSHelp)
 
 /// 图片上写文字
-/// @param string 文字
 - (UIImage *)ss_writeString:(NSString *)string;
+
+/// 纯色图片，SizeMake(1,1)
++ (UIImage *)ss_imageWithColor:(UIColor *)color;
+
+/// 纯色图片，自定大小
++ (UIImage *)ss_imageWithColor:(UIColor *)color withFrame:(CGRect)frame;
 
 @end
 

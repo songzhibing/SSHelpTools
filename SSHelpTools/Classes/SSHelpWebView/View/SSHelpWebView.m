@@ -165,9 +165,8 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 /// @param readAccessURL The URL to allow read access to.  @discussion If readAccessURL references a single file, only that file may be loaded by WebKit.If readAccessURL references a directory, files inside that file may be loaded by WebKit.
 - (void)loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL;
 {
-    WKNavigation *navigation = [self.webView loadFileURL:URL
-                                 allowingReadAccessToURL:readAccessURL];
-    SSWebLog(@"SSHelpWebView loadFileURL:allowingReadAccessToURL %@ ... ",navigation);
+    [self.webView loadFileURL:URL allowingReadAccessToURL:readAccessURL];
+    SSWebLog(@"loadFileURL:allowingReadAccessToURL %@ %@... ",URL.absoluteString,readAccessURL.absoluteString);
 }
 
 /// 执行js语句

@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpTabViewCell : UICollectionViewCell
 
-@property(nonatomic, strong) UILabel *titleLab;
-
 @property(nonatomic, strong) NSIndexPath *currentIndexPath;
 
 @property(nonatomic, strong) SSHelpTabViewCellModel *currentModel;

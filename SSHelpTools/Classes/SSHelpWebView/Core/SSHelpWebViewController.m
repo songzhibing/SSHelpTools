@@ -40,21 +40,27 @@
         self.indexRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     }
     
-//    if ([self.indexRequest.URL.scheme isEqualToString:@"file"]) {
-//        [self.webView loadFileURL:self.indexRequest.URL allowingReadAccessToURL:[NSBundle mainBundle].bundleURL];
-//        return;
-//    }
-    [self.webView loadRequest:self.indexRequest];
+    if (self.indexRequest) {
+        [self.webView loadRequest:self.indexRequest];
+    }
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self resetDeviceOrientation:UIDeviceOrientationLandscapeLeft];
-    });
+    if (self.fileURL && self.readAccessURL) {
+        [self.webView loadFileURL:self.fileURL allowingReadAccessToURL:self.readAccessURL];
+    }
+}
+
+/// @abstract Navigates to the requested file URL on the filesystem.
+/// @param URL The file URL to which to navigate.
+/// @param readAccessURL The URL to allow read access to.  @discussion If readAccessURL references a single file, only that file may be loaded by WebKit.If readAccessURL references a directory, files inside that file may be loaded by WebKit.
+- (void)loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL
+{
+    
 }
 
 - (void)updateSubviewsDisplayWithOptions:(SSHelpViewUpdateDisplayOptions)options
 {
     if (options & SSViewSafeAreaInsetsDidChange) {
-        // 调用父类
+        // 执行父类
         [super updateSubviewsDisplayWithOptions:options];
         // 调整位置
         [self.webView mas_remakeConstraints:^(MASConstraintMaker *make) {

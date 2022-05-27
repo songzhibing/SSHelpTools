@@ -34,8 +34,25 @@ typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView *tableView, __kindof UI
 
 @end
 
+@interface SSHelpTableViewItemModel: NSObject
 
-@interface SSHelpTabViewHeaderModel : NSObject
+@property(nonatomic, copy, nullable) NSString *identifier;
+
+@property(nonatomic, assign) CGFloat height;
+
+@property(nonatomic, assign, nullable) Class className;
+
+@property(nonatomic, copy, nullable) SSHelpTabViewItemOnClick onClick;
+
+/// 推荐存储字典数据
+@property(nonatomic, strong, nullable) __kindof NSDictionary *data;
+
+/// 推荐存储模型数据
+@property(nonatomic, strong, nullable) id model;
+
+@end
+
+@interface SSHelpTabViewHeaderModel : SSHelpTableViewItemModel
 
 @property(nonatomic, assign) CGFloat headerHeight;
 
@@ -43,12 +60,10 @@ typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView *tableView, __kindof UI
 
 @property(nonatomic, assign) Class headerClass;
 
-@property(nonatomic, copy) SSHelpTabViewItemOnClick onClick;
-
 @end
 
 
-@interface SSHelpTabViewCellModel : NSObject
+@interface SSHelpTabViewCellModel : SSHelpTableViewItemModel
 
 @property(nonatomic, copy) NSString *cellIdentifier;
 
@@ -56,20 +71,16 @@ typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView *tableView, __kindof UI
 
 @property(nonatomic, assign) CGFloat cellHeght;
 
-@property(nonatomic, copy) SSHelpTabViewItemOnClick onClick;
-
 @end
 
 
-@interface SSHelpTabViewFooterModel : NSObject
+@interface SSHelpTabViewFooterModel : SSHelpTableViewItemModel
 
 @property(nonatomic, assign) CGFloat footerHeight;
 
 @property(nonatomic, copy) NSString *footerIdentifier;
 
 @property(nonatomic, assign) Class footerClass;
-
-@property(nonatomic, copy) SSHelpTabViewItemOnClick onClick;
 
 @end
 

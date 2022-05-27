@@ -9,6 +9,7 @@
 #import "SSHelpNavigationBar.h"
 #import <Masonry/Masonry.h>
 
+#import "NSBundle+SSHelp.h"
 #import "NSObject+SSHelp.h"
 #import "SSHelpToolsConfig.h"
 #import "SSHelpDefines.h"
@@ -155,7 +156,7 @@
     if (_barStyle & SSNavigationBarWithLeftBack)
     {
         _leftButton = [SSHelpButton buttonWithType:UIButtonTypeCustom];
-        _leftButton.normalImage = [SSHelpToolsConfig sharedConfig].navigationBarLeftBackImg;
+        _leftButton.normalImage =[NSBundle ss_navigationBackImage];
         _leftButton.contentImageRect = CGRectMake(8, (44-18)/2.0f, 10.5, 18.0f);
         _leftButton.style = SSButtonStyleBack;
         [_contentView addSubview:_leftButton];

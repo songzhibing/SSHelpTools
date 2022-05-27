@@ -3,7 +3,8 @@
 //  SSHelpTools
 //
 //  Created by 宋直兵 on 2022/1/4.
-//  统一配置
+//  1.统一配置
+//  2.外观风格配置，支持换肤，iOS13默认跟随系统
 //
 
 #import <Foundation/Foundation.h>
@@ -12,7 +13,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+UIKIT_EXTERN NSNotificationName const SSNavBarAppearanceDidChangeNotification;
+UIKIT_EXTERN NSNotificationName const SSTabBarAppearanceDidChangeNotification;
+
 #define SSHELPTOOLSCONFIG [SSHelpToolsConfig sharedConfig]
+
+typedef SSHelpNavigationBarAppearance *_Nonnull(^SSUpdateNavBarAppearance)(void);
+typedef SSHelpTabBarApparance *_Nonnull(^SSUpdateTabBarAppearance)(void);
 
 @interface SSHelpToolsConfig : NSObject
 
@@ -24,46 +31,40 @@ NS_ASSUME_NONNULL_BEGIN
 /// OC对象生命周期日志输出,方便调试内存泄露等问题,default is NO
 @property(nonatomic, assign) BOOL enableLifeCycleLog;
 
-/// Default is [UIApplication sharedApplication].delegate.window
+/// return [UIApplication sharedApplication].delegate.window
 @property(nonatomic, strong, readwrite, nullable) UIWindow *window;
 
-/// "home键"高度
 @property(nonatomic, assign, readonly) CGFloat homeIndicatorHeight;
 
-/// 默认导航栏左侧返回按钮背景图片，白色
-@property(nonatomic, strong, readwrite) UIImage *navigationBarLeftBackImg;
+@property(nonatomic, strong, readonly) UIColor *backgroundColor;
 
-/// 视图背景色
-@property(nonatomic, strong, readwrite) UIColor *backgroundColor;
+@property(nonatomic, strong, readonly) UIColor *secondaryBackgroundColor;
 
-/// 二级视图背景色
-@property(nonatomic, strong, readwrite) UIColor *secondaryBackgroundColor;
+@property(nonatomic, strong, readonly) UIColor *secondaryFillColor;
 
-/// TabBarItem图标色值
-@property(nonatomic, strong, readwrite) UIColor *secondaryFillColor;
+@property(nonatomic, strong, readonly) UIColor *tertiaryFillColor;
 
-/// TabBar背景色
-@property(nonatomic, strong, readwrite) UIColor *tertiaryFillColor;
+@property(nonatomic, strong, readonly) UIColor *blueColor;
 
-@property(nonatomic, strong, readwrite) UIColor *blueColor;
+@property(nonatomic, strong, readonly) UIColor *labelColor;
 
-@property(nonatomic, strong, readwrite) UIColor *labelColor;
+@property(nonatomic, strong, readonly) UIColor *secondaryLabelColor;
 
-@property(nonatomic, strong, readwrite) UIColor *secondaryLabelColor;
+@property(nonatomic, strong, readonly) UIColor *linkColor;
 
-@property(nonatomic, strong, readwrite) UIColor *linkColor;
+@property(nonatomic, strong, readonly) UIColor *groupedBackgroundColor;
 
-@property(nonatomic, strong, readwrite) UIColor *groupedBackgroundColor;
+@property(nonatomic, strong, readonly) UIColor *secondaryGroupedBackgroundColor;
 
-@property(nonatomic, strong, readwrite) UIColor *secondaryGroupedBackgroundColor;
+@property(nonatomic, strong, readonly, nullable) SSHelpNavigationBarAppearance *customNavbarAppearance;
 
-@property(nonatomic, strong) SSHelpNavigationBarAppearance *navbarAppearance;
+@property(nonatomic, strong, readonly, nullable) SSHelpTabBarApparance *customTabBarAppearance;
 
-@property(nonatomic, strong) SSHelpTabBarApparance *tabBarAppearance;
+/// 自定义导航栏外观、换肤
+- (void)updateNavigationBarAppearance:(SSUpdateNavBarAppearance)block;
 
-- (void)resetNavigationBarAppearance:(SSHelpNavigationBarAppearance *)appearance;
-
-- (void)resetTabBarAppearance:(SSHelpTabBarApparance *)appearance;
+/// 自定义底部选项外观、换肤
+- (void)updateTabBarAppearance:(SSUpdateTabBarAppearance)block;
 
 @end
 

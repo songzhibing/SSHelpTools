@@ -19,6 +19,9 @@
 
 @end
 
+@implementation SSHelpTableViewItemModel
+
+@end
 
 @implementation SSHelpTabViewHeaderModel
 

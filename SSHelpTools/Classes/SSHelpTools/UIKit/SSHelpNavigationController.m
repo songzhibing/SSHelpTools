@@ -16,48 +16,69 @@
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     SSLifeCycleLog(@"%@ dealloc %td...",self,_kRetainCount(self));
 }
 
+- (instancetype)initWithRootViewController:(UIViewController *)rootViewController
+{
+    self = [super initWithRootViewController:rootViewController];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateNavigationBarAppearance)
+                                                     name:SSNavBarAppearanceDidChangeNotification
+                                                   object:nil];
+    }
+    return self;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     self.view.backgroundColor = SSHELPTOOLSCONFIG.backgroundColor;
-    
-    /// 适配>>导航栏
-    if (@available(iOS 13.0, *)) {
-        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
-        appearance.titleTextAttributes = SSHELPTOOLSCONFIG.navbarAppearance.titleTextAttributes;
-        appearance.backgroundColor = SSHELPTOOLSCONFIG.navbarAppearance.backgroundColor;
-        appearance.backgroundImage = SSHELPTOOLSCONFIG.navbarAppearance.backgroundImage;
-        appearance.backgroundEffect = SSHELPTOOLSCONFIG.navbarAppearance.backgroundEffect;
-        appearance.shadowColor = SSHELPTOOLSCONFIG.navbarAppearance.shadowColor;
-        appearance.shadowImage = SSHELPTOOLSCONFIG.navbarAppearance.shadowImage;
-
-        self.navigationBar.standardAppearance = appearance;
-        self.navigationBar.scrollEdgeAppearance = appearance;
-
-    } else {
-        [self.navigationBar setTitleTextAttributes:SSHELPTOOLSCONFIG.navbarAppearance.titleTextAttributes];
-        [self.navigationBar setBarTintColor:SSHELPTOOLSCONFIG.navbarAppearance.backgroundColor];
-        [self.navigationBar setBackgroundImage:SSHELPTOOLSCONFIG.navbarAppearance.backgroundImage
-                                 forBarMetrics:UIBarMetricsDefault];
-        [self.navigationBar setTranslucent:NO];
-        [self.navigationBar setShadowImage:SSHELPTOOLSCONFIG.navbarAppearance.shadowImage];
-    }
+    [self updateNavigationBarAppearance];
 
     /// 适配>>边缘返回手势
-    /// Tip:https://developer.aliyun.com/article/853626
     if (!self.interactivePopGestureRecognizerDisable && [self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         __weak typeof(self) __weak_self = self;
         self.interactivePopGestureRecognizer.delegate = (id)__weak_self;
     }
 }
 
+- (void)updateNavigationBarAppearance
+{
+    SSHelpNavigationBarAppearance *newAppearance = SSHELPTOOLSCONFIG.customNavbarAppearance;
+    if (!newAppearance) return;
+    
+    /// 适配>>导航栏
+    if (@available(iOS 13.0, *)) {
+        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+        appearance.titleTextAttributes = newAppearance.titleTextAttributes;
+        appearance.backgroundColor = newAppearance.backgroundColor;
+        appearance.backgroundImage = newAppearance.backgroundImage;
+        appearance.backgroundEffect = newAppearance.backgroundEffect;
+        appearance.shadowColor = newAppearance.shadowColor;
+        appearance.shadowImage = newAppearance.shadowImage;
+        self.navigationBar.standardAppearance = appearance;
+        self.navigationBar.scrollEdgeAppearance = appearance;
+    } else {
+        [self.navigationBar setTitleTextAttributes:newAppearance.titleTextAttributes];
+        [self.navigationBar setBarTintColor:newAppearance.backgroundColor];
+        [self.navigationBar setBackgroundImage:newAppearance.backgroundImage
+                                 forBarMetrics:UIBarMetricsDefault];
+        [self.navigationBar setShadowImage:newAppearance.shadowImage];
+        self.navigationBar.tintColor = newAppearance.titleTextAttributes[NSForegroundColorAttributeName];
+    }
+    [self.navigationBar setTranslucent:newAppearance.translucent];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
 }
 
 - (UIViewController *)childViewControllerForStatusBarStyle
@@ -108,7 +129,6 @@
     }
     return YES;
 }
-
 
 /*
 #pragma mark - Navigation
