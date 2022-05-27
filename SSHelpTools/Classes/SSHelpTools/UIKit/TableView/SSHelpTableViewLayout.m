@@ -1,13 +1,13 @@
 //
-//  SSHelpFlowLayout.m
+//  SSHelpTableViewLayout.m
 //  SSHelpTools
 //
 //  Created by 宋直兵 on 2021/10/29.
 //
 
-#import "SSHelpFlowLayout.h"
+#import "SSHelpTableViewLayout.h"
 
-@interface SSHelpFlowLayout()
+@interface SSHelpTableViewLayout()
 
 @property(nonatomic, strong) NSMutableArray <NSMutableArray <UICollectionViewLayoutAttributes *> *> *itemLayoutAttributes;
 
@@ -23,7 +23,7 @@
 
 @end
 
-@implementation SSHelpFlowLayout
+@implementation SSHelpTableViewLayout
 
 - (void)prepareLayout
 {

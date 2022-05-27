@@ -6,7 +6,7 @@
 //
 
 #import "SSHelpTableView.h"
-#import "SSHelpFlowLayout.h"
+#import "SSHelpTableViewLayout.h"
 #import "SSHelpTabViewCell.h"
 #import "SSHelpTableViewModel.h"
 #import "SSHelpTableViewHeaderView.h"
@@ -14,16 +14,15 @@
 
 #import <Masonry/Masonry.h>
 
-@interface SSHelpTableView()<SSHelpFlowLayoutDataSource, UICollectionViewDelegate,UICollectionViewDataSource>
+@interface SSHelpTableView()<SSHelpTableViewLayoutDataSource, UICollectionViewDelegate,UICollectionViewDataSource>
 
 @property(nonatomic, strong) UICollectionView *collectionView;
 
-@property(nonatomic, strong) SSHelpFlowLayout *flowLayout;
+@property(nonatomic, strong) SSHelpTableViewLayout *flowLayout;
 
 @property(nonatomic, strong) NSMutableArray <NSString *>*cellsOfIdentifierCache;
 
 @end
-
 
 
 @implementation SSHelpTableView
@@ -64,7 +63,7 @@
     
     _cellsOfIdentifierCache = [[NSMutableArray alloc] initWithCapacity:1];
 
-    _flowLayout = [[SSHelpFlowLayout alloc] init];
+    _flowLayout = [[SSHelpTableViewLayout alloc] init];
     _flowLayout.dataSource = self;
     
     _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:_flowLayout];
@@ -81,15 +80,19 @@
 
 /// Return per section's column number(must be greater than 0).
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-                     layout:(SSHelpFlowLayout*)layout
+                     layout:(SSHelpTableViewLayout*)layout
     numberOfColumnInSection:(NSInteger)section
 {
+    SSHelpTabViewSectionModel *sectionModel = _data[section];
+    if (sectionModel.columnCount!= NSNotFound) {
+        return sectionModel.columnCount;
+    }
     return 1;
 }
 
 /// Return per item's height
 - (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(SSHelpFlowLayout*)layout
+                   layout:(SSHelpTableViewLayout*)layout
                 itemWidth:(CGFloat)width
  heightForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -99,7 +102,7 @@
 
 /// Return per section header view height.
 - (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(SSHelpFlowLayout*)layout referenceHeightForHeaderInSection:(NSInteger)section
+                   layout:(SSHelpTableViewLayout*)layout referenceHeightForHeaderInSection:(NSInteger)section
 {
     SSHelpTabViewSectionModel *sectionModel = _data[section];
     if (sectionModel.headerModel) {
@@ -110,7 +113,7 @@
 
 /// Return per section footer view height.
 - (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(SSHelpFlowLayout*)layout referenceHeightForFooterInSection:(NSInteger)section
+                   layout:(SSHelpTableViewLayout*)layout referenceHeightForFooterInSection:(NSInteger)section
 {
     SSHelpTabViewSectionModel *sectionModel = _data[section];
     if (sectionModel.footerModel) {

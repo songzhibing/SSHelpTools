@@ -17,6 +17,15 @@
 
 @implementation SSHelpTabViewSectionModel
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _columnCount = 1;
+    }
+    return self;
+}
+
 @end
 
 @implementation SSHelpTableViewItemModel

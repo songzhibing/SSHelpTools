@@ -1,5 +1,5 @@
 //
-//  SSHelpFlowLayout.h
+//  SSHelpTableViewLayout.h
 //  SSHelpTools
 //
 //  Created by 宋直兵 on 2021/10/29.
@@ -10,49 +10,49 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class SSHelpFlowLayout;
+@class SSHelpTableViewLayout;
 
-@protocol SSHelpFlowLayoutDataSource<NSObject>
+@protocol SSHelpTableViewLayoutDataSource<NSObject>
 
 @required
 
 /// Return per section's column number(must be greater than 0).
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-                     layout:(SSHelpFlowLayout*)layout
+                     layout:(SSHelpTableViewLayout*)layout
     numberOfColumnInSection:(NSInteger)section;
 
 /// Return per item's height
 - (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(SSHelpFlowLayout*)layout itemWidth:(CGFloat)width
+                   layout:(SSHelpTableViewLayout*)layout itemWidth:(CGFloat)width
  heightForItemAtIndexPath:(NSIndexPath *)indexPath;
 
 @optional
 
 /// Column spacing between columns
 - (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(SSHelpFlowLayout*)layout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
+                   layout:(SSHelpTableViewLayout*)layout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
 
 /// The spacing between rows and rows
 - (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(SSHelpFlowLayout*)layout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
+                   layout:(SSHelpTableViewLayout*)layout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
 ///
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
-                        layout:(SSHelpFlowLayout*)layout insetForSectionAtIndex:(NSInteger)section;
+                        layout:(SSHelpTableViewLayout*)layout insetForSectionAtIndex:(NSInteger)section;
 
 /// Return per section header view height.
 - (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(SSHelpFlowLayout*)layout referenceHeightForHeaderInSection:(NSInteger)section;
+                   layout:(SSHelpTableViewLayout*)layout referenceHeightForHeaderInSection:(NSInteger)section;
 
 /// Return per section footer view height.
 - (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(SSHelpFlowLayout*)layout referenceHeightForFooterInSection:(NSInteger)section;
+                   layout:(SSHelpTableViewLayout*)layout referenceHeightForFooterInSection:(NSInteger)section;
 
 @end
 
 
-@interface SSHelpFlowLayout : UICollectionViewLayout
+@interface SSHelpTableViewLayout : UICollectionViewLayout
 
-@property(nonatomic, weak) id<SSHelpFlowLayoutDataSource> dataSource;
+@property(nonatomic, weak) id<SSHelpTableViewLayoutDataSource> dataSource;
 
 /// default 0.0
 @property(nonatomic, assign) CGFloat minimumLineSpacing;

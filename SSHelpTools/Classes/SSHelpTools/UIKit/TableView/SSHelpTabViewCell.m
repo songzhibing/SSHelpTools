@@ -36,7 +36,7 @@
         self.debugTitleLab.text = title;
     } else {
 #ifdef DEBUG
-        self.debugTitleLab.text = [NSString stringWithFormat:@"Title index %td-%td",_currentIndexPath.section,_currentIndexPath.item];
+        self.debugTitleLab.text = [NSString stringWithFormat:@"( %td-%td)",_currentIndexPath.section,_currentIndexPath.item];
         self.contentView.backgroundColor = [_kRandomColor colorWithAlphaComponent:0.25f];
 #endif
     }
@@ -46,6 +46,9 @@
 {
     if (!_debugTitleLab) {
         _debugTitleLab = [[UILabel alloc] init];
+        _debugTitleLab.textAlignment = NSTextAlignmentCenter;
+        _debugTitleLab.textColor = SSHELPTOOLSCONFIG.labelColor;
+        _debugTitleLab.font = [UIFont systemFontOfSize:12];
         [self.contentView addSubview:_debugTitleLab];
         [_debugTitleLab mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(UIEdgeInsetsMake(2, 2, 2, 2));

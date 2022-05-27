@@ -35,7 +35,7 @@
 #import "SSHelpImagePickerController.h"
 #import "SSHelpPhotoManager.h"
 #import "SSHelpButton.h"
-#import "SSHelpFlowLayout.h"
+#import "SSHelpTableViewLayout.h"
 #import "SSHelpNavigationBar.h"
 #import "SSHelpNavigationController.h"
 #import "SSHelpSlidePageView.h"

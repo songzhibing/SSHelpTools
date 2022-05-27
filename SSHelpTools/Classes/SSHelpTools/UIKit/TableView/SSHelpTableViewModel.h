@@ -28,6 +28,9 @@ typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView *tableView, __kindof UI
 
 @property(nonatomic, strong) SSHelpTabViewHeaderModel * _Nullable headerModel;
 
+/// 默认1列
+@property(nonatomic, assign) NSInteger columnCount;
+
 @property(nonatomic, strong) NSMutableArray <SSHelpTabViewCellModel *> *cellModels;
 
 @property(nonatomic, strong) SSHelpTabViewFooterModel * _Nullable footerModel;
