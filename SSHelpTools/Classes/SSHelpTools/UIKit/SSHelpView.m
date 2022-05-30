@@ -14,15 +14,6 @@
     SSLifeCycleLog(@"%@ dealloc ... ", self);
 }
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        self.backgroundColor = SSHELPTOOLSCONFIG.backgroundColor;
-    }
-    return self;
-}
-
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];

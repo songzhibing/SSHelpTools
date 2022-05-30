@@ -32,15 +32,6 @@
     SSLifeCycleLog(@"%@ dealloc .... ",self);
 }
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        [self p_setupCollectionView];
-    }
-    return self;
-}
-
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];

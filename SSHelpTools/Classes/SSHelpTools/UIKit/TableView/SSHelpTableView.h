@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpTableView : SSHelpView
 
-- (instancetype)initWithFrame:(CGRect)frame;
-
 @property(nonatomic, strong) NSMutableArray <SSHelpTabViewSectionModel *> *data;
 
 - (void)reload;

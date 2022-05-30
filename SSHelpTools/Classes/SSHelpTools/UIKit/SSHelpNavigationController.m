@@ -24,17 +24,21 @@
 {
     self = [super initWithRootViewController:rootViewController];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(updateNavigationBarAppearance)
-                                                     name:SSNavBarAppearanceDidChangeNotification
-                                                   object:nil];
     }
     return self;
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     self.view.backgroundColor = SSHELPTOOLSCONFIG.backgroundColor;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateNavigationBarAppearance)
+                                                 name:SSNavBarAppearanceDidChangeNotification
+                                               object:nil];
+    
     [self updateNavigationBarAppearance];
 
     /// 适配>>边缘返回手势
