@@ -135,7 +135,7 @@ typedef NS_OPTIONS(NSUInteger, SSHelpWebViewCookiePolicy) {
 - (void)presentViewController:(UIViewController *)viewControllerToPresent animated: (BOOL)flag completion:(void (^ __nullable)(void))completion;
 
 /// 清除缓存数据
-+ (void)clearWebsiteDataStore;
++ (void)clearWebsiteDataStore:(void (^)(void))completionHandler;
 
 /// WKWebView相关配置，可自定义，默认都提供一个单列实例
 - (WKWebsiteDataStore *)websiteDataStore;

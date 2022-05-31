@@ -78,20 +78,6 @@ UIScrollViewDelegate>
 
 @implementation SSHelpSlidePageView
 
-- (void)dealloc
-{
-}
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        [self p_initial];
-        [self p_setupSubView];
-    }
-    return self;
-}
-
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];

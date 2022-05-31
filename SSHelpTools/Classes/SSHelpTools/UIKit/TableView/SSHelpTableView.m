@@ -145,8 +145,8 @@
             }
             SSHelpTableViewHeaderView *headerView = nil;
             headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:_identifier forIndexPath:indexPath];
-            headerView.currentModel = sectionModel.headerModel;
-            headerView.currentIndexPath = indexPath;
+            headerView.modelData = sectionModel.headerModel;
+            headerView.indexPath = indexPath;
             if (headerView && [headerView respondsToSelector:@selector(refresh)]) {
                 [headerView refresh];
             }
@@ -164,8 +164,8 @@
             
             SSHelpTableViewFooterView *footerView = nil;
             footerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:_identifier forIndexPath:indexPath];
-            footerView.currentModel = sectionModel.footerModel;
-            footerView.currentIndexPath = indexPath;
+            footerView.modelData = sectionModel.footerModel;
+            footerView.indexPath = indexPath;
             if (footerView && [footerView respondsToSelector:@selector(refresh)]) {
                 [footerView refresh];
             }

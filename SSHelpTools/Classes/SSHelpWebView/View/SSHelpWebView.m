@@ -45,15 +45,6 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 
 #pragma mark - System Method
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _cookiePolicy = SSHelpWebViewCookieEnableSystem;
-    }
-    return self;
-}
-
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -372,6 +363,20 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 
 #pragma mark - WebViewConfiguraion
 
++ (void)clearWebsiteDataStore:(void (^)(void))completionHandler
+{
+    WKWebsiteDataStore *dataStore = sharedWebsiteDataStore();
+    if (dataStore.isPersistent) {
+        NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
+        NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
+        [dataStore removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:completionHandler];
+    } else {
+        if (completionHandler) {
+            completionHandler();
+        }
+    }
+}
+
 /**
  与WebView关联的WKWebsiteDataStore对象
  网站的各种类型的数据，数据类型包括:cookies, disk and memory caches, and persistent data such as WebSQL, IndexedDB databases, and local storage。
@@ -381,18 +386,6 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 - (WKWebsiteDataStore *)websiteDataStore
 {
     return sharedWebsiteDataStore();
-}
-
-+ (void)clearWebsiteDataStore
-{
-    WKWebsiteDataStore *dataStore = sharedWebsiteDataStore();
-    if (dataStore.isPersistent) {
-        NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
-        NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
-        [dataStore removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{
-            
-        }];
-    }
 }
 
 /**

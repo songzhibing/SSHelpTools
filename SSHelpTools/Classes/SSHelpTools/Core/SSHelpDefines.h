@@ -123,7 +123,7 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 
 //__weak && __strong
 
-#ifndef weakify
+#ifndef weakify // 该宏YYKit、ReactiveObjC、...  等都含有;
     #define weakify(...) \
         ss_keywordify \
         metamacro_foreach_cxt(ss_weakify_,, __weak, __VA_ARGS__)
@@ -137,6 +137,19 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
         metamacro_foreach(ss_strongify_,, __VA_ARGS__) \
         _Pragma("clang diagnostic pop")
 #endif
+
+// 为了消除 Ambiguous expansion of macro 'weakify' 警告，增加变体
+#define Tweakify(...) \
+    ss_keywordify \
+    metamacro_foreach_cxt(ss_weakify_,, __weak, __VA_ARGS__)
+
+#define Tstrongify(...) \
+    ss_keywordify \
+    _Pragma("clang diagnostic push") \
+    _Pragma("clang diagnostic ignored \"-Wshadow\"") \
+    metamacro_foreach(ss_strongify_,, __VA_ARGS__) \
+    _Pragma("clang diagnostic pop")
+
 
 #if DEBUG
     #define ss_keywordify autoreleasepool {}
