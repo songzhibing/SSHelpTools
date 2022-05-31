@@ -12,9 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpTableViewHeaderView : UICollectionReusableView
 
-@property(nonatomic, strong) NSIndexPath *currentIndexPath;
+@property(nonatomic, strong) NSIndexPath *indexPath;
 
-@property(nonatomic, strong) SSHelpTabViewHeaderModel *currentModel;
+@property(nonatomic, strong) SSHelpTabViewHeaderModel*modelData;
+
 
 /// 刷新
 - (void)refresh;

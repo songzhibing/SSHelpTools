@@ -29,7 +29,8 @@
 
 - (void)dealloc
 {
-    SSLifeCycleLog(@"%@ dealloc .... ",self);
+    _collectionView = nil;
+    _data = nil;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -51,7 +52,9 @@
 - (void)p_setupCollectionView
 {
     self.userInteractionEnabled = YES;
-    
+    if (_collectionView) {
+        return;
+    }
     _cellsOfIdentifierCache = [[NSMutableArray alloc] initWithCapacity:1];
 
     _flowLayout = [[SSHelpTableViewLayout alloc] init];
@@ -183,8 +186,8 @@
     }
     
     SSHelpTabViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:model.cellIdentifier forIndexPath:indexPath];
-    cell.currentModel = model;
-    cell.currentIndexPath = indexPath;
+    cell.modelData = model;
+    cell.indexPath = indexPath;
     [cell refresh];
     return cell;
 }

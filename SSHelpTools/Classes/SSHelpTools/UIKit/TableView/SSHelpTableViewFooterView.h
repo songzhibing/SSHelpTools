@@ -12,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpTableViewFooterView : UICollectionReusableView
 
-@property(nonatomic, strong) NSIndexPath *currentIndexPath;
+@property(nonatomic, strong) NSIndexPath *indexPath;
 
-@property(nonatomic, strong) SSHelpTabViewFooterModel*currentModel;
+@property(nonatomic, strong) SSHelpTabViewFooterModel*modelData;
 
 /// 刷新
 - (void)refresh;

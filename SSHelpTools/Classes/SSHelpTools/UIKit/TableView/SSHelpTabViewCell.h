@@ -12,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpTabViewCell : UICollectionViewCell
 
-@property(nonatomic, strong) NSIndexPath *currentIndexPath;
+@property(nonatomic, strong) NSIndexPath *indexPath;
 
-@property(nonatomic, strong) SSHelpTabViewCellModel *currentModel;
+@property(nonatomic, strong) SSHelpTabViewCellModel *modelData;
 
 /// 刷新
 - (void)refresh;

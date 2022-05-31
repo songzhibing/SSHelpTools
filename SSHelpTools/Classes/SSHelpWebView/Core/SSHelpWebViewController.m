@@ -19,11 +19,6 @@
 
 @implementation SSHelpWebViewController
 
-- (void)dealloc
-{
-    SSWebLog(@"%@ dealloc ... ",self);
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -39,11 +34,11 @@
         NSString *url = [self.indexString stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
         self.indexRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     }
-    
+
     if (self.indexRequest) {
         [self.webView loadRequest:self.indexRequest];
     }
-    
+
     if (self.fileURL && self.readAccessURL) {
         [self.webView loadFileURL:self.fileURL allowingReadAccessToURL:self.readAccessURL];
     }

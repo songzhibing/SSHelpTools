@@ -70,7 +70,7 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 
 #define _kColorFromHexNumber(hexNumber)   [UIColor ss_colorWithHex:hexNumber alpha:1]
 
-#define _kRandomColor  [UIColor ss_randomColor]
+#define _kRandomColor  [[UIColor ss_randomColor] colorWithAlphaComponent:0.75f]
 
 #define _kClearColor   [UIColor clearColor]
 

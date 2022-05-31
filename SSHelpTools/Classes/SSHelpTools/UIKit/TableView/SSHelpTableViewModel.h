@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView *tableView, __kindof UICollectionReusableView *reusableView, NSIndexPath *indexPath);
 
+typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView *reusableView);
+
 @interface SSHelpTableViewModel : NSObject
 
 @property(nonatomic, strong) NSMutableArray <SSHelpTabViewSectionModel *> *sectionModels;
@@ -43,7 +45,11 @@ typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView *tableView, __kindof UI
 
 @property(nonatomic, assign) CGFloat height;
 
+@property(nonatomic, strong) UIColor *backgroundColor;
+
 @property(nonatomic, assign, nullable) Class className;
+
+@property(nonatomic, copy, nullable) SSHelpTabViewCellRefresh refreshBlock;
 
 @property(nonatomic, copy, nullable) SSHelpTabViewItemOnClick onClick;
 

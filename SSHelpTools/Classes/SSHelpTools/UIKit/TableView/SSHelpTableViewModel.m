@@ -28,9 +28,20 @@
 
 @end
 
+
 @implementation SSHelpTableViewItemModel
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _height = 44;
+    }
+    return self;
+}
+
 @end
+
 
 @implementation SSHelpTabViewHeaderModel
 
