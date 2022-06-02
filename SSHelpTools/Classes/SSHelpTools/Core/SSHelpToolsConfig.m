@@ -34,6 +34,8 @@ NSNotificationName const SSTabBarAppearanceDidChangeNotification = @"ss.tabbar.a
         
         _enableLifeCycleLog = NO;
         
+        _supportMinSystemiOS = 10.0f;
+                
         if (@available(iOS 13.0, *)) {
             _backgroundColor = [UIColor systemBackgroundColor];
         } else {
