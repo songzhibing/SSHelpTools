@@ -7,6 +7,7 @@
 
 #import "SSHelpWebView.h"
 #import "SSHelpWebTestJsBridgeModule.h"
+#import "SSHelpWebView+GestureRecognizer.h"
 
 WKWebsiteDataStore *sharedWebsiteDataStore(void){
     static WKWebsiteDataStore *websiteDataStore;
@@ -27,9 +28,6 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 
 @property(nonatomic, strong) WKUserContentController *userContent;
  
-/// Cookies 管理
-@property(nonatomic, strong) NSArray <NSHTTPCookie *> *cookies;
-
 /// Native & h5 交互
 @property(nonatomic, strong) WKWebViewJavascriptBridge *bridge;
 
@@ -49,6 +47,12 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _hiddenProgressView = NO;
+        _injectPageshowJs = YES;
+        _injectWebkitTouchCalloutJs = YES;
+        _injectwebkitUserSelectJs = YES;
+        _allowsBackForwardNavigationGestures = YES;
+        _supportLongPressGestureRecognizer = NO;
         _cookiePolicy = SSHelpWebViewCookieEnableSystem;
     }
     return self;
@@ -74,7 +78,6 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
         [_webView removeObserver:self forKeyPath:@"estimatedProgress"];
         [_webView removeObserver:self forKeyPath:@"title"];
     }
-    SSWebLog(@"%@ dealloc ... ",self);
 }
 
 #pragma mark - Public Method
@@ -84,8 +87,7 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 - (void)loadRequest:(NSMutableURLRequest *)request;
 {    
     NSMutableURLRequest *mutableRequest = request.mutableCopy;
-    
-    _cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:mutableRequest.URL];
+    NSArray <NSHTTPCookie *> *_cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:mutableRequest.URL];
 
     if (self.cookiePolicy & SSHelpWebViewCookieEnablePHP) {
         // Tip1: 在request header中设置Cookie,解决首个请求Cookie丢失问题,页面PHP等动态语言能够获取到（js获取不到）
@@ -151,6 +153,11 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
     __startLoadingRequest();
 }
 
+- (void)showToast:(NSString *)message
+{
+    SSWebLog(@"日志：%@",message);
+}
+
 /// @abstract Navigates to the requested file URL on the filesystem.
 /// @param URL The file URL to which to navigate.
 /// @param readAccessURL The URL to allow read access to.  @discussion If readAccessURL references a single file, only that file may be loaded by WebKit.If readAccessURL references a directory, files inside that file may be loaded by WebKit.
@@ -196,6 +203,7 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
     }
 }
 
+/// 加载视图控制器
 - (void)presentViewController:(UIViewController *)viewControllerToPresent animated: (BOOL)flag completion:(void (^ __nullable)(void))completion
 {
     if (self.ss_viewController) {
@@ -207,24 +215,26 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 
 - (WKWebView *)webView
 {
-    if (!_webView){
-        //禁止长按
-        WKUserScript *touchClloutScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitTouchCallout='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
-        
-        //禁止选择
-        WKUserScript *selectScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitUserSelect='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
-        
-        //后退刷新
-        WKUserScript *reloadScript = [[WKUserScript alloc] initWithSource:@"window.addEventListener('pageshow', function(event){if(event.persisted || window.performance && window.performance.navigation.type == 2){location.reload();}});" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
-
+    if (!_webView) {
         /**
-         WKUserContentController初始化
-         :提供了一种向WebView发送JavaScript消息或者注入JavaScript脚本的方法
+         配置管理 JavaScript
          */
         _userContent = [[WKUserContentController alloc] init];
-        [_userContent addUserScript:touchClloutScript];
-        [_userContent addUserScript:selectScript];
-        [_userContent addUserScript:reloadScript];
+        
+        if (_injectWebkitTouchCalloutJs) {  //禁止长按显示系统菜单
+            WKUserScript *touchClloutScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitTouchCallout='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
+            [_userContent addUserScript:touchClloutScript];
+        }
+        
+        if (_injectwebkitUserSelectJs) { //禁止用户进行复制、选择
+            WKUserScript *selectScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitUserSelect='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
+            [_userContent addUserScript:selectScript];
+        }
+        
+        if (_injectPageshowJs) { //页面后退刷新
+            WKUserScript *reloadScript = [[WKUserScript alloc] initWithSource:@"window.addEventListener('pageshow', function(event){if(event.persisted || window.performance && window.performance.navigation.type == 2){location.reload();}});" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
+            [_userContent addUserScript:reloadScript];
+        }
         
         for (WKUserScript *scriptItem in _customUserScripts) {
             [_userContent addUserScript:scriptItem]; ///自定义的js
@@ -271,7 +281,7 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
         /**
          初始化进度条
          */
-        if (_hiddenProgressView==NO) {
+        if (!_hiddenProgressView) {
             _loadingPogressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
             _loadingPogressView.frame = CGRectMake(0, 0, self.ss_width, 3);
             _loadingPogressView.progressTintColor = SSHELPTOOLSCONFIG.blueColor;
@@ -283,6 +293,8 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
             }];
         }
         
+        
+        // KVO
         [_webView addObserver:self
                    forKeyPath:@"estimatedProgress"
                       options:NSKeyValueObservingOptionNew
@@ -293,6 +305,10 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
                       options:NSKeyValueObservingOptionNew
                       context:NULL];
         
+        // 手势
+        if (_supportLongPressGestureRecognizer) {
+            [self addLongPressGestureRecognizer:_webView];
+        }
         
         /**
          初始化 WKWebViewJavascriptBridge

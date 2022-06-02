@@ -433,9 +433,10 @@
             responseObject = changedResponseObject;
         }
     }
+    
     if (processError) {
         [self request:request didRecivedError:processError];
-    }else{
+    } else {
         void (^completion)(void) = ^(void){
             if (request.successBlock) {
                 request.successBlock(responseObject);
@@ -447,7 +448,7 @@
         };
         if (_callbackQueue) {
             dispatch_async(_callbackQueue, completion);
-        }else{
+        } else {
             completion();
         }
     }
@@ -464,7 +465,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self toSendRequest:request];
         });
-    }else{
+    } else {
         void (^completion)(void) = ^(void){
             if (request.failureBlock) {
                 request.failureBlock(error);

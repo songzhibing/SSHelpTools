@@ -11,7 +11,7 @@
 #import "SSHelpWebPhotoModule.h"
 #import "SSHelpWebTestJsBridgeModule.h"
 
-@interface SSHelpWebViewController ()<SSWebViewDelegate>
+@interface SSHelpWebViewController ()<SSHelpWebViewDelegate>
 
 @property(nonatomic, strong) SSHelpWebView *webView;
 
