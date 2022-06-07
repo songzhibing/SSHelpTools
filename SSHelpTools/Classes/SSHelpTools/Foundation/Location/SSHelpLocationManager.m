@@ -7,6 +7,7 @@
 #import "SSHelpLocationManager.h"
 #import "SSHelpLocationRequest.h"
 #import "SSHelpHeadingRequest.h"
+#import "SSHelpDefines.h"
 
 @interface SSHelpLocationManager () <CLLocationManagerDelegate, SSHelpLocationRequestDelegate>
 
@@ -374,7 +375,7 @@ static id _sharedInstance;
     for (SSHelpLocationRequest *locationRequest in self.locationRequests) {
         if (locationRequest.requestID == requestID) {
             [locationRequest cancel];
-            SSLOCLog(@"Location Request canceled with ID: %ld", (long)locationRequest.requestID);
+            SSLog(@"Location Request canceled with ID: %ld", (long)locationRequest.requestID);
             [self removeLocationRequest:locationRequest];
             break;
         }
@@ -423,7 +424,7 @@ static id _sharedInstance;
     for (SSHelpHeadingRequest *headingRequest in self.headingRequests) {
         if (headingRequest.requestID == requestID) {
             [self removeHeadingRequest:headingRequest];
-            SSLOCLog(@"Heading Request canceled with ID: %ld", (long)headingRequest.requestID);
+            SSLog(@"Heading Request canceled with ID: %ld", (long)headingRequest.requestID);
             break;
         }
     }
@@ -471,7 +472,7 @@ static id _sharedInstance;
     __SSLOC_GENERICS(NSMutableArray, SSHelpLocationRequest *) *newLocationRequests = [NSMutableArray arrayWithArray:self.locationRequests];
     [newLocationRequests addObject:locationRequest];
     self.locationRequests = newLocationRequests;
-    SSLOCLog(@"Location Request added with ID: %ld", (long)locationRequest.requestID);
+    SSLog(@"Location Request added with ID: %ld", (long)locationRequest.requestID);
 
     // Process all location requests now, as we may be able to immediately complete the request just added above
     // if a location update was recently received (stored in self.currentLocation) that satisfies its criteria.
@@ -593,31 +594,31 @@ static id _sharedInstance;
         case SSLocationAccuracyCity:
             if (self.locationManager.desiredAccuracy != kCLLocationAccuracyThreeKilometers) {
                 self.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers;
-                SSLOCLog(@"Changing location services accuracy level to: low (minimum).");
+                SSLog(@"Changing location services accuracy level to: low (minimum).");
             }
             break;
         case SSLocationAccuracyNeighborhood:
             if (self.locationManager.desiredAccuracy != kCLLocationAccuracyKilometer) {
                 self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
-                SSLOCLog(@"Changing location services accuracy level to: medium low.");
+                SSLog(@"Changing location services accuracy level to: medium low.");
             }
             break;
         case SSLocationAccuracyBlock:
             if (self.locationManager.desiredAccuracy != kCLLocationAccuracyHundredMeters) {
                 self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
-                SSLOCLog(@"Changing location services accuracy level to: medium.");
+                SSLog(@"Changing location services accuracy level to: medium.");
             }
             break;
         case SSLocationAccuracyHouse:
             if (self.locationManager.desiredAccuracy != kCLLocationAccuracyNearestTenMeters) {
                 self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
-                SSLOCLog(@"Changing location services accuracy level to: medium high.");
+                SSLog(@"Changing location services accuracy level to: medium high.");
             }
             break;
         case SSLocationAccuracyRoom:
             if (self.locationManager.desiredAccuracy != kCLLocationAccuracyBest) {
                 self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-                SSLOCLog(@"Changing location services accuracy level to: high (maximum).");
+                SSLog(@"Changing location services accuracy level to: high (maximum).");
             }
             break;
         default:
@@ -634,7 +635,7 @@ static id _sharedInstance;
     if (@available(iOS 12.0, *)) {
         if (desiredActivityType == CLActivityTypeAirborne) {
             self.locationManager.activityType = CLActivityTypeAirborne;
-            SSLOCLog(@"Changing location services activity type to: airborne.");
+            SSLog(@"Changing location services activity type to: airborne.");
             return;
         }
     }
@@ -642,15 +643,15 @@ static id _sharedInstance;
     switch (desiredActivityType) {
         case CLActivityTypeFitness:
             self.locationManager.activityType = CLActivityTypeFitness;
-            SSLOCLog(@"Changing location services activity type to: fitness.");
+            SSLog(@"Changing location services activity type to: fitness.");
             break;
         case CLActivityTypeAutomotiveNavigation:
             self.locationManager.activityType = CLActivityTypeAutomotiveNavigation;
-            SSLOCLog(@"Changing location services activity type to: automotive navigation.");
+            SSLog(@"Changing location services activity type to: automotive navigation.");
             break;
         case CLActivityTypeOtherNavigation:
             self.locationManager.activityType = CLActivityTypeOtherNavigation;
-            SSLOCLog(@"Changing location services activity type to: other navigation.");
+            SSLog(@"Changing location services activity type to: other navigation.");
             break;
         case CLActivityTypeOther:
         default:
@@ -670,7 +671,7 @@ static id _sharedInstance;
     if (locationRequests.count == 0) {
         [self.locationManager startMonitoringSignificantLocationChanges];
         if (self.isMonitoringSignificantLocationChanges == NO) {
-            SSLOCLog(@"Significant location change monitoring has started.")
+            SSLog(@"Significant location change monitoring has started.")
         }
         self.isMonitoringSignificantLocationChanges = YES;
     }
@@ -687,7 +688,7 @@ static id _sharedInstance;
     if (locationRequests.count == 0) {
         [self.locationManager startUpdatingLocation];
         if (self.isUpdatingLocation == NO) {
-            SSLOCLog(@"Location services updates have started.");
+            SSLog(@"Location services updates have started.");
         }
         self.isUpdatingLocation = YES;
     }
@@ -699,7 +700,7 @@ static id _sharedInstance;
     if (locationRequests.count == 0) {
         [self.locationManager stopMonitoringSignificantLocationChanges];
         if (self.isMonitoringSignificantLocationChanges) {
-            SSLOCLog(@"Significant location change monitoring has stopped.");
+            SSLog(@"Significant location change monitoring has stopped.");
         }
         self.isMonitoringSignificantLocationChanges = NO;
     }
@@ -715,7 +716,7 @@ static id _sharedInstance;
     if (locationRequests.count == 0) {
         [self.locationManager stopUpdatingLocation];
         if (self.isUpdatingLocation) {
-            SSLOCLog(@"Location services updates have stopped.");
+            SSLog(@"Location services updates have stopped.");
         }
         self.isUpdatingLocation = NO;
     }
@@ -747,7 +748,7 @@ static id _sharedInstance;
                 CLLocationAccuracy currentLocationHorizontalAccuracy = mostRecentLocation.horizontalAccuracy;
                 NSTimeInterval staleThreshold = [locationRequest updateTimeStaleThreshold];
                 CLLocationAccuracy horizontalAccuracyThreshold = [locationRequest horizontalAccuracyThreshold];
-                SSLOCLog(@"compare：(%lf vs %lf) (%lf vs %lf)",currentLocationTimeSinceUpdate,staleThreshold,currentLocationHorizontalAccuracy,horizontalAccuracyThreshold);
+                SSLog(@"compare：(%lf vs %lf) (%lf vs %lf)",currentLocationTimeSinceUpdate,staleThreshold,currentLocationHorizontalAccuracy,horizontalAccuracyThreshold);
 
                 if (currentLocationTimeSinceUpdate <= staleThreshold &&
                     currentLocationHorizontalAccuracy <= horizontalAccuracyThreshold) {
@@ -771,7 +772,7 @@ static id _sharedInstance;
     for (SSHelpLocationRequest *locationRequest in locationRequests) {
         [self completeLocationRequest:locationRequest];
     }
-    SSLOCLog(@"Finished completing all location requests.");
+    SSLog(@"Finished completing all location requests.");
 }
 
 /**
@@ -800,7 +801,7 @@ static id _sharedInstance;
         }
     });
 
-    SSLOCLog(@"Location Request completed with ID: %ld, currentLocation: %@, achievedAccuracy: %lu, status: %lu", (long)locationRequest.requestID, currentLocation, (unsigned long) achievedAccuracy, (unsigned long)status);
+    SSLog(@"Location Request completed with ID: %ld, currentLocation: %@, achievedAccuracy: %lu, status: %lu", (long)locationRequest.requestID, currentLocation, (unsigned long) achievedAccuracy, (unsigned long)status);
 }
 
 /**
@@ -951,14 +952,14 @@ BOOL INTUCLHeadingIsIsValid(CLHeading *heading)
                 headingRequest.block(nil, SSHeadingStatusUnavailable);
             }
         });
-        SSLOCLog(@"Heading Request (ID %ld) NOT added since device heading is unavailable.", (long)headingRequest.requestID);
+        SSLog(@"Heading Request (ID %ld) NOT added since device heading is unavailable.", (long)headingRequest.requestID);
         return;
     }
 
     __SSLOC_GENERICS(NSMutableArray, SSHelpHeadingRequest *) *newHeadingRequests = [NSMutableArray arrayWithArray:self.headingRequests];
     [newHeadingRequests addObject:headingRequest];
     self.headingRequests = newHeadingRequests;
-    SSLOCLog(@"Heading Request added with ID: %ld", (long)headingRequest.requestID);
+    SSLog(@"Heading Request added with ID: %ld", (long)headingRequest.requestID);
 
     [self startUpdatingHeadingIfNeeded];
 }
@@ -971,7 +972,7 @@ BOOL INTUCLHeadingIsIsValid(CLHeading *heading)
     if (self.headingRequests.count != 0) {
         [self.locationManager startUpdatingHeading];
         if (self.isUpdatingHeading == NO) {
-            SSLOCLog(@"Heading services updates have started.");
+            SSLog(@"Heading services updates have started.");
         }
         self.isUpdatingHeading = YES;
     }
@@ -998,7 +999,7 @@ BOOL INTUCLHeadingIsIsValid(CLHeading *heading)
     if (self.headingRequests.count == 0) {
         [self.locationManager stopUpdatingHeading];
         if (self.isUpdatingHeading) {
-            SSLOCLog(@"Location services heading updates have stopped.");
+            SSLog(@"Location services heading updates have stopped.");
         }
         self.isUpdatingHeading = NO;
     }
@@ -1082,7 +1083,7 @@ BOOL INTUCLHeadingIsIsValid(CLHeading *heading)
     self.updateFailed = NO;
 
     CLLocation *mostRecentLocation = [locations lastObject];
-    SSLOCLog(@"Received update locations: (%f,%f)",mostRecentLocation.coordinate.latitude,mostRecentLocation.coordinate.longitude);
+    SSLog(@"Received update locations: (%f,%f)",mostRecentLocation.coordinate.latitude,mostRecentLocation.coordinate.longitude);
 
     self.currentLocation = mostRecentLocation;
 
@@ -1100,9 +1101,10 @@ BOOL INTUCLHeadingIsIsValid(CLHeading *heading)
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    SSLOCLog(@"Location services error: %@", [error localizedDescription]);
-    if (error && error.domain && [error.domain isEqualToString:kCLErrorDomain] && error.code==1) {
-        //等待授权
+    SSLog(@"Location services error: %@", [error localizedDescription]);
+    SSLocationServicesState locationServicesState = [self locationServicesState];
+    if (SSLocationServicesStateNotDetermined == locationServicesState) {
+        //测试发现，存在等待授权中，会回调此接口现象，因此在这里特殊处理一下
         return;
     }
     self.updateFailed = YES;

@@ -3,7 +3,7 @@
 //  SSHelpTools
 //
 //  Created by 宋直兵 on 2021/8/27.
-//  自定义基础视图控制器 (默认忽视系统NavigationBar,toolBar)
+//  自定义视图控制器
 //
 
 #import <UIKit/UIKit.h>
