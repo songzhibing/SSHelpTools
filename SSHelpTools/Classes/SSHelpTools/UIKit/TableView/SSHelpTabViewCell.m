@@ -22,7 +22,7 @@
 {
     _modelData = nil;
     _indexPath = nil;
-    SSLifeCycleLog(@"%@ dealloc ... 🟢",self);
+    SSLifeCycleLog(@"%@ dealloc ... ",self);
 }
 
 /// 被复用，这里应该做显示还原、网络取消...等操作

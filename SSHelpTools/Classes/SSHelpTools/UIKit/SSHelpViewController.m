@@ -17,7 +17,7 @@
 
 - (void)dealloc
 {
-    SSLifeCycleLog(@"%@ dealloc retain %td ... 🟢",self,_kRetainCount(self))
+    SSLifeCycleLog(@"%@ dealloc retain %td ... ",self,_kRetainCount(self))
 }
 
 /**

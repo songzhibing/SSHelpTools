@@ -6,11 +6,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <SSHelpTools/SSHelpTools.h>
+#import <SSHelpTools/SSHelpView.h>
 #import <WebKit/WebKit.h>
 
 #import "SSHelpWebBaseModule.h"
 #import "SSHelpWebViewDelegate.h"
+#import "SSHelpWebViewSharedConfigurations.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -84,19 +85,18 @@ typedef NS_OPTIONS(NSUInteger, SSHelpWebViewCookiePolicy) {
 /// 加载视图控制器
 - (void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^ __nullable)(void))completion;
 
+/// 提示
 - (void)showToast:(NSString *)message;
 
-/// 清除缓存数据
-+ (void)clearWebsiteDataStore:(void (^)(void))completionHandler;
 
-/// WKWebView相关配置，可自定义，默认都提供一个单列实例
+/// 下列均应用SSHelpWebViewSharedConfigurations配置，可自定义
 - (WKWebsiteDataStore *)websiteDataStore;
 
-- (WKProcessPool *)sharedProcessPool;
+- (WKProcessPool *)processPool;
 
-- (WKWebpagePreferences *)sharedWebpagePreferences API_AVAILABLE(ios(13.0));
+- (WKWebpagePreferences *)webpagePreferences API_AVAILABLE(ios(13.0));
 
-- (WKPreferences *)sharedPreferences;
+- (WKPreferences *)preferences;
 
 
 @end

@@ -9,15 +9,6 @@
 #import "SSHelpWebTestJsBridgeModule.h"
 #import "SSHelpWebView+GestureRecognizer.h"
 
-WKWebsiteDataStore *sharedWebsiteDataStore(void){
-    static WKWebsiteDataStore *websiteDataStore;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        websiteDataStore = [WKWebsiteDataStore defaultDataStore];
-    });
-    return websiteDataStore;
-}
-
 @interface SSHelpWebView()<WKUIDelegate,WKNavigationDelegate>
 
 @property(nonatomic, strong) UIProgressView *loadingPogressView;
@@ -252,13 +243,13 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
          不能用此类来改变一个已经初始化完成的webview的配置。
          */
         _configuration = [[WKWebViewConfiguration alloc] init];
-        _configuration.processPool = self.sharedProcessPool;
-        _configuration.preferences = self.sharedPreferences;
+        _configuration.processPool = self.processPool;
+        _configuration.preferences = self.preferences;
         _configuration.websiteDataStore = self.websiteDataStore;
         _configuration.allowsInlineMediaPlayback = YES; ///允许在线播放
         _configuration.userContentController = _userContent;
         if (@available(iOS 13.0, *)) {
-            _configuration.defaultWebpagePreferences = self.sharedWebpagePreferences;
+            _configuration.defaultWebpagePreferences = self.webpagePreferences;
         }
         
         /**
@@ -305,7 +296,7 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
                       options:NSKeyValueObservingOptionNew
                       context:NULL];
         
-        // 手势
+        // 手势识别
         if (_supportLongPressGestureRecognizer) {
             [self addLongPressGestureRecognizer:_webView];
         }
@@ -362,8 +353,8 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
                                          [self.loadingPogressView setProgress:0.0f animated:NO];
                                      }];
                 }
-                return;
             }
+            return;
         }
     } else if ([keyPath isEqualToString:@"title"]) { //网页title
         if (object == _webView){
@@ -377,74 +368,29 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
     [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
-#pragma mark - WebViewConfiguraion
+#pragma mark - WKWebViewConfiguraion
 
-+ (void)clearWebsiteDataStore:(void (^)(void))completionHandler
-{
-    WKWebsiteDataStore *dataStore = sharedWebsiteDataStore();
-    if (dataStore.isPersistent) {
-        NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
-        NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
-        [dataStore removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:completionHandler];
-    } else {
-        if (completionHandler) {
-            completionHandler();
-        }
-    }
-}
-
-/**
- 与WebView关联的WKWebsiteDataStore对象
- 网站的各种类型的数据，数据类型包括:cookies, disk and memory caches, and persistent data such as WebSQL, IndexedDB databases, and local storage。
- 如果一个WebView关联了一个非持久化的WKWebsiteDataStore，将不会有数据被写入到文件系统
- 该特性可以用来实现隐私浏览。
- */
 - (WKWebsiteDataStore *)websiteDataStore
 {
-    return sharedWebsiteDataStore();
+    return [SSHelpWebViewSharedConfigurations sharedWebsiteDataStore];
 }
 
-/**
- 一个WKProcessPool对象代表Web Content的进程池。
-
- 与WebView的进程池关联的进程池通过其configuration来配置。每个WebView都有自己的Web Content进程，最终由一个有具体实现的进程来限制;在此之后，具有相同进程池的WebView最终共享Web Content进程。
-
- WKProcessPool对象只是一个简单的不透明token，本身没有属性或者方法。
- */
-- (WKProcessPool *)sharedProcessPool
+- (WKProcessPool *)processPool
 {
-    static WKProcessPool *processPool;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        processPool = [[WKProcessPool alloc] init];
-    });
-    return processPool;
+    return [SSHelpWebViewSharedConfigurations sharedProcessPool];
 }
 
-- (WKWebpagePreferences *)sharedWebpagePreferences API_AVAILABLE(ios(13.0))
+- (WKPreferences *)preferences
 {
-    static WKWebpagePreferences *webpagePreferences;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        webpagePreferences = [[WKWebpagePreferences alloc] init];
-        if (@available(iOS 14.0, *)) {
-            webpagePreferences.allowsContentJavaScript = YES;
-        }
-        webpagePreferences.preferredContentMode = WKContentModeMobile;
-    });
-    return webpagePreferences;
+    return [SSHelpWebViewSharedConfigurations sharedPreferences];
 }
 
-- (WKPreferences *)sharedPreferences
+- (WKWebpagePreferences *)webpagePreferences API_AVAILABLE(ios(13.0))
 {
-    static WKPreferences *preferences;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        preferences = [[WKPreferences alloc] init];
-        preferences.javaScriptCanOpenWindowsAutomatically = YES; //允许使用js自动打开Window，默认不允许，js在调用window.open方法的时候，必须将改值设置为YES，才能从WKUIDelegate的代理方法中获取到.类似打开一个新的标签
-    });
-    return preferences;
+    return [SSHelpWebViewSharedConfigurations sharedWebpagePreferences];
 }
+
+#pragma mark - Lazy loading
 
 - (NSMutableArray <WKUserScript *> *)customUserScripts
 {

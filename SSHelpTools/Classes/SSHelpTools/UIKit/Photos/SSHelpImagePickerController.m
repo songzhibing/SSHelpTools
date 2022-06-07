@@ -37,8 +37,8 @@ API_AVAILABLE_BEGIN(ios(14))
     objc_setAssociatedObject(self, @selector(completion), completion, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-///// Called when the user completes a selection or dismisses \c PHPickerViewController using the cancel button.
-///// @discussion The picker won't be automatically dismissed when this method is called.
+/// Called when the user completes a selection or dismisses \c PHPickerViewController using the cancel button.
+/// @discussion The picker won't be automatically dismissed when this method is called.
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results
 {
     @Tweakify(self);
@@ -108,7 +108,7 @@ API_AVAILABLE_END
             pickerController.modalPresentationStyle = UIModalPresentationFullScreen;
             pickerController.completion = [completion copy];
             [controller presentViewController:pickerController animated:YES completion:nil];
-        }else{
+        } else {
             if (completion) {
                 completion(nil);
             }
@@ -140,7 +140,7 @@ API_AVAILABLE_END
             pickerController.modalPresentationStyle = UIModalPresentationFullScreen;
             pickerController.completion = [completion copy];
             [controller presentViewController:pickerController animated:YES completion:nil];
-        }else{
+        } else {
             if (completion) {
                 completion(nil);
             }
