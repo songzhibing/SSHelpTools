@@ -1,21 +1,56 @@
 //
 //  SSHelpDefines.h
-//  SSHelpTools
+//  Pods
 //
-//  Created by 宋直兵 on 2021/12/17.
+//  Created by 宋直兵 on 2022/6/9.
 //
 
-#ifndef SSHelpDefines_h
-#define SSHelpDefines_h
-
+#import <Foundation/Foundation.h>
 #import "SSHelpMetamacros.h"
 #import "SSHelpToolsConfig.h"
 #import "UIColor+SSHelp.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef void(^ _Nullable BlockVoid)(void);
-typedef void(^ _Nullable BlockInt)(int number);
+typedef void(^ _Nullable BlockInt) (int number);
 typedef void(^ _Nullable BlockBool)(BOOL state);
-typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
+typedef void(^ _Nullable BlockDict)(__kindof NSDictionary * _Nullable dict);
+
+/// 字符串读取
+/// @param dict 原始数据
+/// @param key 目标字段
+FOUNDATION_EXTERN NSString * _Nonnull SSEncodeStringFromDict(NSDictionary *dict, NSString *key);
+
+/// 字典读取
+/// @param dict 原始数据
+/// @param key 目标字段
+FOUNDATION_EXTERN NSDictionary * _Nullable SSEncodeDictFromDict(NSDictionary *dict, NSString *key);
+
+/// 数组读取
+/// @param dict 原始数据
+/// @param key 目标字段
+FOUNDATION_EXTERN NSArray * _Nullable SSEncodeArrayFromDict(NSDictionary *dict, NSString *key);
+
+/// 自定义数组读取
+/// @param dic 原始数据
+/// @param key 目标字段
+FOUNDATION_EXTERN NSArray * _Nullable SSEncodeArrayFromDictUsingBlock(NSDictionary *dic, NSString *key, id(^usingBlock)(NSDictionary *item));
+
+/// 判断是空， 如：nil、Nil、NSNull、@""、@"<null>"、@[]、@{}、0Data
+FOUNDATION_EXTERN BOOL SSEqualToEmpty(id object);
+
+/// 非空对象
+FOUNDATION_EXTERN BOOL SSEqualToNotEmpty(id object);
+
+/// 非空字符串
+FOUNDATION_EXTERN BOOL SSEqualToNotEmptyString(id string);
+
+/// 非空数组
+FOUNDATION_EXTERN BOOL SSEqualToNotEmptyArray(id array);
+
+/// 非空字典
+FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 //缩写
 
@@ -123,7 +158,7 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 
 //__weak && __strong
 
-#ifndef weakify // 该宏YYKit、ReactiveObjC、...  等都含有;
+#ifndef weakify // 该宏在YYKit、ReactiveObjC、...  等都含有
     #define weakify(...) \
         ss_keywordify \
         metamacro_foreach_cxt(ss_weakify_,, __weak, __VA_ARGS__)
@@ -173,4 +208,8 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 
 #define _kRandSixValue [NSString stringWithFormat:@"%06d",arc4random() % 100000]
 
-#endif /* SSHelpDefines_h */
+@interface SSHelpDefines : NSObject
+
+@end
+
+NS_ASSUME_NONNULL_END

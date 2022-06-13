@@ -38,7 +38,7 @@ typedef NS_OPTIONS(NSUInteger, SSHelpButtonStyle) {
 @property(nonatomic, copy) void(^block)(id sender);
 
 /// 列表按钮包含的子按钮
-@property(nonatomic, assign, nullable)  NSArray <NSDictionary *> *childButtons;
+@property(nonatomic, strong, nullable)  NSArray <NSDictionary *> *childButtons;
 
 /// 快速构建
 /// @param dict 字典数据
@@ -80,7 +80,7 @@ typedef NS_OPTIONS(NSUInteger, SSHelpButtonStyle) {
 /// 响应区域需要改变的大小，负值表示往外扩大，正值表示往内缩小
 @property(nonatomic, assign) UIEdgeInsets outsideEdge;
 
-@property(nonatomic, assign) NSArray <NSDictionary *> *_Nullable childButtons;
+@property(nonatomic, strong) NSArray <NSDictionary *> *_Nullable childButtons;
 
 /// 支持多设
 @property(nonatomic, copy  ) void(^onClick)(SSHelpButton *sender);

@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 @class
 SSHelpTableView,
-SSHelpTabViewCell,
+SSHelpTableViewCell,
 SSHelpTabViewSectionModel,
 SSHelpTabViewHeaderModel,
 SSHelpTabViewCellModel,
@@ -20,11 +20,39 @@ typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView *tableView, __kindof UI
 
 typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView *reusableView);
 
+//******************************************************************************
+
 @interface SSHelpTableViewModel : NSObject
 
 @property(nonatomic, strong) NSMutableArray <SSHelpTabViewSectionModel *> *sectionModels;
 
 @end
+
+//******************************************************************************
+
+@interface SSHelpTableViewMoveRule : NSObject
+
+/// 是否支持移动、交换，默认NO
+@property(nonatomic, assign) BOOL canMove;
+
+/// 是否支持跨Section区域移动、交换，默认YES
+@property(nonatomic, assign) BOOL canMoveTransSectionArea;
+
+/// 开始位置
+@property(nonatomic, strong) NSIndexPath *moveBeginIndexPath;
+
+/// 结束位置
+@property(nonatomic, strong) NSIndexPath *moveEndIndexPath;
+
+/// 开始移动
+@property(nonatomic, strong, nullable) void(^beginBlock)(SSHelpTableViewMoveRule *rule);
+
+/// 结束移动
+@property(nonatomic, strong, nullable) BOOL (^endBlock)(SSHelpTableViewMoveRule *rule);
+
+@end
+
+//******************************************************************************
 
 @interface SSHelpTabViewSectionModel : NSObject
 
@@ -39,11 +67,9 @@ typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView *reus
 
 @end
 
+//******************************************************************************
+
 @interface SSHelpTableViewItemModel: NSObject
-
-@property(nonatomic, copy, nullable) NSString *identifier;
-
-@property(nonatomic, assign) CGFloat height;
 
 @property(nonatomic, strong) UIColor *backgroundColor;
 
@@ -61,6 +87,8 @@ typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView *reus
 
 @end
 
+//******************************************************************************
+
 @interface SSHelpTabViewHeaderModel : SSHelpTableViewItemModel
 
 @property(nonatomic, assign) CGFloat headerHeight;
@@ -71,6 +99,7 @@ typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView *reus
 
 @end
 
+//******************************************************************************
 
 @interface SSHelpTabViewCellModel : SSHelpTableViewItemModel
 
@@ -80,8 +109,14 @@ typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView *reus
 
 @property(nonatomic, assign) CGFloat cellHeght;
 
+@property(nonatomic, strong) NSIndexPath *cellIndexPath;
+
+/// 是否移动中
+@property(nonatomic, assign) BOOL cellMoving;
+
 @end
 
+//******************************************************************************
 
 @interface SSHelpTabViewFooterModel : SSHelpTableViewItemModel
 

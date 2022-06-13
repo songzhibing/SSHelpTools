@@ -208,7 +208,7 @@
         obj.hidden = YES;
     }];
     
-    if ([NSObject ss_isNotEmptySting:model.title]) {
+    if (model.title) {
         self.titleLabel.hidden = NO;
         self.titleLabel.text = model.title;
     }
@@ -239,24 +239,25 @@
         [self.dynamicLeftButtons.allObjects makeObjectsPerformSelector:@selector(removeFromSuperview)];
     }
     
+    if (!leftButtons) {
+        return;
+    }
+    
     //添加新的动态按钮
-    if ([NSObject ss_isNotEmptyArray:leftButtons])
+    for (NSInteger index=0; index<leftButtons.count && index<2; index++)
     {
-        for (NSInteger index=0; index<leftButtons.count && index<2; index++)
-        {
-            SSHelpButtonModel *btnModel = leftButtons[index];
-            SSHelpButton *button = [SSHelpButton buttonWithModel:btnModel];
-            [_contentView addSubview:button];
-            [self.dynamicLeftButtons addObject:button];
-            
-            CGFloat leftMargin = (index==0)?(0):(0+44+8);
-            [button mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(leftMargin);
-                make.width.mas_equalTo(44);
-                make.height.mas_equalTo(44);
-                make.bottom.mas_equalTo(0);
-            }];
-        }
+        SSHelpButtonModel *btnModel = leftButtons[index];
+        SSHelpButton *button = [SSHelpButton buttonWithModel:btnModel];
+        [_contentView addSubview:button];
+        [self.dynamicLeftButtons addObject:button];
+        
+        CGFloat leftMargin = (index==0)?(0):(0+44+8);
+        [button mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(leftMargin);
+            make.width.mas_equalTo(44);
+            make.height.mas_equalTo(44);
+            make.bottom.mas_equalTo(0);
+        }];
     }
 }
 
@@ -267,24 +268,25 @@
         [self.dynamicRightButtons.allObjects makeObjectsPerformSelector:@selector(removeFromSuperview)];
     }
     
+    if (!rightButtons) {
+        return;
+    }
+    
     //添加新的动态按钮
-    if ([NSObject ss_isNotEmptyArray:rightButtons])
+    for (NSInteger index=0; index<rightButtons.count && index<2; index++)
     {
-        for (NSInteger index=0; index<rightButtons.count && index<2; index++)
-        {
-            SSHelpButtonModel *btnModel = rightButtons[index];
-            SSHelpButton *button = [SSHelpButton buttonWithModel:btnModel];
-            [_contentView addSubview:button];
-            [self.dynamicRightButtons addObject:button];
-            
-            CGFloat rightMargin = (index==0)?(0):(-44-8);
-            [button mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(rightMargin);
-                make.width.mas_equalTo(44);
-                make.height.mas_equalTo(44);
-                make.bottom.mas_equalTo(0);
-            }];
-        }
+        SSHelpButtonModel *btnModel = rightButtons[index];
+        SSHelpButton *button = [SSHelpButton buttonWithModel:btnModel];
+        [_contentView addSubview:button];
+        [self.dynamicRightButtons addObject:button];
+        
+        CGFloat rightMargin = (index==0)?(0):(-44-8);
+        [button mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(rightMargin);
+            make.width.mas_equalTo(44);
+            make.height.mas_equalTo(44);
+            make.bottom.mas_equalTo(0);
+        }];
     }
 }
 

@@ -7,13 +7,40 @@
 
 #import "SSHelpTableViewModel.h"
 #import "SSHelpTableViewHeaderView.h"
-#import "SSHelpTabViewCell.h"
+#import "SSHelpTableViewCell.h"
 #import "SSHelpTableViewFooterView.h"
+#import "SSHelpTools/SSHelpDefines.h"
+
+//******************************************************************************
 
 @implementation SSHelpTableViewModel
 
 @end
 
+//******************************************************************************
+
+@implementation SSHelpTableViewMoveRule
+
+- (void)dealloc
+{
+    _endBlock = NULL;
+    _beginBlock = NULL;
+    SSLifeCycleLog(@"%@ dealloc ... ",self);
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _canMove = NO;
+        _canMoveTransSectionArea = YES;
+    }
+    return self;
+}
+
+@end
+
+//******************************************************************************
 
 @implementation SSHelpTabViewSectionModel
 
@@ -28,6 +55,7 @@
 
 @end
 
+//******************************************************************************
 
 @implementation SSHelpTableViewItemModel
 
@@ -35,13 +63,14 @@
 {
     self = [super init];
     if (self) {
-        _height = 44;
+        //_height = 44;
     }
     return self;
 }
 
 @end
 
+//******************************************************************************
 
 @implementation SSHelpTabViewHeaderModel
 
@@ -57,6 +86,7 @@
 
 @end
 
+//******************************************************************************
 
 @implementation SSHelpTabViewCellModel
 
@@ -65,28 +95,15 @@
     self = [super init];
     if (self) {
         _cellHeght = 44;
+        _cellIdentifier = @"SSHelpTableView.Cell.Identifer";
+        _cellClass = [SSHelpTableViewCell class];
     }
     return self;
 }
 
-- (NSString *)cellIdentifier
-{
-    if (!_cellIdentifier) {
-        _cellIdentifier = @"SSHelpTableView.Cell.Identifer";
-    }
-    return _cellIdentifier;
-}
-
-- (Class)cellClass
-{
-    if (!_cellClass) {
-        _cellClass = [SSHelpTabViewCell class];
-    }
-    return _cellClass;
-}
-
 @end
 
+//******************************************************************************
 
 @implementation SSHelpTabViewFooterModel
 
@@ -101,4 +118,7 @@
 }
 
 @end
+
+//******************************************************************************
+
 

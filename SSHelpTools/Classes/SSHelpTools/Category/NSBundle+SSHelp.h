@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (UIImage *)ss_scanGridImg;
 
++ (UIImage * _Nullable)ss_loadImage:(NSString *)imageName withBundle:(NSString *)bundleName;
+
 @end
 
 NS_ASSUME_NONNULL_END

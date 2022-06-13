@@ -65,4 +65,25 @@
     return _scanGridImg;
 }
 
++ (UIImage * _Nullable)ss_loadImage:(NSString *)imageName withBundle:(NSString *)bundleName
+{
+    // #use_frameworks!
+    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:bundleName ofType:@"bundle"];
+    
+    if (!bundlePath) {
+        // use_frameworks!
+        NSString *path = [NSString stringWithFormat:@"Frameworks/%@.framework/%@",bundleName,bundleName];
+        bundlePath = [[NSBundle mainBundle] pathForResource:path ofType:@"bundle"];
+    }
+    
+    if (bundlePath) {
+        NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
+        if (bundle) {
+            UIImage *image = [UIImage imageNamed:imageName inBundle:bundle compatibleWithTraitCollection:nil];
+            return image;
+        }
+    }
+    return nil;
+}
+
 @end

@@ -6,12 +6,7 @@
 //
 
 #import "SSHelpTableView.h"
-#import "SSHelpTableViewLayout.h"
-#import "SSHelpTabViewCell.h"
-#import "SSHelpTableViewModel.h"
-#import "SSHelpTableViewHeaderView.h"
-#import "SSHelpTableViewFooterView.h"
-
+#import "SSHelpTableView+Drag.h"
 #import <Masonry/Masonry.h>
 
 @interface SSHelpTableView()<SSHelpTableViewLayoutDataSource, UICollectionViewDelegate,UICollectionViewDataSource>
@@ -55,6 +50,7 @@
     if (_collectionView) {
         return;
     }
+    
     _cellsOfIdentifierCache = [[NSMutableArray alloc] initWithCapacity:1];
 
     _flowLayout = [[SSHelpTableViewLayout alloc] init];
@@ -63,14 +59,40 @@
     _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:_flowLayout];
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
-    _collectionView.backgroundColor = self.backgroundColor;
+    _collectionView.backgroundColor = _kRandomColor;
     [self addSubview:_collectionView];
     [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
+    
+    //if ([_collectionView respondsToSelector:@selector(setPrefetchingEnabled:)]) {
+    //    _collectionView.prefetchingEnabled = false;
+    //}
 }
 
-#pragma mark - SSHelpFlowLayoutDataSource Protocol Method
+/// 配置移动、交换规则
+- (void)setMoveRule:(SSHelpTableViewMoveRule *)moveRule
+{
+    _moveRule = moveRule;
+    if (moveRule.canMove) {
+        if (@available(iOS 11.0, *)) {
+            // 开启系统拖放手势，设置代理。
+            _collectionView.dragInteractionEnabled = YES;
+            _collectionView.dragDelegate = self;
+            _collectionView.dropDelegate = self;
+        } else {
+            UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGesture:)];
+            [_collectionView addGestureRecognizer:longPressGesture];
+        }
+    }
+}
+
+- (void)longPressGesture:(UILongPressGestureRecognizer *)gesture
+{
+    [self collectionView:_collectionView longPressGestureRecognizerHandler:gesture];
+}
+
+#pragma mark - SSHelpFlowLayoutDataSource Method
 
 /// Return per section's column number(must be greater than 0).
 - (NSInteger)collectionView:(UICollectionView *)collectionView
@@ -90,8 +112,17 @@
                 itemWidth:(CGFloat)width
  heightForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    SSHelpTabViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
-    return model.cellHeght;
+    if (indexPath.section < _data.count) {
+        if (indexPath.item < _data[indexPath.section].cellModels.count) {
+            SSHelpTabViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
+            return model.cellHeght;
+        } else {
+            /// 特殊，跨Section移动item时，需要预模拟排版当前Section所在的item样式，这里会
+            /// 加上"被移动的Item",数据+1，导致这里cellModels溢出，因此这里特殊处理
+            return _data[indexPath.section].cellModels.lastObject.cellHeght;
+        }
+    }
+    return 0;
 }
 
 /// Return per section header view height.
@@ -116,11 +147,11 @@
     return 0;
 }
 
-#pragma mark - UICollectionViewDataSource Protocol Method
+#pragma mark - UICollectionViewDataSource Method
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return _data?_data.count:0;
+    return _data.count;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -179,20 +210,54 @@
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     SSHelpTabViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
+    model.cellIndexPath = indexPath;
     
     if (![_cellsOfIdentifierCache containsObject:model.cellIdentifier]) {
         [_cellsOfIdentifierCache addObject:model.cellIdentifier];
         [collectionView registerClass:model.cellClass forCellWithReuseIdentifier:model.cellIdentifier];
     }
     
-    SSHelpTabViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:model.cellIdentifier forIndexPath:indexPath];
+    SSHelpTableViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:model.cellIdentifier forIndexPath:indexPath];
     cell.modelData = model;
     cell.indexPath = indexPath;
     [cell refresh];
     return cell;
 }
 
-#pragma mark - UICollectionViewDelegate Protocol Method
+/// 是否可以移动Cell
+- (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return _moveRule.canMove;
+}
+
+/// 移动完成后的方法，交换数据
+- (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
+{
+    if (sourceIndexPath.section == destinationIndexPath.section ) {
+        SSHelpTabViewSectionModel *sectionModel =_data[destinationIndexPath.section];
+
+        SSHelpTabViewCellModel *sourceModel =sectionModel.cellModels[sourceIndexPath.item];
+        [sectionModel.cellModels removeObject:sourceModel];
+        [sectionModel.cellModels insertObject:sourceModel atIndex:destinationIndexPath.item];
+        
+    } else {
+        
+        SSHelpTabViewSectionModel *sectionModel =_data[destinationIndexPath.section];
+
+        SSHelpTabViewCellModel *sourceModel =sectionModel.cellModels[sourceIndexPath.item];
+        [sectionModel.cellModels removeObject:sourceModel];
+        [sectionModel.cellModels insertObject:sourceModel atIndex:destinationIndexPath.item];
+    }
+    
+    // 需要主动调整数据内部索引值
+    [_data enumerateObjectsUsingBlock:^(SSHelpTabViewSectionModel * _Nonnull sectionModel, NSUInteger section, BOOL * _Nonnull stop) {
+        [sectionModel.cellModels enumerateObjectsUsingBlock:^(SSHelpTabViewCellModel * _Nonnull cellModel, NSUInteger item, BOOL * _Nonnull stop) {
+            cellModel.cellIndexPath = [NSIndexPath indexPathForItem:item inSection:section];
+        }];
+    }];
+}
+
+#pragma mark - UICollectionViewDelegate Method
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {

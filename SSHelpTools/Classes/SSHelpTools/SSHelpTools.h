@@ -48,6 +48,6 @@
 #import "SSHelpTableViewHeaderView.h"
 #import "SSHelpTableViewLayout.h"
 #import "SSHelpTableViewModel.h"
-#import "SSHelpTabViewCell.h"
+#import "SSHelpTableViewCell.h"
 
 #endif /* SSHelpTools_h */

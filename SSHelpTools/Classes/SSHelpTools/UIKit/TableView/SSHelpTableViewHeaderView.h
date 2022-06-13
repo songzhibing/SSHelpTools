@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) SSHelpTabViewHeaderModel*modelData;
 
-
 /// 刷新
 - (void)refresh;
 

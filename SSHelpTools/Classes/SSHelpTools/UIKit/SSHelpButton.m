@@ -112,7 +112,7 @@
         }
     }
 
-    if(!_button.normalImage && [NSObject ss_isNotEmptySting:buttonModel.title]){
+    if(!_button.normalImage && buttonModel.title ){
         _button.normalTitle = buttonModel.title;
 
     }
