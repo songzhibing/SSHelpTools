@@ -205,7 +205,6 @@ API_AVAILABLE(ios(11.0))
 - (void)collectionView:(UICollectionView *)collectionView dropSessionDidEnter:(id<UIDropSession>)session
 API_AVAILABLE(ios(11.0))
 {
-    SSLifeCycleLog(@"dropSessionDidEnter 。。。。。");
 }
 
 /*
@@ -213,7 +212,6 @@ API_AVAILABLE(ios(11.0))
  */
 - (void)collectionView:(UICollectionView *)collectionView dropSessionDidExit:(id<UIDropSession>)session API_AVAILABLE(ios(11.0))
 {
-    SSLifeCycleLog(@"dropSessionDidExit ，，，");
 }
 
 /*
@@ -224,7 +222,6 @@ API_AVAILABLE(ios(11.0))
     if (self.moveRule.endBlock) {
         self.moveRule.endBlock(self.moveRule);
     }
-    SSLifeCycleLog(@"dropSessionDidEnd ，，，");
 }
 
 /// 当手指离开屏幕时，UICollectionView会调用collectionView:performDropWithCoordinator:方法，

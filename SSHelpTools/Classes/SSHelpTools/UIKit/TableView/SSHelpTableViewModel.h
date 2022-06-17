@@ -65,6 +65,13 @@ typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView *reus
 
 @property(nonatomic, strong) SSHelpTabViewFooterModel * _Nullable footerModel;
 
+/// default 0.0
+@property(nonatomic, assign) CGFloat minimumLineSpacing;
+
+/// default 0.0
+@property(nonatomic, assign) CGFloat minimumInteritemSpacing;
+
+
 @end
 
 //******************************************************************************
@@ -73,7 +80,7 @@ typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView *reus
 
 @property(nonatomic, strong) UIColor *backgroundColor;
 
-@property(nonatomic, assign, nullable) Class className;
+//@property(nonatomic, assign, nullable) Class className;
 
 @property(nonatomic, copy, nullable) SSHelpTabViewCellRefresh refreshBlock;
 

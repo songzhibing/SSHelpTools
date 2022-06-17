@@ -29,23 +29,18 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /// Column spacing between columns
-- (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(SSHelpTableViewLayout*)layout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(SSHelpTableViewLayout*)layout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
 
 /// The spacing between rows and rows
-- (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(SSHelpTableViewLayout*)layout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(SSHelpTableViewLayout*)layout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
 ///
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
-                        layout:(SSHelpTableViewLayout*)layout insetForSectionAtIndex:(NSInteger)section;
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(SSHelpTableViewLayout*)layout insetForSectionAtIndex:(NSInteger)section;
 
 /// Return per section header view height.
-- (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(SSHelpTableViewLayout*)layout referenceHeightForHeaderInSection:(NSInteger)section;
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(SSHelpTableViewLayout*)layout referenceHeightForHeaderInSection:(NSInteger)section;
 
 /// Return per section footer view height.
-- (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(SSHelpTableViewLayout*)layout referenceHeightForFooterInSection:(NSInteger)section;
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(SSHelpTableViewLayout*)layout referenceHeightForFooterInSection:(NSInteger)section;
 
 @end
 

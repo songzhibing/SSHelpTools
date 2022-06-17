@@ -50,6 +50,7 @@
     if (_collectionView) {
         return;
     }
+    self.backgroundColor = SSHELPTOOLSCONFIG.groupedBackgroundColor;
     
     _cellsOfIdentifierCache = [[NSMutableArray alloc] initWithCapacity:1];
 
@@ -57,20 +58,31 @@
     _flowLayout.dataSource = self;
     
     _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:_flowLayout];
+    _collectionView.backgroundColor = SSHELPTOOLSCONFIG.groupedBackgroundColor;
+    _collectionView.contentInset = UIEdgeInsetsMake(2, 2, 2, 2);
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
-    _collectionView.backgroundColor = _kRandomColor;
     [self addSubview:_collectionView];
     [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
     
-    //if ([_collectionView respondsToSelector:@selector(setPrefetchingEnabled:)]) {
-    //    _collectionView.prefetchingEnabled = false;
-    //}
+    if ([_collectionView respondsToSelector:@selector(setPrefetchingEnabled:)]) {
+        _collectionView.prefetchingEnabled = NO;
+    }
 }
 
-/// 配置移动、交换规则
+- (void)setBackColor:(UIColor *)backColor
+{
+    self.backgroundColor = backColor;
+    _collectionView.backgroundColor = backColor;
+}
+
+- (void)setContentInset:(UIEdgeInsets)contentInset
+{
+    _collectionView.contentInset = contentInset;
+}
+
 - (void)setMoveRule:(SSHelpTableViewMoveRule *)moveRule
 {
     _moveRule = moveRule;
@@ -145,6 +157,20 @@
         return sectionModel.footerModel.footerHeight;
     }
     return 0;
+}
+
+/// Column spacing between columns
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(SSHelpTableViewLayout*)layout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    SSHelpTabViewSectionModel *sectionModel = _data[section];
+    return sectionModel.minimumLineSpacing;
+}
+
+/// The spacing between rows and rows
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(SSHelpTableViewLayout*)layout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
+{
+    SSHelpTabViewSectionModel *sectionModel = _data[section];
+    return sectionModel.minimumInteritemSpacing;
 }
 
 #pragma mark - UICollectionViewDataSource Method

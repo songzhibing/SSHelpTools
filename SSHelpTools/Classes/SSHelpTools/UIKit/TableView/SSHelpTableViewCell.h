@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) SSHelpTabViewCellModel *modelData;
 
+- (void)prepareForReuse;
+
 /// 刷新
 - (void)refresh;
 
