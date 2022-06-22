@@ -90,8 +90,7 @@
     
     if (buttonModel.block)
     {
-        [_button ss_addBlockForControlEvents:UIControlEventTouchUpInside
-                                       block:buttonModel.block];
+        [_button ss_addControlEvents:UIControlEventTouchUpInside block:buttonModel.block];
     }
     
     if (buttonModel.icon)
@@ -220,7 +219,7 @@
 
 - (void)setOnClick:(void (^)(SSHelpButton *))onClick
 {
-    [self ss_addTouchUpInsideBlock:onClick];
+    [self ss_touchUpInsideBlock:onClick];
 }
 
 @end

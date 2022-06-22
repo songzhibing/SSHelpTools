@@ -77,13 +77,11 @@ typedef NS_OPTIONS(NSUInteger, SSHelpButtonStyle) {
 
 @property(nonatomic, assign) CGRect titleContentRect;
 
-/// 响应区域需要改变的大小，负值表示往外扩大，正值表示往内缩小
-@property(nonatomic, assign) UIEdgeInsets outsideEdge;
+@property(nonatomic, assign) UIEdgeInsets outsideEdge; /// 调整响应区域大小，负值扩大，正值缩小
 
 @property(nonatomic, strong) NSArray <NSDictionary *> *_Nullable childButtons;
 
-/// 支持多设
-@property(nonatomic, copy  ) void(^onClick)(SSHelpButton *sender);
+@property(nonatomic, copy  ) void (^onClick)(SSHelpButton *sender); /// 点击回调，支持多设
 
 @end
 
