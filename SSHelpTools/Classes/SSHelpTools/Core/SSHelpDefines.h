@@ -158,7 +158,7 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 //__weak && __strong
 
-#ifndef weakify // 该宏在YYKit、ReactiveObjC、...  等都含有
+#ifndef weakify // 该宏在YYKit、ReactiveObjC、...  等内部都含有
     #define weakify(...) \
         ss_keywordify \
         metamacro_foreach_cxt(ss_weakify_,, __weak, __VA_ARGS__)

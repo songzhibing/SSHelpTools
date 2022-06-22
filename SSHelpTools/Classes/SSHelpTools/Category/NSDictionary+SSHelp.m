@@ -15,15 +15,12 @@
  */
 - (NSString *)ss_jsonStringEncoded
 {
-    if ([NSJSONSerialization isValidJSONObject:self])
-    {
+    if ([NSJSONSerialization isValidJSONObject:self]) {
         NSJSONWritingOptions opt = kNilOptions;
         if (@available(iOS 11.0, *)) {
             opt = NSJSONWritingSortedKeys;
         }
-        NSData *data = [NSJSONSerialization dataWithJSONObject:self
-                                                       options:opt
-                                                         error:NULL];
+        NSData *data = [NSJSONSerialization dataWithJSONObject:self options:opt error:NULL];
         if (data) {
             return data.ss_utf8String?:@"";
         }

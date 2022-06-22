@@ -24,6 +24,7 @@ static NSString *logCurrentTime(void)
         dateFromatter = [NSDateFormatter new];
         dateFromatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         dateFromatter.calendar = [[NSCalendar  alloc] initWithCalendarIdentifier:NSCalendarIdentifierISO8601];
+        dateFromatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT+0800"];
         dateFromatter.dateFormat = @"yyyy.MM.dd.HH.mm.ss.SSS";
     });
     return [dateFromatter stringFromDate:NSDate.date];
@@ -42,12 +43,13 @@ static NSString *logCurrentTime(void)
 - (NSString *)newLogFileName
 {
     NSString *timeStamp = logCurrentTime();
-    return [NSString stringWithFormat:@"%@.log.html", timeStamp];
+    return [NSString stringWithFormat:@"%@.log.txt", timeStamp];
 }
+
 //重写方法(是否是log文件)
 - (BOOL)isLogFile:(NSString *)fileName
 {
-    BOOL hasProperSuffix = [fileName hasSuffix:@".log.html"];
+    BOOL hasProperSuffix = [fileName hasSuffix:@".log.txt"];
     return hasProperSuffix;
 }
 
@@ -116,7 +118,10 @@ static NSString *logCurrentTime(void)
         [_logger addXcodeLogger];
         [_logger addFileLogger];
         #ifdef DEBUG
-            SSLogDebug(@"日志文件:%@\n%@",_logger.fileLogger.logFileManager.logsDirectory,_logger.fileLogger.logFileManager.sortedLogFileNames);
+//            SSLogDebug(@"日志文件:%@\n%@",_logger.fileLogger.logFileManager.logsDirectory,_logger.fileLogger.logFileManager.sortedLogFileNames);
+            DDLogDebug(@"Time:%@",logCurrentTime());
+            DDLogDebug(@"日志文件:%@\n%@",_logger.fileLogger.logFileManager.logsDirectory,_logger.fileLogger.logFileManager.sortedLogFileNames);
+
         #endif
     });
     return _logger;
