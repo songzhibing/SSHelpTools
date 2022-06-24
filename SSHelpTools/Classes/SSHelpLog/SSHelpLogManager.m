@@ -118,10 +118,8 @@ static NSString *logCurrentTime(void)
         [_logger addXcodeLogger];
         [_logger addFileLogger];
         #ifdef DEBUG
-//            SSLogDebug(@"日志文件:%@\n%@",_logger.fileLogger.logFileManager.logsDirectory,_logger.fileLogger.logFileManager.sortedLogFileNames);
-            DDLogDebug(@"Time:%@",logCurrentTime());
-            DDLogDebug(@"日志文件:%@\n%@",_logger.fileLogger.logFileManager.logsDirectory,_logger.fileLogger.logFileManager.sortedLogFileNames);
-
+            DDLogDebug(@"日志路径:%@",_logger.fileLogger.logFileManager.logsDirectory);
+            DDLogDebug(@"日志文件:%@",_logger.fileLogger.logFileManager.sortedLogFileNames);
         #endif
     });
     return _logger;
