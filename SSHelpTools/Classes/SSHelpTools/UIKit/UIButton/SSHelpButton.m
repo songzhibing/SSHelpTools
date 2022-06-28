@@ -6,48 +6,13 @@
 //  Copyright © 2017年 songzhibing. All rights reserved.
 //
 
-#import "SSHelpButton.h"
 #import <objc/runtime.h>
 
+#import "SSHelpButton.h"
 #import "SSHelpDefines.h"
 #import "UIButton+SSHelp.h"
 #import "NSObject+SSHelp.h"
 #import "NSBundle+SSHelp.h"
-
-@implementation SSHelpButtonModel
-
-+ (instancetype)modelWithDictionary:(NSDictionary *)dict
-{
-    SSHelpButtonModel *_model = [[SSHelpButtonModel alloc] init];
-    _model.title = SSEncodeStringFromDict(dict, @"title");
-    _model.icon  = SSEncodeStringFromDict(dict, @"image");
-    
-    NSString *style = SSEncodeStringFromDict(dict, @"style");
-    if ([style isEqualToString:@"back"])
-    {
-        _model.style =  SSButtonStyleBack;
-    }
-    else if ([style isEqualToString:@"reload"])
-    {
-        _model.style =  SSButtonStyleRefresh;
-    }
-    else if ([style isEqualToString:@"list"])
-    {
-        //列表按钮
-        _model.style =  SSButtonStyleList;
-        _model.childButtons = SSEncodeArrayFromDict(dict, @"list");
-    }else{
-        _model.style =  SSButtonStyleCustom;
-
-    }
-    return _model;
-}
-
-@end
-
-//******************************************************************************
-//******************************************************************************
-
 
 @implementation SSHelpButton
 
@@ -65,44 +30,67 @@
 + (instancetype)buttonWithStyle:(SSHelpButtonStyle)buttonStyle
 {
     SSHelpButton *_button = [SSHelpButton buttonWithType:UIButtonTypeCustom];
+    _button.style = buttonStyle;
     _button.frame = CGRectMake(0, 0, 44, 44);
-    if (buttonStyle == SSButtonStyleBack)
-    {
-        _button.normalImage = [NSBundle ss_navigationBackImage];
-    }
-    else if (buttonStyle == SSButtonStyleLocation)
-    {
-        _button.normalImage = [NSBundle ss_navigationBackImage];
-    }
-    else if (buttonStyle == SSButtonStyleFlashlight)
-    {
-        _button.normalImage = [NSBundle ss_flashlightOpenImg];
-        _button.selectedImage = [NSBundle ss_flashlightCloseImg];
+    
+    switch (buttonStyle) {
+        case SSButtonStyleBack:
+        {
+            _button.normalImage = [NSBundle ss_toolsBundleImage:@"SSNav_Back_Dark12x24"];
+            _button.contentImageRect = CGRectMake(8, (44-24)/2.0f, 12, 24);
+        }
+            break;
+            
+        case SSButtonStyleLocation:
+            break;
+            
+        case SSButtonStyleRefresh:
+            break;
+            
+        case SSButtonStyleList:
+        {
+        }
+            break;
+            
+        case SSButtonStyleRightMore:
+        {
+            _button.normalImage = [NSBundle ss_toolsBundleImage:@"SSNav_Menu_More_Dark_Small43x28"];
+            _button.contentImageRect = CGRectMake(44-43, (44-28)/2.0f, 43, 28);
+        }
+            break;
+        case SSButtonStyleRightExit:
+        {
+            _button.normalImage = [NSBundle ss_toolsBundleImage:@"SSNav_Menu_Exit_Dark_Small43x28"];
+            _button.contentImageRect = CGRectMake(0, (44-28)/2.0f, 43, 28);
+        }
+            break;
+        default:
+            break;
     }
     return _button;
 }
 
-+ (instancetype)buttonWithModel:(SSHelpButtonModel*)buttonModel
++ (instancetype)buttonWithModel:(SSHelpButtonModel*)model
 {
-    SSHelpButton *_button = [SSHelpButton buttonWithStyle:buttonModel.style];
-    _button.identifier = buttonModel.identifier;
-    _button.childButtons = buttonModel.childButtons;
+    SSHelpButton *_button = [SSHelpButton buttonWithStyle:model.style];
+    _button.identifier = model.identifier;
+    _button.childButtons = model.childButtons;
     
-    if (buttonModel.block)
+    if (model.block)
     {
-        [_button ss_addControlEvents:UIControlEventTouchUpInside block:buttonModel.block];
+        [_button ss_addControlEvents:UIControlEventTouchUpInside block:model.block];
     }
     
-    if (buttonModel.icon)
+    if (model.icon)
     {
-        if ([buttonModel.icon isKindOfClass:[UIImage class]])
+        if ([model.icon isKindOfClass:[UIImage class]])
         {
-            _button.normalImage = buttonModel.icon;
+            _button.normalImage = model.icon;
         }
-        else if([buttonModel.icon isKindOfClass:[NSString class]])
+        else if([model.icon isKindOfClass:[NSString class]])
         {
             NSData *imageDta = nil;
-            imageDta = [[NSData alloc] initWithBase64EncodedString:buttonModel.icon
+            imageDta = [[NSData alloc] initWithBase64EncodedString:model.icon
                                                            options:NSDataBase64DecodingIgnoreUnknownCharacters];
             if (imageDta)
             {
@@ -111,8 +99,8 @@
         }
     }
 
-    if(!_button.normalImage && buttonModel.title ){
-        _button.normalTitle = buttonModel.title;
+    if(!_button.normalImage && model.title ){
+        _button.normalTitle = model.title;
 
     }
     return _button;
@@ -219,7 +207,7 @@
 
 - (void)setOnClick:(void (^)(SSHelpButton *))onClick
 {
-    [self ss_touchUpInsideBlock:onClick];
+    [self ss_addTouchUpInsideBlock:onClick];
 }
 
 @end

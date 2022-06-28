@@ -58,7 +58,7 @@
     if (@available(iOS 11.0, *)) {
         // iOS11之后使用 - (void)viewSafeAreaInsetsDidChange
     } else {
-        [self updateSubviewsDisplayWithOptions:SSViewWillAppear];
+        [self updateSubviewsDisplayWithOptions:UIViewControllerViewWillAppear];
     }
 }
 
@@ -68,7 +68,7 @@
 - (void)viewLayoutMarginsDidChange NS_REQUIRES_SUPER API_AVAILABLE(ios(11.0), tvos(11.0))
 {
     [super viewLayoutMarginsDidChange];
-    [self updateSubviewsDisplayWithOptions:SSViewLayoutMarginsDidChange];
+    [self updateSubviewsDisplayWithOptions:UIViewControllerViewLayoutMarginsDidChange];
 }
 
 /**
@@ -77,7 +77,7 @@
 - (void)viewSafeAreaInsetsDidChange NS_REQUIRES_SUPER API_AVAILABLE(ios(11.0), tvos(11.0))
 {
     [super viewSafeAreaInsetsDidChange];
-    [self updateSubviewsDisplayWithOptions:SSViewSafeAreaInsetsDidChange];
+    [self updateSubviewsDisplayWithOptions:UIViewControllerViewSafeAreaInsetsDidChange];
 }
 
 /**
@@ -139,7 +139,7 @@
 /**
  控制器视图尺寸发生变化回调
  */
-- (void)updateSubviewsDisplayWithOptions:(SSHelpViewUpdateDisplayOptions)options API_AVAILABLE(ios(10.0)) NS_REQUIRES_SUPER
+- (void)updateSubviewsDisplayWithOptions:(UIViewControllerLifeCycleOptions)options API_AVAILABLE(ios(10.0)) NS_REQUIRES_SUPER
 {
     CGFloat statusBarHeight = 20;     //状态栏高度
     CGFloat homeIndicatorHeight = 0;  //底部"Home键"高度

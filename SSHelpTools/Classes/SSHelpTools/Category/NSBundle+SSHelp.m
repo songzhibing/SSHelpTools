@@ -10,72 +10,21 @@
 
 @implementation NSBundle (SSHelp)
 
-+ (instancetype)ss_toolsBundle
-{
-    static NSBundle *uikitBundle = nil;
-    if (uikitBundle == nil) {
-        NSBundle *containnerBundle = [NSBundle bundleForClass:[SSHelpToolsConfig class]];
-        uikitBundle = [NSBundle bundleWithPath:[containnerBundle pathForResource:@"SSHelpTools" ofType:@"bundle"]];
-    }
-    return uikitBundle;
-}
-
-+ (UIImage *)ss_navigationBackImage
-{
-    static UIImage *backImage = nil;
-    if (backImage == nil) {
-        backImage = [UIImage imageWithContentsOfFile:[[self ss_toolsBundle] pathForResource:@"ss_navi_back_white@2x" ofType:@"png"]];
-    }
-    return backImage;
-}
-
-+ (UIImage *)ss_flashlightOpenImg
-{
-    static UIImage *_flashlightOpenImg = nil;
-    if (_flashlightOpenImg == nil) {
-        _flashlightOpenImg = [UIImage imageWithContentsOfFile:[[self ss_toolsBundle] pathForResource:@"ss_flashlight_open_img@2x" ofType:@"png"]];
-    }
-    return _flashlightOpenImg;
-}
-
-+ (UIImage *)ss_flashlightCloseImg
-{
-    static UIImage *_flashlightCloseImg = nil;
-    if (_flashlightCloseImg == nil) {
-        _flashlightCloseImg = [UIImage imageWithContentsOfFile:[[self ss_toolsBundle] pathForResource:@"ss_flashlight_close_img@2x" ofType:@"png"]];
-    }
-    return _flashlightCloseImg;
-}
-
-+ (UIImage *)ss_scanLineImg
-{
-    static UIImage *_scanLineImg = nil;
-    if (_scanLineImg == nil) {
-        _scanLineImg = [UIImage imageWithContentsOfFile:[[self ss_toolsBundle] pathForResource:@"ss_scan_line_img@3x" ofType:@"png"]];
-    }
-    return _scanLineImg;
-}
-
-+ (UIImage *)ss_scanGridImg
-{
-    static UIImage *_scanGridImg = nil;
-    if (_scanGridImg == nil) {
-        _scanGridImg = [UIImage imageWithContentsOfFile:[[self ss_toolsBundle] pathForResource:@"ss_scan_grid_img@3x" ofType:@"png"]];
-    }
-    return _scanGridImg;
-}
-
-+ (UIImage * _Nullable)ss_loadImage:(NSString *)imageName withBundle:(NSString *)bundleName
++ (NSString * _Nullable)ss_bundlePath:(NSString *)bundleName
 {
     // #use_frameworks!
     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:bundleName ofType:@"bundle"];
-    
     if (!bundlePath) {
         // use_frameworks!
         NSString *path = [NSString stringWithFormat:@"Frameworks/%@.framework/%@",bundleName,bundleName];
         bundlePath = [[NSBundle mainBundle] pathForResource:path ofType:@"bundle"];
     }
-    
+    return bundlePath;
+}
+
++ (UIImage * _Nullable)ss_loadImage:(NSString *)imageName fromBundle:(NSString *)bundleName
+{
+    NSString *bundlePath = [self ss_bundlePath:bundleName];
     if (bundlePath) {
         NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
         if (bundle) {
@@ -84,6 +33,20 @@
         }
     }
     return nil;
+}
+
++ (NSBundle *)ss_toolsBundle
+{
+    static NSBundle *toolsBundle;
+    if (!toolsBundle) {
+        toolsBundle = [NSBundle bundleWithPath:[self ss_bundlePath:@"SSHelpTools"]];
+    }
+    return toolsBundle;
+}
+
++ (UIImage *)ss_toolsBundleImage:(NSString *)imageName
+{
+    return [UIImage imageNamed:imageName inBundle:[self ss_toolsBundle] compatibleWithTraitCollection:nil];
 }
 
 @end

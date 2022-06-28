@@ -1,6 +1,6 @@
 {
   "name": "SSHelpTools",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "summary": "常用工具",
   "description": "TODO: 代码逐渐完善中，欢迎提出问题.",
   "homepage": "https://github.com/songzhibing/SSHelpTools",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/songzhibing/SSHelpTools.git",
-    "tag": "0.1.0"
+    "tag": "0.1.1"
   },
   "platforms": {
     "ios": "10.0"
@@ -23,12 +23,18 @@
       "name": "SSHelpTools",
       "source_files": "SSHelpTools/Classes/SSHelpTools/**/*.{h,m}",
       "public_header_files": "SSHelpTools/Classes/SSHelpTools/**/*.h",
-      "resources": "SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.bundle",
+      "resource_bundles": {
+        "SSHelpTools": [
+          "SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.bundle",
+          "SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.xcassets"
+        ]
+      },
       "frameworks": [
         "UIKit",
         "Foundation",
         "CoreLocation",
-        "AVFoundation"
+        "AVFoundation",
+        "PhotosUI"
       ],
       "dependencies": {
         "Masonry": [

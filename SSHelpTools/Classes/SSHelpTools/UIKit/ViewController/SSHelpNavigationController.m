@@ -31,7 +31,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     self.view.backgroundColor = SSHELPTOOLSCONFIG.backgroundColor;
     
     [[NSNotificationCenter defaultCenter] addObserver:self

@@ -7,48 +7,7 @@
 //
 
 #import "SSHelpNavigationBar.h"
-#import <Masonry/Masonry.h>
-
-#import "NSBundle+SSHelp.h"
-#import "NSObject+SSHelp.h"
-#import "SSHelpToolsConfig.h"
-#import "SSHelpDefines.h"
-
-@implementation SSHelpNavigationBarModel
-
-+ (instancetype)modelWithDictionary:(NSDictionary *)dict
-{
-    SSHelpNavigationBarModel *_model = [[SSHelpNavigationBarModel alloc] init];
-    _model.title = SSEncodeStringFromDict(dict, @"title");
-    _model.titleImage = SSEncodeStringFromDict(dict,@"image");
-    //左侧动态按钮
-    NSArray *leftBtnArray = SSEncodeArrayFromDict(dict, @"left");
-    if (leftBtnArray && leftBtnArray.count) {
-        NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:leftBtnArray.count];
-        for (NSInteger index=0; index<leftBtnArray.count; index++) {
-            SSHelpButtonModel *item =[SSHelpButtonModel modelWithDictionary:leftBtnArray[index]];
-            [array addObject:item];
-        }
-        _model.leftButtons = array;
-    }
-    //右侧动态按钮
-    NSArray *rightBtnArray = SSEncodeArrayFromDict(dict, @"right");
-    if (rightBtnArray && rightBtnArray.count) {
-        NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:rightBtnArray.count];
-        for (NSInteger index=0; index<rightBtnArray.count; index++) {
-            SSHelpButtonModel *item =[SSHelpButtonModel modelWithDictionary:rightBtnArray[index]];
-            [array addObject:item];
-        }
-        _model.rightButtons = array;
-    }
-    return _model;
-}
-
-@end
-
-//******************************************************************************
-//******************************************************************************
-
+#import "SSHelpView.h"
 
 @interface SSHelpNavigationBar()
 
@@ -61,11 +20,6 @@
 @end
 
 @implementation SSHelpNavigationBar
-
-- (void)dealloc
-{
-    
-}
 
 - (instancetype)init
 {
@@ -101,8 +55,8 @@
 {
     [super safeAreaInsetsDidChange];
     [_contentView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.safeAreaInsets.left);
-        make.right.mas_equalTo(-self.safeAreaInsets.right);
+        make.left.mas_equalTo(self.safeAreaInsets.left?:8);
+        make.right.mas_equalTo(-(self.safeAreaInsets.right?:8));
         make.height.mas_equalTo(44);
         make.bottom.mas_equalTo(self.mas_bottom);
     }];
@@ -112,14 +66,17 @@
 
 - (void)p_setupSubView
 {
-    @weakify(self);
+    @Tweakify(self);
     
     self.userInteractionEnabled = YES;
     self.backgroundColor = [SSHelpToolsConfig sharedConfig].tertiaryFillColor;
         
+    _dynamicLeftButtons  = [NSHashTable weakObjectsHashTable];
+    _dynamicRightButtons = [NSHashTable weakObjectsHashTable];
+
     _contentView = [[UIView alloc] init];
     _contentView.userInteractionEnabled = YES;
-    _contentView.backgroundColor = [UIColor clearColor];
+    _contentView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.f];
     [self addSubview:_contentView];
     [_contentView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(8);
@@ -145,43 +102,50 @@
     _titleImage.backgroundColor = [UIColor clearColor];
     [_contentView addSubview:_titleImage];
     [_titleImage mas_remakeConstraints:^(MASConstraintMaker *make) {
-        //左右留出各一个button间距
-        make.left.mas_equalTo(44);
-        make.bottom.mas_equalTo(0);
-        make.right.mas_equalTo(-44);
+        make.left.bottom.right.mas_equalTo(0);
         make.height.mas_equalTo(44);
     }];
     
     ///左侧返回按钮
     if (_barStyle & SSNavigationBarWithLeftBack)
     {
-        _leftButton = [SSHelpButton buttonWithType:UIButtonTypeCustom];
-        _leftButton.normalImage =[NSBundle ss_navigationBackImage];
-        _leftButton.contentImageRect = CGRectMake(8, (44-18)/2.0f, 10.5, 18.0f);
-        _leftButton.style = SSButtonStyleBack;
+        _leftButton = [SSHelpButton buttonWithStyle:SSButtonStyleBack];
         [_contentView addSubview:_leftButton];
-        [_leftButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.bottom.mas_equalTo(0);
+        [_leftButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(0);
             make.size.mas_equalTo(CGSizeMake(44, 44));
         }];
-        _leftButton.onClick = ^(SSHelpButton * _Nonnull sender) {
+        [_leftButton setOnClick:^(SSHelpButton * _Nonnull sender) {
             [self_weak_ p_clickLeftButton:sender];
-        };
+        }];
+        [_dynamicLeftButtons addObject:_leftButton];
     }
     
-    ///右侧空内容按钮
-    if (_barStyle & SSNavigationBarWithLeftBackAndCustomRight)
+    ///右侧按钮
+    if (_barStyle & SSNavigationBarWithRightMenu)
     {
-        SSHelpButtonModel *rightBtnModel = [[SSHelpButtonModel alloc] init];
-        _rightButton = [SSHelpButton buttonWithModel:rightBtnModel];
-        [_contentView addSubview:_rightButton];
-        [_rightButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.right.bottom.mas_equalTo(-8);
+        _rightExitButton = [SSHelpButton buttonWithStyle:SSButtonStyleRightExit];
+        [_contentView addSubview:_rightExitButton];
+        [_rightExitButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(0);
             make.size.mas_equalTo(CGSizeMake(44, 44));
         }];
-        _rightButton.onClick = ^(SSHelpButton * _Nonnull sender) {
+        [_rightExitButton setOnClick:^(SSHelpButton * _Nonnull sender) {
             [self_weak_ p_clickRightButton:sender];
-        };
+        }];
+        
+        _rightMoreButton = [SSHelpButton buttonWithStyle:SSButtonStyleRightMore];
+        [_contentView addSubview:_rightMoreButton];
+        [_rightMoreButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(_rightMoreButton.mas_left);
+            make.size.mas_equalTo(CGSizeMake(44, 44));
+        }];
+        [_rightMoreButton setOnClick:^(SSHelpButton * _Nonnull sender) {
+            [self_weak_ p_clickRightButton:sender];
+        }];
+        
+        [_dynamicRightButtons addObject:_rightExitButton];
+        [_dynamicRightButtons addObject:_rightMoreButton];
     }
 }
 
@@ -290,24 +254,6 @@
     }
 }
 
-#pragma mark - Lazyload Method
-
-
-- (NSHashTable<SSHelpButton *> *)dynamicLeftButtons
-{
-    if (!_dynamicLeftButtons) {
-        _dynamicLeftButtons = [NSHashTable weakObjectsHashTable];
-    }
-    return _dynamicLeftButtons;
-}
-
-- (NSHashTable<SSHelpButton *> *)dynamicRightButtons
-{
-    if (!_dynamicRightButtons) {
-        _dynamicRightButtons = [NSHashTable weakObjectsHashTable];
-    }
-    return _dynamicRightButtons;
-}
 
 /*
 // Only override drawRect: if you perform custom drawing.

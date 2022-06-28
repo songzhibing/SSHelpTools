@@ -11,11 +11,10 @@ target 'SSHelpTools_Example' do
 
   target 'SSHelpTools_Tests' do
     inherit! :search_paths
-    pod 'SDWebImage', '~> 4.4.3'
+    pod 'SDWebImage'
 
     pod 'FBSnapshotTestCase'
     pod 'YYKit'
     pod 'CocoaHTTPServer'
-    pod 'TSHelpTool'
   end
 end

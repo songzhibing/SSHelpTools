@@ -15,10 +15,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_OPTIONS(NSInteger, SSHelpViewUpdateDisplayOptions) {
-    SSViewWillAppear              = (1 << 0),  //iOS11之前
-    SSViewLayoutMarginsDidChange  = (1 << 1),
-    SSViewSafeAreaInsetsDidChange = (1 << 2),
+typedef NS_OPTIONS(NSInteger, UIViewControllerLifeCycleOptions) {
+    UIViewControllerViewInit       = (1<<0),
+    UIViewControllerViewDidLoad    = (1<<1),
+    UIViewControllerViewWillAppear = (1<<2),
+    UIViewControllerViewLayoutMarginsDidChange = (1<<3),
+    UIViewControllerViewSafeAreaInsetsDidChange = (1<<4),
+    UIViewControllerViewDidAppear  = (1<<5),
+    UIViewControllerViewWillDisappear = (1<<6),
+    UIViewControllerViewDidDisappear  = (1<<7),
+    UIViewControllerDealloc        = (1<<8)
 };
 
 @interface SSHelpViewController : UIViewController <SSHelpNavigationBarDelegate>
@@ -42,7 +48,7 @@ typedef NS_OPTIONS(NSInteger, SSHelpViewUpdateDisplayOptions) {
 - (void)tryGoBack;
 
 /// 控制器视图尺寸发生变化回调
-- (void)updateSubviewsDisplayWithOptions:(SSHelpViewUpdateDisplayOptions)options API_AVAILABLE(ios(10.0)) NS_REQUIRES_SUPER;
+- (void)updateSubviewsDisplayWithOptions:(UIViewControllerLifeCycleOptions)options API_AVAILABLE(ios(10.0)) NS_REQUIRES_SUPER;
 
 @end
 

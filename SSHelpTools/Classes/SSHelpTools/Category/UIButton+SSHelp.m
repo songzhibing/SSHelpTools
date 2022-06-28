@@ -50,7 +50,7 @@ static const int block_target_key;
     [[self _allBlockTargets] removeAllObjects];
 }
 
-- (void)ss_touchUpInsideBlock:(void (^)(id sender))block
+- (void)ss_addTouchUpInsideBlock:(void (^)(id sender))block
 {
     [self ss_addControlEvents:UIControlEventTouchUpInside block:block];
 }

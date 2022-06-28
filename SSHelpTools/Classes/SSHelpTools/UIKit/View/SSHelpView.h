@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Masonry/Masonry.h>
 #import "UIView+SSHelp.h"
 #import "SSHelpDefines.h"
 

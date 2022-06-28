@@ -44,9 +44,9 @@
     }
 }
 
-- (void)updateSubviewsDisplayWithOptions:(SSHelpViewUpdateDisplayOptions)options
+- (void)updateSubviewsDisplayWithOptions:(UIViewControllerLifeCycleOptions)options
 {
-    if (options & (SSViewSafeAreaInsetsDidChange | SSViewWillAppear)) {
+    if (options & (UIViewControllerViewSafeAreaInsetsDidChange | UIViewControllerViewWillAppear)) {
         // 执行父类
         [super updateSubviewsDisplayWithOptions:options];
         // 调整位置
