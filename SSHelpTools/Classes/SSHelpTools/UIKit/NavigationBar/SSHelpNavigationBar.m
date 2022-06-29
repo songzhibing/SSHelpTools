@@ -70,9 +70,27 @@
     
     self.userInteractionEnabled = YES;
     self.backgroundColor = [SSHelpToolsConfig sharedConfig].tertiaryFillColor;
-        
-    _dynamicLeftButtons  = [NSHashTable weakObjectsHashTable];
-    _dynamicRightButtons = [NSHashTable weakObjectsHashTable];
+    
+    ///图片
+    _titleImage = [[UIImageView alloc] init];
+    _titleImage.contentMode = UIViewContentModeCenter;
+    _titleImage.backgroundColor = [UIColor clearColor];
+    [self addSubview:_titleImage];
+    [_titleImage mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
+    
+    ///标题
+    _titleLabel = [[UILabel alloc] init];
+    _titleLabel.textAlignment = NSTextAlignmentCenter;
+    _titleLabel.textColor = SSHELPTOOLSCONFIG.labelColor;
+    _titleLabel.backgroundColor = [UIColor clearColor];
+    [self addSubview:_titleLabel];
+    [_titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.bottom.right.mas_equalTo(0);
+        make.height.mas_equalTo(_kNavBarHeight);
+    }];
+    
 
     _contentView = [[UIView alloc] init];
     _contentView.userInteractionEnabled = YES;
@@ -85,26 +103,8 @@
         make.bottom.mas_equalTo(self.mas_bottom);
     }];
     
-    ///标题
-    _titleLabel = [[UILabel alloc] init];
-    _titleLabel.textAlignment = NSTextAlignmentCenter;
-    _titleLabel.textColor = SSHELPTOOLSCONFIG.labelColor;
-    _titleLabel.backgroundColor = [UIColor clearColor];
-    [_contentView addSubview:_titleLabel];
-    [_titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.right.mas_equalTo(0);
-        make.height.mas_equalTo(44);
-    }];
-    
-    ///图片
-    _titleImage = [[UIImageView alloc] init];
-    _titleImage.contentMode = UIViewContentModeCenter;
-    _titleImage.backgroundColor = [UIColor clearColor];
-    [_contentView addSubview:_titleImage];
-    [_titleImage mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.right.mas_equalTo(0);
-        make.height.mas_equalTo(44);
-    }];
+    _dynamicLeftButtons  = [NSHashTable weakObjectsHashTable];
+    _dynamicRightButtons = [NSHashTable weakObjectsHashTable];
     
     ///左侧返回按钮
     if (_barStyle & SSNavigationBarWithLeftBack)
@@ -168,8 +168,10 @@
 - (void)resetNavigationBar:(SSHelpNavigationBarModel *)model
 {
     //先隐藏所有的旧视图
-    [_contentView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        obj.hidden = YES;
+    [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj!=self.contentView) {
+            obj.hidden = YES;
+        }
     }];
     
     if (model.title) {

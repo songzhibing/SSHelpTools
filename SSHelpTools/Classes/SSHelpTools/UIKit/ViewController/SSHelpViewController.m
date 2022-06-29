@@ -102,25 +102,10 @@
     CGFloat statusBarHeight    = 0;
     CGRect  navigationBarFrame = CGRectZero;
     CGFloat tabBarHeight       = 0;
-    CGFloat homeIndicatorHeight= 0;
+    UIEdgeInsets safeAreaInsets= UIEdgeInsetsZero;
     
-    // 底部
-    if (self.tabBarController && self.tabBarController.tabBar && !self.tabBarController.tabBar.isHidden) {
-        tabBarHeight = CGRectGetHeight(self.tabBarController.tabBar.frame);
-        homeIndicatorHeight = 0; //归零，高度已算在tabBar里.
-    } else {
-        tabBarHeight = 0;
-        if (@available(iOS 11.0, *)) {
-            homeIndicatorHeight = self.view.bounds.size.height- self.view.safeAreaLayoutGuide.layoutFrame.origin.y-self.view.safeAreaLayoutGuide.layoutFrame.size.height;
-        } else {
-            homeIndicatorHeight = 0;
-        }
-    }
-    
-    // 顶部
     if (self.navigationController && !self.navigationController.isNavigationBarHidden) {
         // 使用系统导航栏
-        statusBarHeight = 0; //归零，高度已算在navigationBar里.
         navigationBarFrame = self.navigationController.navigationBar.frame;
         // 隐藏自定义导航栏
         if (_customNavigationBar) {
@@ -134,35 +119,46 @@
         if (orientation==UIInterfaceOrientationLandscapeLeft || orientation==UIInterfaceOrientationLandscapeRight) {
             statusBarHeight = 0; //横屏状态高度为0
         } else {
-            statusBarHeight = 20; //竖屏
+            if (@available(iOS 11.0, *)) {
+                statusBarHeight = self.view.safeAreaInsets.top;
+            } else {
+                statusBarHeight = 20; //竖屏
+            }
         }
         // 处理自定义导航栏
         if (_customNavigationBar) {
             navigationBarFrame = CGRectMake(0, 0, self.view.ss_width, statusBarHeight+_kNavBarHeight);
             _customNavigationBar.frame = navigationBarFrame;
             _customNavigationBar.hidden = NO; //显示
-            statusBarHeight = 0; //归零，高度已算在navigationBar里.
-        } else {
-            navigationBarFrame = CGRectZero;
         }
     }
     
     // 计算间距
     if (@available(iOS 11.0, *)) {
-        _viewSafeAreaInsets = UIEdgeInsetsMake(statusBarHeight+navigationBarFrame.size.height,
-                                               self.view.safeAreaInsets.left,
-                                               self.view.safeAreaInsets.bottom,
-                                               self.view.safeAreaInsets.right);
+        if (self.navigationController && !self.navigationController.isNavigationBarHidden) {
+            safeAreaInsets = self.view.safeAreaInsets;
+        } else {
+            CGFloat navgationBarHeight = (_customNavigationBar && !_customNavigationBar.hidden)?_kNavBarHeight:0;
+            safeAreaInsets = UIEdgeInsetsMake(self.view.safeAreaInsets.top+navgationBarHeight,
+                                              self.view.safeAreaInsets.left,
+                                              self.view.safeAreaInsets.bottom,
+                                              self.view.safeAreaInsets.right);
+        }
     } else {
-        _viewSafeAreaInsets = UIEdgeInsetsMake(statusBarHeight+navigationBarFrame.size.height,0,
-                                               tabBarHeight+homeIndicatorHeight,0);
+        if (self.tabBarController && self.tabBarController.tabBar && !self.tabBarController.tabBar.isHidden) {
+            tabBarHeight = CGRectGetHeight(self.tabBarController.tabBar.frame);
+        } else {
+            tabBarHeight = 0;
+        }
+        safeAreaInsets = UIEdgeInsetsMake(navigationBarFrame.size.height,0,tabBarHeight,0);
     }
     
-    CGRect contentFrame = CGRectMake(_viewSafeAreaInsets.left,
-                                     _viewSafeAreaInsets.top,
-                                     self.view.ss_width-(_viewSafeAreaInsets.left+_viewSafeAreaInsets.right),
-                                     self.view.ss_height-(_viewSafeAreaInsets.top+_viewSafeAreaInsets.bottom));
+    CGRect contentFrame = CGRectMake(safeAreaInsets.left,
+                                     safeAreaInsets.top,
+                                     self.view.ss_width-(safeAreaInsets.left+safeAreaInsets.right),
+                                     self.view.ss_height-(safeAreaInsets.top+safeAreaInsets.bottom));
     // 调整
+    _viewSafeAreaInsets = safeAreaInsets;
     if (_contentView) {
         _contentView.frame = contentFrame;
     }
