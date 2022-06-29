@@ -10,13 +10,13 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_OPTIONS(NSUInteger, SSHelpButtonStyle) {
-    SSButtonStyleCustom   = 0, // 默认自定义按钮
-    SSButtonStyleBack,         // 普通的返回按钮
-    SSButtonStyleLocation,     // 定位按钮
-    SSButtonStyleList,         // 展开列表按钮
-    SSButtonStyleRefresh,      // 刷新按钮
-    SSButtonStyleRightMore,    // '胶囊'左按钮
-    SSButtonStyleRightExit,    // '胶囊'右按钮
+    SSButtonStyleCustom    = (1<<0), // 默认自定义按钮
+    SSButtonStyleBack      = (1<<1), // 普通的返回按钮
+    SSButtonStyleLocation  = (1<<2), // 定位按钮
+    SSButtonStyleList      = (1<<3), // 展开列表按钮
+    SSButtonStyleRefresh   = (1<<4), // 刷新按钮
+    SSButtonStyleRightMore = (1<<5), // '胶囊'左按钮
+    SSButtonStyleRightExit = (1<<6)  // '胶囊'右按钮
 };
 
 @interface SSHelpButtonModel : NSObject

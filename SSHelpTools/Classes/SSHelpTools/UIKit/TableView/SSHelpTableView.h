@@ -16,9 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpTableView : SSHelpView
 
-@property(nonatomic, strong) UIColor *backColor;
-
-/// 默认 UIEdgeInsetsZero
 @property(nonatomic, assign) UIEdgeInsets contentInset;
 
 @property(nonatomic, strong) NSMutableArray <SSHelpTabViewSectionModel *> *data;

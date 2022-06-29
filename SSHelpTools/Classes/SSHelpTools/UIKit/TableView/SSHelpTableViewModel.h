@@ -80,8 +80,6 @@ typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView *reus
 
 @property(nonatomic, strong) UIColor *backgroundColor;
 
-//@property(nonatomic, assign, nullable) Class className;
-
 @property(nonatomic, copy, nullable) SSHelpTabViewCellRefresh refreshBlock;
 
 @property(nonatomic, copy, nullable) SSHelpTabViewItemOnClick onClick;

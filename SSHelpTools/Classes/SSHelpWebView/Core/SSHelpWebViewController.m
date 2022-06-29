@@ -44,16 +44,13 @@
     }
 }
 
-- (void)updateSubviewsDisplayWithOptions:(UIViewControllerLifeCycleOptions)options
+- (void)adjustSubviewsDisplay
 {
-    if (options & (UIViewControllerViewSafeAreaInsetsDidChange | UIViewControllerViewWillAppear)) {
-        // 执行父类
-        [super updateSubviewsDisplayWithOptions:options];
-        // 调整位置
-        [self.webView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(self.viewSafeAreaInsets.top, self.viewSafeAreaInsets.left, 0, self.viewSafeAreaInsets.right));
-        }];
-    }
+    [super adjustSubviewsDisplay];
+    // 调整位置
+    [self.webView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsMake(self.viewSafeAreaInsets.top, self.viewSafeAreaInsets.left, 0, self.viewSafeAreaInsets.right));
+    }];
 }
 
 #pragma mark - WebView Delegate

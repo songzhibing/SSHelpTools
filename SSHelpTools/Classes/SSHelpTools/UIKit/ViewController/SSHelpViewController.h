@@ -9,46 +9,33 @@
 #import <UIKit/UIKit.h>
 #import <Masonry/Masonry.h>
 
-#import "SSHelpToolsConfig.h"
 #import "SSHelpDefines.h"
 #import "SSHelpNavigationBar.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_OPTIONS(NSInteger, UIViewControllerLifeCycleOptions) {
-    UIViewControllerViewInit       = (1<<0),
-    UIViewControllerViewDidLoad    = (1<<1),
-    UIViewControllerViewWillAppear = (1<<2),
-    UIViewControllerViewLayoutMarginsDidChange = (1<<3),
-    UIViewControllerViewSafeAreaInsetsDidChange = (1<<4),
-    UIViewControllerViewDidAppear  = (1<<5),
-    UIViewControllerViewWillDisappear = (1<<6),
-    UIViewControllerViewDidDisappear  = (1<<7),
-    UIViewControllerDealloc        = (1<<8)
-};
-
 @interface SSHelpViewController : UIViewController <SSHelpNavigationBarDelegate>
 
-/// 自定义导航栏,懒加载
-@property(nonatomic, strong) SSHelpNavigationBar *navigationBar;
+/// 自定义导航栏
+@property(nonatomic, strong) SSHelpNavigationBar *customNavigationBar;
 
-/// 自定义容器视图,懒加载
+/// 控制自定义导航栏默认样式
+- (SSHelpNavigationBarStyle)customNavigationBarStyle;
+
+/// 自定义内容视图
 @property(nonatomic, strong) SSHelpView *contentView;
 
-/// view有效边距
+/// 内容视图安全间距
 @property(nonatomic, readonly) UIEdgeInsets viewSafeAreaInsets API_AVAILABLE(ios(10.0));
 
-/// 自定义返回
-@property(nonatomic, strong, nullable) void(^hookGoBack)(SSHelpViewController *viewController);
+/// 调整子视图位置
+- (void)adjustSubviewsDisplay API_AVAILABLE(ios(10.0)) NS_REQUIRES_SUPER;
 
 /// 设置屏幕方向
 - (void)resetDeviceOrientation:(UIDeviceOrientation)orientation;
 
 /// 返回上级页面
 - (void)tryGoBack;
-
-/// 控制器视图尺寸发生变化回调
-- (void)updateSubviewsDisplayWithOptions:(UIViewControllerLifeCycleOptions)options API_AVAILABLE(ios(10.0)) NS_REQUIRES_SUPER;
 
 @end
 

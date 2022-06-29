@@ -46,10 +46,9 @@
 
 - (void)p_setupCollectionView
 {
+    if (_collectionView) return;
+    
     self.userInteractionEnabled = YES;
-    if (_collectionView) {
-        return;
-    }
     self.backgroundColor = SSHELPTOOLSCONFIG.groupedBackgroundColor;
     
     _cellsOfIdentifierCache = [[NSMutableArray alloc] initWithCapacity:1];
@@ -58,8 +57,8 @@
     _flowLayout.dataSource = self;
     
     _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:_flowLayout];
-    _collectionView.backgroundColor = SSHELPTOOLSCONFIG.groupedBackgroundColor;
-    _collectionView.contentInset = UIEdgeInsetsMake(2, 2, 2, 2);
+    _collectionView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0];
+    _collectionView.contentInset = UIEdgeInsetsZero;
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
     [self addSubview:_collectionView];
@@ -70,12 +69,6 @@
     if ([_collectionView respondsToSelector:@selector(setPrefetchingEnabled:)]) {
         _collectionView.prefetchingEnabled = NO;
     }
-}
-
-- (void)setBackColor:(UIColor *)backColor
-{
-    self.backgroundColor = backColor;
-    _collectionView.backgroundColor = backColor;
 }
 
 - (void)setContentInset:(UIEdgeInsets)contentInset

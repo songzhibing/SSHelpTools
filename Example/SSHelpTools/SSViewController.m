@@ -31,7 +31,6 @@
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
     self.title = @"12";
-    self.contentView.backgroundColor = [[UIColor yellowColor] colorWithAlphaComponent:0.25];
 //    [UIApplication sharedApplication].statusBarHidden = YES;
 //    [UIViewController prefersStatusBarHidden];
     //    SSHelpView *backView = [[SSHelpView alloc] initWithFrame:CGRectZero];

@@ -11,7 +11,6 @@
 #import "SSHelpButton.h"
 #import "SSHelpDefines.h"
 #import "UIButton+SSHelp.h"
-#import "NSObject+SSHelp.h"
 #import "NSBundle+SSHelp.h"
 
 @implementation SSHelpButton
@@ -32,7 +31,6 @@
     SSHelpButton *_button = [SSHelpButton buttonWithType:UIButtonTypeCustom];
     _button.style = buttonStyle;
     _button.frame = CGRectMake(0, 0, 44, 44);
-    
     switch (buttonStyle) {
         case SSButtonStyleBack:
         {
@@ -40,18 +38,12 @@
             _button.contentImageRect = CGRectMake(8, (44-24)/2.0f, 12, 24);
         }
             break;
-            
         case SSButtonStyleLocation:
             break;
-            
         case SSButtonStyleRefresh:
             break;
-            
         case SSButtonStyleList:
-        {
-        }
             break;
-            
         case SSButtonStyleRightMore:
         {
             _button.normalImage = [NSBundle ss_toolsBundleImage:@"SSNav_Menu_More_Dark_Small43x28"];
@@ -76,32 +68,25 @@
     _button.identifier = model.identifier;
     _button.childButtons = model.childButtons;
     
-    if (model.block)
-    {
-        [_button ss_addControlEvents:UIControlEventTouchUpInside block:model.block];
+    if (model.block) {
+        [_button ss_addTouchUpInsideBlock:model.block];
     }
     
-    if (model.icon)
-    {
-        if ([model.icon isKindOfClass:[UIImage class]])
-        {
+    if (model.icon) {
+        if ([model.icon isKindOfClass:[UIImage class]]) {
             _button.normalImage = model.icon;
-        }
-        else if([model.icon isKindOfClass:[NSString class]])
-        {
+        } else if([model.icon isKindOfClass:[NSString class]]) {
             NSData *imageDta = nil;
             imageDta = [[NSData alloc] initWithBase64EncodedString:model.icon
                                                            options:NSDataBase64DecodingIgnoreUnknownCharacters];
-            if (imageDta)
-            {
+            if (imageDta) {
                 _button.normalImage = [UIImage imageWithData:imageDta];
             }
         }
     }
 
-    if(!_button.normalImage && model.title ){
+    if (!_button.normalImage && model.title) {
         _button.normalTitle = model.title;
-
     }
     return _button;
 }

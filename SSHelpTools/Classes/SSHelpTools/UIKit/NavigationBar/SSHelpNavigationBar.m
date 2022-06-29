@@ -57,7 +57,7 @@
     [_contentView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.safeAreaInsets.left?:8);
         make.right.mas_equalTo(-(self.safeAreaInsets.right?:8));
-        make.height.mas_equalTo(44);
+        make.height.mas_equalTo(_kNavBarHeight);
         make.bottom.mas_equalTo(self.mas_bottom);
     }];
 }
@@ -81,7 +81,7 @@
     [_contentView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(8);
         make.right.mas_equalTo(-8);
-        make.height.mas_equalTo(44);
+        make.height.mas_equalTo(_kNavBarHeight);
         make.bottom.mas_equalTo(self.mas_bottom);
     }];
     
@@ -137,7 +137,7 @@
         _rightMoreButton = [SSHelpButton buttonWithStyle:SSButtonStyleRightMore];
         [_contentView addSubview:_rightMoreButton];
         [_rightMoreButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(_rightMoreButton.mas_left);
+            make.right.mas_equalTo(_rightExitButton.mas_left);
             make.size.mas_equalTo(CGSizeMake(44, 44));
         }];
         [_rightMoreButton setOnClick:^(SSHelpButton * _Nonnull sender) {
@@ -208,6 +208,7 @@
     }
     
     //添加新的动态按钮
+    @Tweakify(self);
     for (NSInteger index=0; index<leftButtons.count && index<2; index++)
     {
         SSHelpButtonModel *btnModel = leftButtons[index];
@@ -221,6 +222,9 @@
             make.width.mas_equalTo(44);
             make.height.mas_equalTo(44);
             make.bottom.mas_equalTo(0);
+        }];
+        [button setOnClick:^(SSHelpButton * _Nonnull sender) {
+            [self_weak_ p_clickLeftButton:sender];
         }];
     }
 }
@@ -237,6 +241,7 @@
     }
     
     //添加新的动态按钮
+    @Tweakify(self);
     for (NSInteger index=0; index<rightButtons.count && index<2; index++)
     {
         SSHelpButtonModel *btnModel = rightButtons[index];
@@ -250,6 +255,9 @@
             make.width.mas_equalTo(44);
             make.height.mas_equalTo(44);
             make.bottom.mas_equalTo(0);
+        }];
+        [button setOnClick:^(SSHelpButton * _Nonnull sender) {
+            [self_weak_ p_clickRightButton:sender];
         }];
     }
 }
