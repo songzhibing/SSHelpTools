@@ -11,7 +11,7 @@
 
 - (void)moduleRegisterJsHandler
 {
-    [self baseRegisterHandler:kWebApiTestObjcCallback handler:^(NSString * _Nonnull api, id  _Nonnull data, SSBridgeJsCallback  _Nonnull callback) {
+    [self baseRegisterHandler:kWebApiTestJSBridge handler:^(NSString * _Nonnull api, id  _Nonnull data, SSBridgeJsCallback  _Nonnull callback) {
         SSWebLog(@"testObjcCallback called: %@", data);
         callback(@"Response from testObjcCallback Objective-C ... ");
     }];

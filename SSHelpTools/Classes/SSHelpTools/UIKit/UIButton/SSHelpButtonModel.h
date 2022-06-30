@@ -16,7 +16,8 @@ typedef NS_OPTIONS(NSUInteger, SSHelpButtonStyle) {
     SSButtonStyleList      = (1<<3), // 展开列表按钮
     SSButtonStyleRefresh   = (1<<4), // 刷新按钮
     SSButtonStyleRightMore = (1<<5), // '胶囊'左按钮
-    SSButtonStyleRightExit = (1<<6)  // '胶囊'右按钮
+    SSButtonStyleRightExit = (1<<6), // '胶囊'右按钮
+    SSButtonStyleSpace     = (1<<7)  // 按钮之间区间
 };
 
 @interface SSHelpButtonModel : NSObject
@@ -30,6 +31,9 @@ typedef NS_OPTIONS(NSUInteger, SSHelpButtonStyle) {
 
 /// 按钮标识
 @property(nonatomic, copy) NSString *identifier;
+
+/// 按钮区间 (只针对SSButtonStyleSpace类型，用来控制两个按钮之间的间隔)
+@property(nonatomic, assign) CGFloat spaceInterval;
 
 /// 按钮图标 (支持图片或者是图片的Base64String字符串)
 @property(nonatomic, strong) id icon;

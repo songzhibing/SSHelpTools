@@ -43,6 +43,11 @@
     {
         _model.style =  SSButtonStyleRightExit;
     }
+    else if ([style isEqualToString:@"space"])
+    {
+        _model.style =  SSButtonStyleSpace;
+        _model.spaceInterval = SSEncodeStringFromDict(dict, @"spaceInterval").intValue;
+    }
     else
     {
         _model.style =  SSButtonStyleCustom;

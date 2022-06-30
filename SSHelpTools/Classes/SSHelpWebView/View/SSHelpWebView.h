@@ -15,13 +15,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_OPTIONS(NSUInteger, SSHelpWebViewCookiePolicy) {
-    SSHelpWebViewCookieEnableSystem    = 1 << 0,
-    SSHelpWebViewCookieEnableJs        = 1 << 1,
-    SSHelpWebViewCookieEnablePHP       = 1 << 2,
-    SSHelpWebViewCookieSyncCookieStore = 1 << 3
-};
-
 @interface SSHelpWebView : SSHelpView
 
 /// 是否隐藏加载进度条，默认no显示

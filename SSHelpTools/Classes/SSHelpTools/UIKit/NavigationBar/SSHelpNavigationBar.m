@@ -168,12 +168,10 @@
 - (void)resetNavigationBar:(SSHelpNavigationBarModel *)model
 {
     //先隐藏所有的旧视图
-    [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (obj!=self.contentView) {
-            obj.hidden = YES;
-        }
-    }];
-    
+    self.titleLabel.hidden = YES;
+    self.titleImage.hidden = YES;
+
+    //根据数据模型配置
     if (model.title) {
         self.titleLabel.hidden = NO;
         self.titleLabel.text = model.title;
@@ -205,29 +203,28 @@
         [self.dynamicLeftButtons.allObjects makeObjectsPerformSelector:@selector(removeFromSuperview)];
     }
     
-    if (!leftButtons) {
-        return;
-    }
-    
-    //添加新的动态按钮
+    //添加新按钮
     @Tweakify(self);
-    for (NSInteger index=0; index<leftButtons.count && index<2; index++)
-    {
-        SSHelpButtonModel *btnModel = leftButtons[index];
-        SSHelpButton *button = [SSHelpButton buttonWithModel:btnModel];
-        [_contentView addSubview:button];
-        [self.dynamicLeftButtons addObject:button];
-        
-        CGFloat leftMargin = (index==0)?(0):(0+44+8);
-        [button mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(leftMargin);
-            make.width.mas_equalTo(44);
-            make.height.mas_equalTo(44);
-            make.bottom.mas_equalTo(0);
-        }];
-        [button setOnClick:^(SSHelpButton * _Nonnull sender) {
-            [self_weak_ p_clickLeftButton:sender];
-        }];
+    CGFloat originX = 0;
+    for (NSInteger index=0; index<leftButtons.count; index++) {
+        SSHelpButtonModel *model = leftButtons[index];
+        if (SSButtonStyleSpace == model.style) {
+            originX += model.spaceInterval;
+        } else {
+            SSHelpButton *button = [SSHelpButton buttonWithModel:model];
+            [_contentView addSubview:button];
+            [self.dynamicLeftButtons addObject:button];
+            [button mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(originX);
+                make.width.mas_equalTo(44);
+                make.height.mas_equalTo(44);
+                make.bottom.mas_equalTo(0);
+            }];
+            [button setOnClick:^(SSHelpButton * _Nonnull sender) {
+                [self_weak_ p_clickLeftButton:sender];
+            }];
+            originX += 44;
+        }
     }
 }
 
@@ -238,29 +235,28 @@
         [self.dynamicRightButtons.allObjects makeObjectsPerformSelector:@selector(removeFromSuperview)];
     }
     
-    if (!rightButtons) {
-        return;
-    }
-    
     //添加新的动态按钮
     @Tweakify(self);
-    for (NSInteger index=0; index<rightButtons.count && index<2; index++)
-    {
-        SSHelpButtonModel *btnModel = rightButtons[index];
-        SSHelpButton *button = [SSHelpButton buttonWithModel:btnModel];
-        [_contentView addSubview:button];
-        [self.dynamicRightButtons addObject:button];
-        
-        CGFloat rightMargin = (index==0)?(0):(-44-8);
-        [button mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(rightMargin);
-            make.width.mas_equalTo(44);
-            make.height.mas_equalTo(44);
-            make.bottom.mas_equalTo(0);
-        }];
-        [button setOnClick:^(SSHelpButton * _Nonnull sender) {
-            [self_weak_ p_clickRightButton:sender];
-        }];
+    CGFloat rightMargin = 0;
+    for (NSInteger index=0; index<rightButtons.count; index++) {
+        SSHelpButtonModel *model = rightButtons[index];
+        if (SSButtonStyleSpace == model.style) {
+            rightMargin -= model.spaceInterval;
+        } else {
+            SSHelpButton *button = [SSHelpButton buttonWithModel:model];
+            [_contentView addSubview:button];
+            [self.dynamicRightButtons addObject:button];
+            [button mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(rightMargin);
+                make.width.mas_equalTo(44);
+                make.height.mas_equalTo(44);
+                make.bottom.mas_equalTo(0);
+            }];
+            [button setOnClick:^(SSHelpButton * _Nonnull sender) {
+                [self_weak_ p_clickRightButton:sender];
+            }];
+            rightMargin -= 44;
+        }
     }
 }
 

@@ -77,10 +77,6 @@ NSMutableArray * _Nullable SSEncodeArrayFromDictUsingBlock(NSDictionary *dic, NS
 
 BOOL SSEqualToEmpty(id object)
 {
-    if (!object) {
-        return YES;
-    }
-    
     if (object == nil || [object isEqual:[NSNull null]]) {
         return YES;
     } else if ([object isKindOfClass:[NSString class]]) {

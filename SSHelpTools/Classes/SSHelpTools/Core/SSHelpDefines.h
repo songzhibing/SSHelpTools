@@ -12,10 +12,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^ _Nullable BlockVoid)(void);
-typedef void(^ _Nullable BlockInt) (int number);
-typedef void(^ _Nullable BlockBool)(BOOL state);
-typedef void(^ _Nullable BlockDict)(__kindof NSDictionary * _Nullable dict);
+typedef void(^ _Nullable SSBlockVoid)(void);
+typedef void(^ _Nullable SSBlockInt )(int number);
+typedef void(^ _Nullable SSBlockBool)(BOOL success);
+typedef void(^ _Nullable SSBlockDict)(__kindof NSDictionary * _Nullable dict);
 
 /// 字符串读取
 /// @param dict 原始数据

@@ -28,10 +28,10 @@ typedef NS_OPTIONS(NSUInteger, SSHelpNavigationBarStyle) {
 /// 导航栏标图,优先级高于标题;支持UIImage, NSString(图片转换后的Base64string)
 @property(nonatomic, strong) id titleImage;
 
-/// 导航栏左侧按钮 (最多2个，多个可用列表按钮)
+/// 导航栏左侧按钮 (建议最多2个，多个可用列表按钮)
 @property(nonatomic, assign) NSArray <SSHelpButtonModel *> *leftButtons;
 
-/// 导航栏右侧按钮 (最多2个，多个可用列表按钮)
+/// 导航栏右侧按钮 (建议最多2个，多个可用列表按钮)
 @property(nonatomic, assign) NSArray <SSHelpButtonModel *> *rightButtons;
 
 @end

@@ -11,6 +11,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_OPTIONS(NSUInteger, SSHelpWebViewCookiePolicy) {
+    SSHelpWebViewCookieEnableSystem    = 1 << 0,
+    SSHelpWebViewCookieEnableJs        = 1 << 1,
+    SSHelpWebViewCookieEnablePHP       = 1 << 2,
+    SSHelpWebViewCookieSyncCookieStore = 1 << 3
+};
+
 @interface SSHelpWebViewSharedConfigurations : NSObject
 
 + (WKWebsiteDataStore *)sharedWebsiteDataStore;
