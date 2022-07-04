@@ -94,6 +94,8 @@
             SSLogDebug(@"下载失败：%@",error);
         }];
     }];
+    
+
 }
 
 - (BOOL)prefersStatusBarHidden

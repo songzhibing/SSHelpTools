@@ -9,18 +9,20 @@
 #import "SSTestViewController.h"
 #import <SSHelpTools/SSHelpNetwork.h>
 #import <SSHelpTools/SSHelpTableViewController.h>
+#import <SSHelpTools/SSHelpDropdownMenu.h>
 
-@interface SSTestViewController ()
+@interface SSTestViewController ()<SSHelpDropdownMenuDelegate>
 //@property(nonatomic, strong) SSHelpLocationManager *locationManager;
-
+@property(nonatomic, strong) SSHelpButton *tapBtn;
 @property(nonatomic, strong) dispatch_semaphore_t t;
+@property(nonatomic, strong) SSHelpDropdownMenu *selectMenu;
 @end
 
 @implementation SSTestViewController
 
 - (void)dealloc
 {
-//    SSLog(@"%@ dealloc ... ", self);
+    SSLog(@"%@ dealloc ... ", self);
 //    SSLog(@"Self reation count：%td",_kRetainCount(self));
 }
 
@@ -29,17 +31,50 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
         
-    SSHelpButton *tapBtn = [SSHelpButton buttonWithType:UIButtonTypeCustom];
-    tapBtn.frame = CGRectMake(10, 88, 88, 44);
-    tapBtn.normalTitle = @"PushTest";
-    tapBtn.normalTitleColor = [UIColor blueColor];
-    tapBtn.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    [self.view addSubview:tapBtn];
+    self.tapBtn = [SSHelpButton buttonWithType:UIButtonTypeCustom];
+    self.tapBtn.frame = CGRectMake(10, 88, 88, 44);
+    self.tapBtn.normalTitle = @"tapTest";
+    self.tapBtn.normalTitleColor = [UIColor blueColor];
+    self.tapBtn.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    [self.view addSubview:self.tapBtn];
 
     @weakify(self);
-    [tapBtn setOnClick:^(SSHelpButton *sender) {
+    [self.tapBtn setOnClick:^(SSHelpButton *sender) {
         @strongify(self);
         [self testNetwork];
+    }];
+    
+    CGRect frame = CGRectMake(10, 88*4, self.view.ss_width*0.8, 44);
+    NSMutableArray *data= [[NSMutableArray alloc] init];
+    for (NSInteger index=0; index<6; index++) {
+        SSHelpDropdownMenuItem *item = [SSHelpDropdownMenuItem new];
+        item.title = [NSString stringWithFormat:@"tt%td",index];
+        [data addObject:item];
+    }
+    SSHelpDropdownMenu *selectMenu = [[SSHelpDropdownMenu alloc] initWithFrame:frame];
+    selectMenu.data = data;
+    selectMenu.title = @"请选择";
+    selectMenu.titleColor = [UIColor redColor];//UIColorFromRGB(0x666666);
+    selectMenu.titleFont = [UIFont systemFontOfSize:13];
+    selectMenu.rotateIcon = [UIImage imageNamed:@"TableViewArrow"];
+    
+    selectMenu.optionLineColor = [UIColor redColor];//UIColorFromRGB(0x666666);
+    selectMenu.optionBgColor = [UIColor whiteColor];
+    selectMenu.optionTextAlignment = NSTextAlignmentLeft;
+    
+    selectMenu.layer.borderWidth = 0.5f;
+    selectMenu.layer.borderColor = [UIColor blackColor].CGColor;
+    selectMenu.layer.cornerRadius = 6;
+    
+    selectMenu.delegate = self;
+    self.selectMenu = selectMenu;
+//    selectMenu.dataSource = self;
+    [self.view addSubview:selectMenu];
+    
+//    @weakify(self);
+    [selectMenu setDidSelect:^(SSHelpDropdownMenu * _Nonnull menu, NSInteger index, SSHelpDropdownMenuItem * _Nonnull item) {
+        @strongify(self);
+        self.tapBtn.normalTitle = item.title;
     }];
 }
 
