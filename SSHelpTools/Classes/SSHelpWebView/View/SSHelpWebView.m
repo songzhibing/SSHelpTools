@@ -41,7 +41,7 @@
         _hiddenProgressView = NO;
         _injectPageshowJs = YES;
         _injectWebkitTouchCalloutJs = YES;
-        _injectwebkitUserSelectJs = YES;
+        _injectWebkitUserSelectJs = YES;
         _allowsBackForwardNavigationGestures = YES;
         _supportLongPressGestureRecognizer = NO;
         _cookiePolicy = SSHelpWebViewCookieEnableSystem;
@@ -217,7 +217,7 @@
             [_userContent addUserScript:touchClloutScript];
         }
         
-        if (_injectwebkitUserSelectJs) { //禁止用户进行复制、选择
+        if (_injectWebkitUserSelectJs) { //禁止用户进行复制、选择
             WKUserScript *selectScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitUserSelect='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
             [_userContent addUserScript:selectScript];
         }

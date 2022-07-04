@@ -26,11 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否注入'后退刷新js'，默认yes
 @property(nonatomic, assign) BOOL injectPageshowJs;
 
-/// 是否注入'禁用长按显示系统菜单'，默认yes
+/// 是否注入'禁用长按显示系统菜单js'，默认yes
 @property(nonatomic, assign) BOOL injectWebkitTouchCalloutJs;
 
-/// 是否注入'禁止用户进行复制、选择'，默认yes
-@property(nonatomic, assign) BOOL injectwebkitUserSelectJs;
+/// 是否注入'禁止用户进行复制、选择js'，默认yes
+@property(nonatomic, assign) BOOL injectWebkitUserSelectJs;
 
 /// 是否支持自定义长按手势识别:识别web中二维码、看图模式、.... ，默认no
 @property(nonatomic, assign) BOOL supportLongPressGestureRecognizer;
