@@ -56,7 +56,6 @@
                 CGPoint touchPoint = [gesture locationInView:collectionView];
                 NSIndexPath *indexPath = [collectionView indexPathForItemAtPoint:touchPoint];
                 SSHelpTableViewCell *cell = (SSHelpTableViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-                SSLifeCycleLog(@"(%td,%td) (%@) (%@)",indexPath.section,indexPath.item,cell.debugTitleLab.text,NSStringFromClass([cell class]));
                 if (self.moveRule.canMoveTransSectionArea) {
                     // 全区可交换
                     [collectionView updateInteractiveMovementTargetPosition:[gesture locationInView:collectionView]];

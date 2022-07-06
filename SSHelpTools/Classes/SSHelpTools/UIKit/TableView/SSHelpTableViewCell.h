@@ -6,13 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
-@class SSHelpTabViewCellModel;
+#import "SSHelpTableViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpTableViewCell : UICollectionViewCell
-
-@property(nonatomic, strong) UILabel *debugTitleLab;
 
 @property(nonatomic, strong) NSIndexPath *indexPath;
 
@@ -20,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)prepareForReuse;
 
-/// 刷新
 - (void)refresh;
 
 - (void)startMovingShakeAnimation;

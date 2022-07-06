@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SSHelpButtonModel.h"
+#import "UIButton+SSHelp.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

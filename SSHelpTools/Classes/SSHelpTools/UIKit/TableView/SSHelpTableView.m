@@ -61,14 +61,19 @@
     _collectionView.contentInset = UIEdgeInsetsZero;
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
+    if ([_collectionView respondsToSelector:@selector(setPrefetchingEnabled:)]) {
+        _collectionView.prefetchingEnabled = NO;
+    }
+    if (@available(iOS 11.0, *)) {
+        _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    if (@available(iOS 13.0, *)) {
+        _collectionView.automaticallyAdjustsScrollIndicatorInsets = NO;
+    }
     [self addSubview:_collectionView];
     [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
-    
-    if ([_collectionView respondsToSelector:@selector(setPrefetchingEnabled:)]) {
-        _collectionView.prefetchingEnabled = NO;
-    }
 }
 
 - (void)setContentInset:(UIEdgeInsets)contentInset

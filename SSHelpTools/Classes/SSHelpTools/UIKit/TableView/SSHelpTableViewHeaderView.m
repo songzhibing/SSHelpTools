@@ -6,7 +6,6 @@
 //
 
 #import "SSHelpTableViewHeaderView.h"
-#import "SSHelpTableViewModel.h"
 
 @implementation SSHelpTableViewHeaderView
 

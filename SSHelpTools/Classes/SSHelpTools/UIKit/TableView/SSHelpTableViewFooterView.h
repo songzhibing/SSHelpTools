@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-@class SSHelpTabViewFooterModel;
+#import "SSHelpTableViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

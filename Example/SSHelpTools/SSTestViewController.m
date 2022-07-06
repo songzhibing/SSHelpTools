@@ -52,15 +52,15 @@
         [data addObject:item];
     }
     SSHelpDropdownMenu *selectMenu = [[SSHelpDropdownMenu alloc] initWithFrame:frame];
-    selectMenu.data = data;
-    selectMenu.title = @"请选择";
-    selectMenu.titleColor = [UIColor redColor];//UIColorFromRGB(0x666666);
-    selectMenu.titleFont = [UIFont systemFontOfSize:13];
-    selectMenu.rotateIcon = [UIImage imageNamed:@"TableViewArrow"];
-    
-    selectMenu.optionLineColor = [UIColor redColor];//UIColorFromRGB(0x666666);
-    selectMenu.optionBgColor = [UIColor whiteColor];
-    selectMenu.optionTextAlignment = NSTextAlignmentLeft;
+//    selectMenu.data = data;
+//    selectMenu.title = @"请选择";
+//    selectMenu.titleColor = [UIColor redColor];//UIColorFromRGB(0x666666);
+//    selectMenu.titleFont = [UIFont systemFontOfSize:13];
+//    selectMenu.rotateIcon = [UIImage imageNamed:@"TableViewArrow"];
+//    
+//    selectMenu.optionLineColor = [UIColor redColor];//UIColorFromRGB(0x666666);
+//    selectMenu.optionBgColor = [UIColor whiteColor];
+//    selectMenu.optionTextAlignment = NSTextAlignmentLeft;
     
     selectMenu.layer.borderWidth = 0.5f;
     selectMenu.layer.borderColor = [UIColor blackColor].CGColor;
@@ -72,10 +72,10 @@
     [self.view addSubview:selectMenu];
     
 //    @weakify(self);
-    [selectMenu setDidSelect:^(SSHelpDropdownMenu * _Nonnull menu, NSInteger index, SSHelpDropdownMenuItem * _Nonnull item) {
-        @strongify(self);
-        self.tapBtn.normalTitle = item.title;
-    }];
+//    [selectMenu setDidSelect:^(SSHelpDropdownMenu * _Nonnull menu, NSInteger index, SSHelpDropdownMenuItem * _Nonnull item) {
+//        @strongify(self);
+//        self.tapBtn.normalTitle = item.title;
+//    }];
 }
 
 - (void)testSSHelpViewController

@@ -10,7 +10,6 @@
 
 #import "SSHelpButton.h"
 #import "SSHelpDefines.h"
-#import "UIButton+SSHelp.h"
 #import "NSBundle+SSHelp.h"
 
 @implementation SSHelpButton

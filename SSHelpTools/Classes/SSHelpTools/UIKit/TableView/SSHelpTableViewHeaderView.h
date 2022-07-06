@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-@class SSHelpTabViewHeaderModel;
+#import "SSHelpTableViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) SSHelpTabViewHeaderModel*modelData;
 
-/// 刷新
 - (void)refresh;
 
 

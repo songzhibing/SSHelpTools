@@ -8,7 +8,6 @@
 #import "SSHelpTableViewCell.h"
 #import <Masonry/Masonry.h>
 #import "SSHelpDefines.h"
-#import "SSHelpTableViewModel.h"
 
 @interface SSHelpTableViewCell()
 
@@ -29,33 +28,13 @@
 {
     [super prepareForReuse];
     [self stopMovingShakeAnimation];
-    self.contentView.backgroundColor = [UIColor clearColor];
-    if (_debugTitleLab) {
-        _debugTitleLab.text = @"";
-    }
 }
 
 /// 刷新
 - (void)refresh
 {
-    
-#ifdef DEBUG
-    NSString *title = [self.modelData.data objectForKey:@"title"];
-    if (title.length) {
-        self.debugTitleLab.text = [title stringByAppendingFormat:@"( %td-%td)",_indexPath.section,_indexPath.item];
-    } else {
-        self.debugTitleLab.text = [NSString stringWithFormat:@"( %td-%td)",_indexPath.section,_indexPath.item];
-        self.contentView.backgroundColor = _kRandomColor;
-    }
-#endif
-    
     if (self.modelData.backgroundColor) {
         self.contentView.backgroundColor = self.modelData.backgroundColor;
-    } else {
-#ifdef DEBUG
-        self.contentView.backgroundColor = _kRandomColor;
-        self.modelData.backgroundColor = self.contentView.backgroundColor ;
-#endif
     }
     
     if (_modelData.refreshBlock) {
@@ -91,22 +70,6 @@
     if ([self.layer.animationKeys containsObject:@"cellShake"]) {
         [self.layer removeAnimationForKey:@"cellShake"];
     }
-}
-
-
-- (UILabel *)debugTitleLab
-{
-    if (!_debugTitleLab) {
-        _debugTitleLab = [[UILabel alloc] init];
-        _debugTitleLab.textAlignment = NSTextAlignmentLeft;
-        _debugTitleLab.textColor = SSHELPTOOLSCONFIG.labelColor;
-        _debugTitleLab.font = [UIFont systemFontOfSize:12];
-        [self.contentView addSubview:_debugTitleLab];
-        [_debugTitleLab mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(2, 2, 2, 2));
-        }];
-    }
-    return _debugTitleLab;;
 }
 
 @end

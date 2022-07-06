@@ -16,9 +16,11 @@ SSHelpTabViewFooterModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView *tableView, __kindof UICollectionReusableView *reusableView, NSIndexPath *indexPath);
+typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView * _Nullable tableView, __kindof UICollectionReusableView * _Nullable reusableView, NSIndexPath *indexPath);
 
-typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView *reusableView);
+typedef void (^SSHelpTabViewItemSubOnClick)(__kindof UICollectionReusableView * _Nullable reusableView, id _Nullable data);
+
+typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView * _Nullable reusableView);
 
 //******************************************************************************
 
@@ -58,7 +60,7 @@ typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView *reus
 
 @property(nonatomic, strong) SSHelpTabViewHeaderModel * _Nullable headerModel;
 
-/// 默认1列
+/// 列数，默认1列
 @property(nonatomic, assign) NSInteger columnCount;
 
 @property(nonatomic, strong) NSMutableArray <SSHelpTabViewCellModel *> *cellModels;
@@ -82,7 +84,11 @@ typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView *reus
 
 @property(nonatomic, copy, nullable) SSHelpTabViewCellRefresh refreshBlock;
 
+/// item点击事件
 @property(nonatomic, copy, nullable) SSHelpTabViewItemOnClick onClick;
+
+/// item内部子控件点击事件
+@property(nonatomic, copy, nullable) SSHelpTabViewItemSubOnClick subOnClick;
 
 /// 推荐存储字典数据
 @property(nonatomic, strong, nullable) __kindof NSDictionary *data;
