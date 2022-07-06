@@ -10,15 +10,12 @@
 #import "SSHelpDefines.h"
 
 @interface SSHelpTableViewCell()
-
-
 @end
 
 @implementation SSHelpTableViewCell
 
 - (void)dealloc
 {
-    SSLifeCycleLog(@"%@ (%td,%td) dealloc ... ",NSStringFromClass([self class]),_indexPath.section,_indexPath.item);
     _modelData = nil;
     _indexPath = nil;
 }
@@ -33,26 +30,12 @@
 /// 刷新
 - (void)refresh
 {
-    if (self.modelData.backgroundColor) {
-        self.contentView.backgroundColor = self.modelData.backgroundColor;
-    }
-    
-    if (_modelData.refreshBlock) {
-        _modelData.refreshBlock(self);
-    }
-    
-    if (_modelData.cellMoving) {
-        [self startMovingShakeAnimation];
-    }
+
 }
 
 /// 开始摆动动画
 - (void)startMovingShakeAnimation
 {
-    if (!_modelData.cellMoving) {
-        return;
-    }
-    
     [self stopMovingShakeAnimation];
     CAKeyframeAnimation * keyAnimaion = [CAKeyframeAnimation animation];
     keyAnimaion.keyPath = @"transform.rotation";

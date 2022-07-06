@@ -61,6 +61,8 @@
     _collectionView.contentInset = UIEdgeInsetsZero;
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
+    _collectionView.showsHorizontalScrollIndicator = NO;
+    _collectionView.showsVerticalScrollIndicator = NO;
     if ([_collectionView respondsToSelector:@selector(setPrefetchingEnabled:)]) {
         _collectionView.prefetchingEnabled = NO;
     }
@@ -233,7 +235,7 @@
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    SSHelpTabViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
+    __kindof SSHelpTabViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
     model.cellIndexPath = indexPath;
     
     if (![_cellsOfIdentifierCache containsObject:model.cellIdentifier]) {

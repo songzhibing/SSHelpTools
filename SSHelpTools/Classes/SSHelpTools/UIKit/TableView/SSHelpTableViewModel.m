@@ -25,7 +25,6 @@
 {
     _endBlock = NULL;
     _beginBlock = NULL;
-    SSLifeCycleLog(@"%@ dealloc ... ",self);
 }
 
 - (instancetype)init
@@ -33,7 +32,7 @@
     self = [super init];
     if (self) {
         _canMove = NO;
-        _canMoveTransSectionArea = YES;
+        _canMoveTransSectionArea = NO;
     }
     return self;
 }
@@ -78,10 +77,16 @@
 {
     self = [super init];
     if (self) {
-        _headerIdentifier = @"SSHelpTableView.Header.Identifer";
         _headerClass = [SSHelpTableViewHeaderView class];
+        _headerIdentifier = @"SSHelpTableViewHeaderView";
     }
     return self;
+}
+
+- (void)setHeaderClass:(Class)headerClass
+{
+    _headerClass = headerClass;
+    _headerIdentifier = NSStringFromClass(headerClass);
 }
 
 @end
@@ -95,10 +100,16 @@
     self = [super init];
     if (self) {
         _cellHeght = 44;
-        _cellIdentifier = @"SSHelpTableView.Cell.Identifer";
         _cellClass = [SSHelpTableViewCell class];
+        _cellIdentifier = @"SSHelpTableViewCell";
     }
     return self;
+}
+
+- (void)setCellClass:(Class)cellClass
+{
+    _cellClass = cellClass;
+    _cellIdentifier = NSStringFromClass(cellClass);
 }
 
 @end
@@ -111,10 +122,17 @@
 {
     self = [super init];
     if (self) {
-        _footerIdentifier = @"SSHelpTableView.Footer.Identifer";
         _footerClass = [SSHelpTableViewFooterView class];
+        _footerIdentifier = @"SSHelpTableViewFooterView";
+
     }
     return self;
+}
+
+- (void)setFooterClass:(Class)footerClass
+{
+    _footerClass = footerClass;
+    _footerIdentifier = NSStringFromClass(footerClass);
 }
 
 @end

@@ -12,16 +12,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpTableViewCell : UICollectionViewCell
 
+/// 索引
 @property(nonatomic, strong) NSIndexPath *indexPath;
 
+/// 模型数据
 @property(nonatomic, strong) SSHelpTabViewCellModel *modelData;
 
-- (void)prepareForReuse;
+/// 复用重置
+- (void)prepareForReuse NS_REQUIRES_SUPER;
 
+/// 刷新
 - (void)refresh;
 
+/// 开始"摆动"动画
 - (void)startMovingShakeAnimation;
 
+/// 停止"摆动"动画
 - (void)stopMovingShakeAnimation;
 
 @end

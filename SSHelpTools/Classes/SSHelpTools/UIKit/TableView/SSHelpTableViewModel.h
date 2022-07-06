@@ -16,11 +16,9 @@ SSHelpTabViewFooterModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView * _Nullable tableView, __kindof UICollectionReusableView * _Nullable reusableView, NSIndexPath *indexPath);
+typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView * _Nullable tableView, __kindof UICollectionReusableView * _Nullable reusableView, NSIndexPath * _Nullable indexPath);
 
 typedef void (^SSHelpTabViewItemSubOnClick)(__kindof UICollectionReusableView * _Nullable reusableView, id _Nullable data);
-
-typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView * _Nullable reusableView);
 
 //******************************************************************************
 
@@ -37,7 +35,7 @@ typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView * _Nu
 /// 是否支持移动、交换，默认NO
 @property(nonatomic, assign) BOOL canMove;
 
-/// 是否支持跨Section区域移动、交换，默认YES
+/// 是否支持跨Section区域移动、交换，默认NO
 @property(nonatomic, assign) BOOL canMoveTransSectionArea;
 
 /// 开始位置
@@ -67,22 +65,15 @@ typedef void (^SSHelpTabViewCellRefresh)(__kindof UICollectionReusableView * _Nu
 
 @property(nonatomic, strong) SSHelpTabViewFooterModel * _Nullable footerModel;
 
-/// default 0.0
 @property(nonatomic, assign) CGFloat minimumLineSpacing;
 
-/// default 0.0
 @property(nonatomic, assign) CGFloat minimumInteritemSpacing;
-
 
 @end
 
 //******************************************************************************
 
 @interface SSHelpTableViewItemModel: NSObject
-
-@property(nonatomic, strong) UIColor *backgroundColor;
-
-@property(nonatomic, copy, nullable) SSHelpTabViewCellRefresh refreshBlock;
 
 /// item点击事件
 @property(nonatomic, copy, nullable) SSHelpTabViewItemOnClick onClick;
