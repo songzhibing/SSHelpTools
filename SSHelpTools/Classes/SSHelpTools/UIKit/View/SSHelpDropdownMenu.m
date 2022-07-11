@@ -7,19 +7,24 @@
 
 @implementation SSHelpDropdownMenuItem
 
++ (instancetype)itemWithTitle:(NSString *)title
+{
+    SSHelpDropdownMenuItem *item = [[SSHelpDropdownMenuItem alloc] init];
+    item.title = title;
+    return item;
+}
+
 @end
 
-@interface SSHelpDropdownMenu() <UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
 
+
+@interface SSHelpDropdownMenu() <UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
 @property (nonatomic, strong) UIButton    *mainBtn;      // 菜单按钮
 @property (nonatomic, strong) UIImageView *arrowMark;    // 尖头图标
 @property (nonatomic, strong) UITableView *optionsList;  // 下拉列表
-
 @property (nonatomic, strong) UIView      *floatView;
 @property (nonatomic, strong) UIView      *coverView;
-
 @end
-
 
 
 @implementation SSHelpDropdownMenu

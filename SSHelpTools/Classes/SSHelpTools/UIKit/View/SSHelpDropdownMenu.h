@@ -10,6 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpDropdownMenuItem : NSObject
++ (instancetype)itemWithTitle:(NSString *)title;
 @property(nonatomic, strong) UIImage *icon;
 @property(nonatomic, copy  ) NSString *title;
 @property(nonatomic, strong) id data;
