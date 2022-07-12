@@ -14,11 +14,17 @@ NS_ASSUME_NONNULL_BEGIN
 /// 图片上写文字
 - (UIImage *)ss_writeString:(NSString *)string;
 
-/// 纯色图片，SizeMake(1,1)
+/// 图片绘制圆角
+- (UIImage *)ss_setCornerRadius:(CGFloat)cornerRadius;
+
+/// 改变图片颜色
+- (UIImage *)ss_imageWithTintColor:(UIColor *)tintColor;
+
+/// 颜色生成图片 CGSizeMake(1,1)
 + (UIImage *)ss_imageWithColor:(UIColor *)color;
 
-/// 纯色图片，自定大小
-+ (UIImage *)ss_imageWithColor:(UIColor *)color withFrame:(CGRect)frame;
+/// 颜色生成图片
++ (UIImage *)ss_imageWithColor:(UIColor *)color size:(CGSize)size;
 
 @end
 
