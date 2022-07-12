@@ -274,28 +274,20 @@ NS_ASSUME_NONNULL_BEGIN
  Creates and runs batch requests
 
  @param setup The config block to setup batch requests context info for the new created SSHelpNetworkBatchRequest object.
- @param success Success callback block called when all batch requests finished successfully.
- @param failure Failure callback block called once a request error occured.
  @param finished Finished callback block for the new created SSHelpNetworkBatchRequest object.
  @return Unique identifier for the new running SSHelpNetworkBatchRequest object,`nil` for fail.
  */
 - (nullable NSString *)sendBatchRequest:(SSNetBatchRequestSetup)setup
-                                success:(SSNetArraySuccess)success
-                                failure:(SSNetArrayFailure)failure
                                finished:(SSNetArrayFinished)finished;
 
 /**
  Creates and runs chain requests
 
  @param setup The config block to setup chain requests context info for the new created SSHelpNetworkBatchRequest object.
- @param success Success callback block called when all chain requests finished successfully.
- @param failure Failure callback block called once a request error occured.
  @param finished Finished callback block for the new created SSHelpNetworkChainRequest object.
  @return Unique identifier for the new running SSHelpNetworkChainRequest object,`nil` for fail.
  */
 - (nullable NSString *)sendChainRequest:(SSNetChainRequestSetup)setup
-                                success:(SSNetArraySuccess)success
-                                failure:(SSNetArrayFailure)failure
                                finished:(SSNetArrayFinished)finished;
 
 ///------------------------------------------

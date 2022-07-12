@@ -74,10 +74,10 @@ typedef void (^ _Nonnull SSNetChainRequestSetup)(SSHelpNetworkChainRequest *_Non
 ///--------------------------------
 
 typedef void (^ _Nullable SSNetProgress)(NSProgress * _Nullable progress);
-typedef void (^ _Nullable SSNetSuccess)(id _Nullable responseObject);
-typedef void (^ _Nullable SSNetFailure)(NSError * _Nullable error);
-typedef void (^ _Nullable SSNetFinishe)(id _Nullable responseObject, NSError * _Nullable error);
-typedef void (^ _Nullable SSNetCancel)(NSData * _Nullable resumeData); // The `request` might be a SSHelpNetworkRequest/SSHelpNetworkBatchRequest/SSHelpNetworkChainRequest object.
+typedef void (^ _Nullable SSNetSuccess) (id _Nullable responseObject);
+typedef void (^ _Nullable SSNetFailure) (NSError * _Nullable error);
+typedef void (^ _Nullable SSNetFinishe) (id _Nullable responseObject, NSError * _Nullable error);
+typedef void (^ _Nullable SSNetCancel)  (NSData * _Nullable resumeData); // The `request` might be a SSHelpNetworkRequest/SSHelpNetworkBatchRequest/SSHelpNetworkChainRequest object.
 /* Cancel the download (and calls the superclass -cancel).  If
 * conditions will allow for resuming the download in the future, the
 * callback will be called with an opaque data blob, which may be used
@@ -90,9 +90,8 @@ typedef void (^ _Nullable SSNetCancel)(NSData * _Nullable resumeData); // The `r
 /// @name Callback Blocks for Batch or Chain Request
 ///-------------------------------------------------
 
-typedef void (^ _Nullable SSNetArraySuccess)(NSArray * _Nullable responseObjects);
-typedef void (^ _Nullable SSNetArrayFailure)(NSArray * _Nullable errors);
-typedef void (^ _Nullable SSNetArrayFinished)(NSArray * _Nullable responseObjects, NSArray * _Nullable errors);
+typedef void (^ _Nullable SSNetArrayFinished)(NSArray * _Nullable responseObjects);
+
 typedef void (^ _Nonnull SSNetNextBlock)(SSHelpNetworkRequest * _Nonnull request, id _Nullable responseObject, BOOL * _Nullable sendNext);
 
 ///------------------------------
@@ -295,8 +294,6 @@ typedef void (^ _Nullable SSNetCenterErrorProcess)(SSHelpNetworkRequest * _Nulla
 @property (nonatomic, assign, readonly ) BOOL anyRequestFailed;
 @property (nonatomic, strong, readonly) NSMutableArray *requestArray;
 @property (nonatomic, strong, readonly) NSMutableArray *responseArray;
-@property (nonatomic, strong) SSNetArraySuccess batchSuccessBlock;
-@property (nonatomic, strong) SSNetArrayFailure batchFailureBlock;
 @property (nonatomic, strong) SSNetArrayFinished batchFinishedBlock;
 
 - (void)addRequest:(SSHelpNetworkRequest *)request;
@@ -319,8 +316,6 @@ typedef void (^ _Nullable SSNetCenterErrorProcess)(SSHelpNetworkRequest * _Nulla
 
 @property (nonatomic, copy  ) NSString *identifier;
 @property (nonatomic, strong) SSHelpNetworkRequest *runningRequest;
-@property (nonatomic, strong) SSNetArraySuccess chainSuccessBlock;
-@property (nonatomic, strong) SSNetArrayFailure chainFailureBlock;
 @property (nonatomic, strong) SSNetArrayFinished chainFinishedBlock;
 
 - (SSHelpNetworkChainRequest *)setupFirst:(SSNetRequestSetup)firstBlock;
