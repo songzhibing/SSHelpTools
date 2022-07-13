@@ -6,7 +6,7 @@
 //  移动Cell: 如果自定义Cell尺寸且每个尺寸不尽相同，尽量设置成不允许跨Section
 //
 
-#import <SSHelpTools/SSHelpTools.h>
+#import "SSHelpTableView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

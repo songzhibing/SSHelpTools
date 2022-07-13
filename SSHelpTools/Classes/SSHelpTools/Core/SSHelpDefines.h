@@ -16,6 +16,7 @@ typedef void(^ _Nullable SSBlockVoid)(void);
 typedef void(^ _Nullable SSBlockInt )(int number);
 typedef void(^ _Nullable SSBlockBool)(BOOL success);
 typedef void(^ _Nullable SSBlockDict)(__kindof NSDictionary * _Nullable dict);
+typedef void(^ _Nullable SSBlockString)(__kindof NSString * _Nullable string);
 
 /// 字符串读取
 /// @param dict 原始数据

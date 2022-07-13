@@ -9,41 +9,52 @@
 
 @implementation NSDate (SSHelp)
 
++ (NSDateFormatter *)ss_dateFormatter
+{
+    static NSDateFormatter *dateFormatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dateFormatter = [[NSDateFormatter alloc] init];
+        //时区
+        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT+0800"]];
+        //地区
+        //[dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+        [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"]];
+        //公历
+        [dateFormatter setCalendar:[[NSCalendar  alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian]];
+    });
+    return dateFormatter;
+}
+
+/// 字符串转时间
++ (NSDate *)ss_dateFromString:(NSString *)string withFormat:(NSString *)format
+{
+    NSDateFormatter *formatter = [self ss_dateFormatter];
+    [formatter setDateFormat:format];
+    NSDate *date = [formatter dateFromString:string];
+    return date;
+}
+
+/// 时间转字符串
++ (NSString *)ss_stringFromDate:(NSDate *)date withFormat:(NSString *)format
+{
+    NSDateFormatter *formatter = [self ss_dateFormatter];
+    return [formatter stringFromDate:date];
+}
+
 /// Convenience method that returns a formatted string representing the receiver's date formatted to a given date format, time zone, locale and calendar
 /// @param format   NSString - String representing the desired date format
 /// @param timeZone NSTimeZone - Desired time zone， default by GMT+0800
 /// @param locale   NSLocale - Desired locale,  default by en_US_POSIX
 /// @param calendar NSCalendar - Desired calendar,  default by NSCalendarIdentifierISO8601
-- (NSString *)ss_formattedDateWithFormat:(NSString *)format
-                                timeZone:(NSTimeZone * _Nullable)timeZone
-                                  locale:(NSLocale * _Nullable)locale
-                                calendar:(NSCalendar * _Nullable)calendar
+- (NSString *)ss_stringWithFormat:(NSString *)format timeZone:(NSTimeZone * _Nullable)timeZone locale:(NSLocale * _Nullable)locale calendar:(NSCalendar * _Nullable)calendar;
 {
-    static NSDateFormatter *formatter = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        formatter = [[NSDateFormatter alloc] init];
-    });
-
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setTimeZone:timeZone?:[NSDate ss_dateFormatter].timeZone];
+    [formatter setLocale:locale?:[NSDate ss_dateFormatter].locale];
+    [formatter setCalendar:calendar?:[NSDate ss_dateFormatter].calendar];
     [formatter setDateFormat:format];
-    [formatter setTimeZone:timeZone?:[NSTimeZone timeZoneWithAbbreviation:@"GMT+0800"]];
-    [formatter setLocale:locale?:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-    [formatter setCalendar:calendar?:[[NSCalendar  alloc] initWithCalendarIdentifier:NSCalendarIdentifierISO8601]];
     return [formatter stringFromDate:self];
 }
-
-/// 今天
-+ (NSString *)ss_day
-{
-    return [[NSDate date] ss_formattedDateWithFormat:@"yyyyMMdd" timeZone:nil locale:nil calendar:nil];
-}
-
-/// 现在
-+ (NSString *)ss_now
-{
-    return [[NSDate date] ss_formattedDateWithFormat:@"yyyyMMddHHmmss" timeZone:nil locale:nil calendar:nil];
-}
-
-
 
 @end

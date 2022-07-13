@@ -24,6 +24,10 @@
 {
     self = [super initWithRootViewController:rootViewController];
     if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateNavigationBarAppearance)
+                                                     name:SSNavBarAppearanceDidChangeNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -32,14 +36,7 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = SSHELPTOOLSCONFIG.backgroundColor;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateNavigationBarAppearance)
-                                                 name:SSNavBarAppearanceDidChangeNotification
-                                               object:nil];
-    
     [self updateNavigationBarAppearance];
-
     /// 适配>>边缘返回手势
     if (!self.interactivePopGestureRecognizerDisable && [self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         __weak typeof(self) __weak_self = self;
@@ -69,9 +66,16 @@
         [self.navigationBar setBackgroundImage:newAppearance.backgroundImage
                                  forBarMetrics:UIBarMetricsDefault];
         [self.navigationBar setShadowImage:newAppearance.shadowImage];
-        self.navigationBar.tintColor = newAppearance.titleTextAttributes[NSForegroundColorAttributeName];
     }
-    [self.navigationBar setTranslucent:newAppearance.translucent];
+    self.navigationBar.tintColor = newAppearance.titleTextAttributes[NSForegroundColorAttributeName];
+    self.navigationBar.translucent = newAppearance.translucent;
+    
+    if (@available(iOS 11.0, *)) {
+        [[UICollectionView appearance] setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
+    }
+    if (@available(iOS 13.0, *)) {
+        [[UITableView appearance] setAutomaticallyAdjustsScrollIndicatorInsets:NO];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

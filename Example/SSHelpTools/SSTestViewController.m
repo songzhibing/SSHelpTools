@@ -131,13 +131,8 @@
         [batchRequest addRequest:request1];
 //        [batchRequest addRequest:request3];
         [batchRequest addRequest:request2];
-    } success:^(NSArray * _Nullable responseObjects) {
-        //
-    } failure:^(NSArray * _Nullable errors) {
-        //
-    } finished:^(NSArray * _Nullable responseObjects, NSArray * _Nullable errors) {
-        SSLogDebug(@"请求结果：%@ +++%@",responseObjects,errors);
-
+    } finished:^(NSArray * _Nullable responseObjects) {
+        SSLogDebug(@"请求结果：%@",responseObjects);
     }];
 //
 //    [[SSHelpNetworkCenter defaultCenter] sendChainRequest:^(SSHelpNetworkChainRequest * _Nonnull chainRequest) {
