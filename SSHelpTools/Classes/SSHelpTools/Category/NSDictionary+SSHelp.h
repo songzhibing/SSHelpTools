@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSDictionary (SSHelp)
 
+- (NSData * _Nullable)ss_jsonDataEncoded;
+
 /**
  Convert dictionary to json string. return "" if an error occurs.
  */

@@ -10,10 +10,7 @@
 
 @implementation NSDictionary (SSHelp)
 
-/**
- Convert dictionary to json string. return "" if an error occurs.
- */
-- (NSString *)ss_jsonStringEncoded
+- (NSData * _Nullable)ss_jsonDataEncoded
 {
     if ([NSJSONSerialization isValidJSONObject:self]) {
         NSJSONWritingOptions opt = kNilOptions;
@@ -22,8 +19,20 @@
         }
         NSData *data = [NSJSONSerialization dataWithJSONObject:self options:opt error:NULL];
         if (data) {
-            return data.ss_utf8String?:@"";
+            return data;
         }
+    }
+    return nil;
+}
+
+/**
+ Convert dictionary to json string. return "" if an error occurs.
+ */
+- (NSString *)ss_jsonStringEncoded
+{
+    NSData *data = [self ss_jsonDataEncoded];
+    if (data) {
+        return data.ss_utf8String?:@"";
     }
     return @"";
 }
