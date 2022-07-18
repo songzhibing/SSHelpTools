@@ -18,13 +18,6 @@
     return [[[self class] alloc] init];
 }
 
-- (void)dealloc
-{
-    #ifdef DEBUG
-    NSLog(@"[SSHelpTools Log] %@ dealloc......",self);
-    #endif
-}
-
 - (instancetype)init
 {
     self = [super init];
@@ -119,9 +112,6 @@
 
 - (void)dealloc
 {
-    #ifdef DEBUG
-    NSLog(@"[SSHelpTools Log] %@ dealloc......",self);
-    #endif
 }
 
 - (instancetype)init
@@ -189,9 +179,6 @@
 
 - (void)dealloc
 {
-#ifdef DEBUG
-    NSLog(@"[SSHelpTools Log] %@ dealloc......",self);
-#endif
 }
 
 - (instancetype)init
@@ -275,9 +262,6 @@
 
 - (void)dealloc
 {
-#ifdef DEBUG
-    //NSLog(@"[SSHelpTools Log] %@ dealloc......",self);
-#endif
 }
 
 + (instancetype)formDataWithName:(NSString *)name

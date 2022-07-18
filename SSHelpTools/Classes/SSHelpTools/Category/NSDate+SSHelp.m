@@ -39,6 +39,7 @@
 + (NSString *)ss_stringFromDate:(NSDate *)date withFormat:(NSString *)format
 {
     NSDateFormatter *formatter = [self ss_dateFormatter];
+    [formatter setDateFormat:format];
     return [formatter stringFromDate:date];
 }
 

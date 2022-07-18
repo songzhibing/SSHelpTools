@@ -25,7 +25,7 @@ typedef SSHelpTabBarApparance *_Nonnull(^SSUpdateTabBarAppearance)(void);
 
 + (SSHelpToolsConfig *)sharedConfig;
 
-/// 输出日志, default is YES
+/// 输出日志, default is NO
 @property(nonatomic, assign) BOOL enableLog;
 
 /// OC对象生命周期日志输出,方便调试内存泄露等问题,default is NO

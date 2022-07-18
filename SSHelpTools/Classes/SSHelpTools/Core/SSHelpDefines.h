@@ -9,6 +9,7 @@
 #import "SSHelpMetamacros.h"
 #import "SSHelpToolsConfig.h"
 #import "UIColor+SSHelp.h"
+#import "NSDate+SSHelp.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -132,17 +133,17 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 //日志
 
 #ifdef DEBUG
-    #define SSLog(fmt, ...) @autoreleasepool { (void)fprintf(stderr,"[SSLOG][%s]:[line-%d] %s\n", [[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String]); };
+    #define SSLog(fmt, ...) @autoreleasepool { (void)fprintf(stderr,"\n[SSLOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String]); };
 #else
     #define SSLog(...) @{};
 #endif
 
-#define SSToolsLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"[SSTOOLSLOG][%s]:[line-%d] %s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
+#define SSToolsLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"\n[SSTOOLSLOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
 
 // WKWebView日志
-#define SSWebLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"[SSWEBLOG][%s]:[line-%d] %s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
+#define SSWebLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"\n[SSWEBLOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
 
-#define SSLifeCycleLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLifeCycleLog)?((void)fprintf(stderr,"[SSLIFECYCLE][%s]:[line-%d] %s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
+#define SSLifeCycleLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLifeCycleLog)?((void)fprintf(stderr,"\n[SSLIFELOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
 
 //文件
 
