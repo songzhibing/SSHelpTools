@@ -37,27 +37,27 @@ typedef SSHelpTabBarApparance *_Nonnull(^SSUpdateTabBarAppearance)(void);
 /// return [UIApplication sharedApplication].delegate.window
 @property(nonatomic, strong, readwrite, nullable) UIWindow *window;
 
-@property(nonatomic, assign, readonly) CGFloat homeIndicatorHeight;
+@property(nonatomic, assign) CGFloat homeIndicatorHeight;
 
-@property(nonatomic, strong, readonly) UIColor *backgroundColor;
+@property(nonatomic, strong) UIColor *backgroundColor;
 
-@property(nonatomic, strong, readonly) UIColor *secondaryBackgroundColor;
+@property(nonatomic, strong) UIColor *secondaryBackgroundColor;
 
-@property(nonatomic, strong, readonly) UIColor *secondaryFillColor;
+@property(nonatomic, strong) UIColor *secondaryFillColor;
 
-@property(nonatomic, strong, readonly) UIColor *tertiaryFillColor;
+@property(nonatomic, strong) UIColor *tertiaryFillColor;
 
-@property(nonatomic, strong, readonly) UIColor *blueColor;
+@property(nonatomic, strong) UIColor *blueColor;
 
-@property(nonatomic, strong, readonly) UIColor *labelColor;
+@property(nonatomic, strong) UIColor *labelColor;
 
-@property(nonatomic, strong, readonly) UIColor *secondaryLabelColor;
+@property(nonatomic, strong) UIColor *secondaryLabelColor;
 
-@property(nonatomic, strong, readonly) UIColor *linkColor;
+@property(nonatomic, strong) UIColor *linkColor;
 
-@property(nonatomic, strong, readonly) UIColor *groupedBackgroundColor;
+@property(nonatomic, strong) UIColor *groupedBackgroundColor;
 
-@property(nonatomic, strong, readonly) UIColor *secondaryGroupedBackgroundColor;
+@property(nonatomic, strong) UIColor *secondaryGroupedBackgroundColor;
 
 @property(nonatomic, strong, readonly, nullable) SSHelpNavigationBarAppearance *customNavbarAppearance;
 
