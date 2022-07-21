@@ -22,7 +22,7 @@
 
 - (void)dealloc
 {
-    SSLifeCycleLog(@"%@ dealloc ... ",self);
+    //SSLifeCycleLog(@"%@ dealloc ... ",self);
 }
 
 + (instancetype)buttonWithStyle:(SSHelpButtonStyle)buttonStyle
