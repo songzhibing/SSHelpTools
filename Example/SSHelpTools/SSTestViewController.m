@@ -10,6 +10,7 @@
 #import <SSHelpTools/SSHelpNetwork.h>
 #import <SSHelpTools/SSHelpTableViewController.h>
 #import <SSHelpTools/SSHelpDropdownMenu.h>
+#import <SSHelpTools/SSHelpCheckBox.h>
 
 @interface SSTestViewController ()<SSHelpDropdownMenuDelegate>
 //@property(nonatomic, strong) SSHelpLocationManager *locationManager;
@@ -76,6 +77,48 @@
 //        @strongify(self);
 //        self.tapBtn.normalTitle = item.title;
 //    }];
+    
+    
+    
+    SSHelpCheckBox *checkbok = [[SSHelpCheckBox alloc] initWithFrame:CGRectMake(100, 100, 88, 44)];
+    checkbok.dataSouce = [[NSMutableArray alloc] initWithCapacity:6];
+    [checkbok.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"123"]];
+    [checkbok.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"abc"]];
+    [checkbok.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"你好呀"]];
+    [checkbok.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"1a2c3你"]];
+
+//    checkbok.title = @"123";
+//    checkbok.optionBgColor = self.
+    [self.view addSubview:checkbok];
+    
+    
+    
+    SSHelpCheckBox *checkbokLeft = [[SSHelpCheckBox alloc] initWithFrame:CGRectMake(5, 120, 88, 44)];
+    checkbokLeft.dataSouce = [[NSMutableArray alloc] initWithCapacity:6];
+    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"123"]];
+    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"abc"]];
+    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"你好呀"]];
+    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"1a2c3你"]];
+    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"123"]];
+    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"abc"]];
+    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"你好呀"]];
+    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"1a2c3你"]];
+    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"123"]];
+    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"abc"]];
+    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"你好呀"]];
+    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"1a2c3你"]];
+    [self.view addSubview:checkbokLeft];
+    
+    SSHelpCheckBox *checkbok2 = [[SSHelpCheckBox alloc] initWithFrame:CGRectMake(100, self.view.ss_height-44*3, 88, 44)];
+    checkbok2.dataSouce = [[NSMutableArray alloc] initWithCapacity:6];
+    [checkbok2.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"123"]];
+    [checkbok2.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"abc"]];
+    [checkbok2.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"你好呀"]];
+    [checkbok2.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"1a2c3你"]];
+
+//    checkbok.title = @"123";
+//    checkbok.optionBgColor = self.
+    [self.view addSubview:checkbok2];
 }
 
 - (void)testSSHelpViewController

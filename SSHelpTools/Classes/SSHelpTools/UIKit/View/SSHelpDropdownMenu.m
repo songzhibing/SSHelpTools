@@ -168,17 +168,13 @@
     
     // 菜单高度计算
     CGFloat listHeight = 0;
-    if (self.optionsListLimitHeight <= 0) { // 当未设置下拉菜单最小展示高度
-        NSUInteger count = self.data.count;
-        for (int i = 0; i < count; i++) {
-            CGFloat cHeight = self.optionItemHeight;
-            listHeight += cHeight;
-        }
-        _optionsList.scrollEnabled = NO;
-    } else {
-        listHeight = self.optionsListLimitHeight;
-        _optionsList.scrollEnabled = YES;
+    NSUInteger count = self.data.count;
+    for (int i = 0; i < count&& i<6; i++) {
+        CGFloat cHeight = self.optionItemHeight;
+        listHeight += cHeight;
     }
+    _optionsList.scrollEnabled = (count>6)?YES:NO;
+
     
     // 执行展开动画
     __weak typeof(self) weakSelf = self;
