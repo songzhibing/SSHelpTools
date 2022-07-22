@@ -84,7 +84,6 @@
 		1BABC748CD5AE3E3F0391D8CD2BCFAF8 /* SSHelpNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23055A6F0490798F3F400CFDE3044AB8 /* SSHelpNavigationController.m */; };
 		1C2E1D97CE14CACD94DE63578248C91E /* NSDate+SSHelp.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C71DF5B88FAD22C29A30C7D400E0CF /* NSDate+SSHelp.m */; };
 		1C3C63733B5A622E161EB956EBC3A4B6 /* YYWebImageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 553C75812ABE538409B116DECC8E2D3E /* YYWebImageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1C5DFC5B14E5B4369AC21818CB860505 /* SSHelpCheckBox.h in Headers */ = {isa = PBXBuildFile; fileRef = CE409283F76C33A035DD6917B95ACEAA /* SSHelpCheckBox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1E1F23B3E28A06FD28EE427A681F3E8F /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = F0CDE65FD9C184F01D1163F754AA030A /* DDAbstractDatabaseLogger.m */; };
 		1E7C46E7B8E2E7B802D45B50B60FCC53 /* YYFileHash.h in Headers */ = {isa = PBXBuildFile; fileRef = 0EDBAB042AB54DBFB49EA616EA6A31B4 /* YYFileHash.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1E8F5B679D79CCC3DB927555E1EA3108 /* UIImageView+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F243B24F60A5292C76679757FE6A091 /* UIImageView+YYWebImage.m */; };
@@ -619,7 +618,6 @@
 		DBBAC864AD405BED53782364E0F0D5F3 /* UIImage+GIF.h in Headers */ = {isa = PBXBuildFile; fileRef = CE57B6359A0399EE0F714F2C3CFE0DD6 /* UIImage+GIF.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC25C265E1835385E3E76B072AA18CAA /* SSHelpTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F237957842116553721738EB7F4B131C /* SSHelpTableView.m */; };
 		DCB70B23E95D1E2D11A1C409735C6177 /* YYTextParser.m in Sources */ = {isa = PBXBuildFile; fileRef = AF1CA35245BDC55A8C72E8B0F0710220 /* YYTextParser.m */; };
-		DD769012684AD0CA7400EC0625F1C7BA /* SSHelpCheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 524223FB56533628AAF9D09AD5D6849B /* SSHelpCheckBox.m */; };
 		DDF47765E8179A3EC6D56746B035E3F5 /* HTTPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = F5098075A1D13AB03B2E7D1B9042A24E /* HTTPConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE0BA471FB4FC10C0B25BDE4F22F5B76 /* SDWebImageDownloaderDecryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F84660B7E8F2D7B21A67206B964301 /* SDWebImageDownloaderDecryptor.m */; };
 		DEC2EE09E0EA7C101614BFF4BC5F69BD /* YYTextDebugOption.h in Headers */ = {isa = PBXBuildFile; fileRef = D994881B05DFAF851290EB24565E9806 /* YYTextDebugOption.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -945,7 +943,7 @@
 		155F370616751633DBE9252563AC22B0 /* NSObject+YYAddForKVO.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSObject+YYAddForKVO.h"; path = "YYKit/Base/Foundation/NSObject+YYAddForKVO.h"; sourceTree = "<group>"; };
 		1581B63F690CB5357309FD4A1723E168 /* MultipartMessageHeader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MultipartMessageHeader.m; path = Core/Mime/MultipartMessageHeader.m; sourceTree = "<group>"; };
 		162962E030591F1973381E3A03DBE324 /* SSHelpLocationRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SSHelpLocationRequest.h; sourceTree = "<group>"; };
-		169E6A7B35F982255575DB5EBA14FCEB /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		169E6A7B35F982255575DB5EBA14FCEB /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		170FAB66E4608D122A0D8AF3AE85921C /* SSHelpNetworkRequest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SSHelpNetworkRequest.m; path = SSHelpTools/Classes/SSHelpNetwork/SSHelpNetworkRequest.m; sourceTree = "<group>"; };
 		19456A5DB5B855EA102EC37161B1C1C4 /* SDImageIOAnimatedCoderInternal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageIOAnimatedCoderInternal.h; path = SDWebImage/Private/SDImageIOAnimatedCoderInternal.h; sourceTree = "<group>"; };
 		19D8DFA0C230E3CA383C26EA5882BBA0 /* SSHelpWebView+WKNavigationDelegate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SSHelpWebView+WKNavigationDelegate.m"; sourceTree = "<group>"; };
@@ -1100,7 +1098,6 @@
 		516D501A33DC91F4EE191BCFB2F0C240 /* SDWebImage-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SDWebImage-prefix.pch"; sourceTree = "<group>"; };
 		51E79F074368F87E4797A33F18A24FCE /* HTTPDataResponse.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = HTTPDataResponse.m; path = Core/Responses/HTTPDataResponse.m; sourceTree = "<group>"; };
 		51EBEAAE74C30245EC3B2AF148A33DE7 /* SDImageLoadersManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageLoadersManager.m; path = SDWebImage/Core/SDImageLoadersManager.m; sourceTree = "<group>"; };
-		524223FB56533628AAF9D09AD5D6849B /* SSHelpCheckBox.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SSHelpCheckBox.m; sourceTree = "<group>"; };
 		5294287177378762460F84C92E6A8C32 /* SSHelpWebObjcJsHandler.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SSHelpWebObjcJsHandler.h; sourceTree = "<group>"; };
 		52D8412D0AFFD477EE16E84E09C0DC4E /* SSHelpWebViewDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SSHelpWebViewDelegate.h; sourceTree = "<group>"; };
 		53222972A136E740DE33E75132207C37 /* DDFileLogger+Buffering.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "DDFileLogger+Buffering.m"; path = "Sources/CocoaLumberjack/Extensions/DDFileLogger+Buffering.m"; sourceTree = "<group>"; };
@@ -1346,7 +1343,7 @@
 		9C4E4455F9EA685A6420AE68F9313145 /* NSTimer+YYAdd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSTimer+YYAdd.h"; path = "YYKit/Base/Foundation/NSTimer+YYAdd.h"; sourceTree = "<group>"; };
 		9C76A236C01951C90496EA6D1D5B9254 /* WebViewJavascriptBridge_JS.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = WebViewJavascriptBridge_JS.m; path = WebViewJavascriptBridge/WebViewJavascriptBridge_JS.m; sourceTree = "<group>"; };
 		9D289A965B2B36E4648B8FA064B5C069 /* SDWebImageTransition.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageTransition.m; path = SDWebImage/Core/SDWebImageTransition.m; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9DEA094B1BC442DDBC2B703AB4C36C78 /* SDImageCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageCoder.m; path = SDWebImage/Core/SDImageCoder.m; sourceTree = "<group>"; };
 		9DFD8C2B0D4E264A5B15C64199BEF5F1 /* SDImageAPNGCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDImageAPNGCoder.m; path = SDWebImage/Core/SDImageAPNGCoder.m; sourceTree = "<group>"; };
 		9E0F47FBDEAC3E294DFBF1DC6ACFB962 /* SDWebImageTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageTransition.h; path = SDWebImage/Core/SDWebImageTransition.h; sourceTree = "<group>"; };
@@ -1420,7 +1417,7 @@
 		B6AFE0828CBE0251F59AA4C9A58E90C5 /* SSHelpWebPhotoModule.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SSHelpWebPhotoModule.m; sourceTree = "<group>"; };
 		B72788FD69DFF97314A5E4F487125A4E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
 		B75C2D2CA4B5EFC04EA7C777A88DB6C5 /* DDLog.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DDLog.m; path = Sources/CocoaLumberjack/DDLog.m; sourceTree = "<group>"; };
-		B7A47A4407C646CA63E9C6D936A4BBFB /* SSHELPTOOLSLICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = SSHELPTOOLSLICENSE; sourceTree = "<group>"; };
+		B7A47A4407C646CA63E9C6D936A4BBFB /* SSHELPTOOLSLICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = SSHELPTOOLSLICENSE; sourceTree = "<group>"; };
 		B82D53BB29F3D15E8D7FD12B0E2B0604 /* SDInternalMacros.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDInternalMacros.m; path = SDWebImage/Private/SDInternalMacros.m; sourceTree = "<group>"; };
 		B85546424E2EC09DEEAD0E605462DF65 /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFNetworkActivityIndicatorManager.h; path = "UIKit+AFNetworking/AFNetworkActivityIndicatorManager.h"; sourceTree = "<group>"; };
 		B85C4145290E9663AFB212639AF1BCB9 /* SDImageCodersManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDImageCodersManager.h; path = SDWebImage/Core/SDImageCodersManager.h; sourceTree = "<group>"; };
@@ -1504,7 +1501,6 @@
 		CD2AC05711268B49EEA3468BBEFDBF83 /* MASViewAttribute.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MASViewAttribute.m; path = Masonry/MASViewAttribute.m; sourceTree = "<group>"; };
 		CD88291A53EEA3A90B7CCC125E3E5F94 /* Masonry.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Masonry.debug.xcconfig; sourceTree = "<group>"; };
 		CE38EC30D2B71E048A4FA90FEA6270B9 /* UIImage+YYAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+YYAdd.m"; path = "YYKit/Base/UIKit/UIImage+YYAdd.m"; sourceTree = "<group>"; };
-		CE409283F76C33A035DD6917B95ACEAA /* SSHelpCheckBox.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SSHelpCheckBox.h; sourceTree = "<group>"; };
 		CE57B6359A0399EE0F714F2C3CFE0DD6 /* UIImage+GIF.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+GIF.h"; path = "SDWebImage/Core/UIImage+GIF.h"; sourceTree = "<group>"; };
 		CEA85AD90DA50A464D0D93E2C8377345 /* YYKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YYKit.debug.xcconfig; sourceTree = "<group>"; };
 		CF02CDDF1B9D2E7E3B1A78485D7C3339 /* HTTPConnection.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = HTTPConnection.m; path = Core/HTTPConnection.m; sourceTree = "<group>"; };
@@ -1642,7 +1638,7 @@
 		FC1B29044A54C27CD9353101A652A5A2 /* GCDWebServerRequest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerRequest.m; path = GCDWebServer/Core/GCDWebServerRequest.m; sourceTree = "<group>"; };
 		FCA552B586CCB0B53E6F82B0C1787908 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
 		FCDAFF051A3E1B6D2779D0EAF4BDDD48 /* UIControl+YYAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIControl+YYAdd.m"; path = "YYKit/Base/UIKit/UIControl+YYAdd.m"; sourceTree = "<group>"; };
-		FCE4139118FFCD98A050FAA89CF341F8 /* SSHelpTools.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = SSHelpTools.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		FCE4139118FFCD98A050FAA89CF341F8 /* SSHelpTools.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = SSHelpTools.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		FD1481232FA8148E195786199A71E282 /* YYTextRubyAnnotation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYTextRubyAnnotation.m; path = YYKit/Text/String/YYTextRubyAnnotation.m; sourceTree = "<group>"; };
 		FD191CD5CE8CDCBAACB55590BD1B73A9 /* SSHelpTableViewLayout.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = SSHelpTableViewLayout.h; sourceTree = "<group>"; };
 		FD4C05249EFC425C048BB28AF938A9A2 /* YYLabel.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYLabel.m; path = YYKit/Text/YYLabel.m; sourceTree = "<group>"; };
@@ -1805,7 +1801,6 @@
 				FFBC1495F136286403E5646F3247F0B2 /* Support Files */,
 				6EE594FEE78253CBB37F0AEF11A30A39 /* UIKit */,
 			);
-			name = AFNetworking;
 			path = AFNetworking;
 			sourceTree = "<group>";
 		};
@@ -1855,7 +1850,6 @@
 				137BB3D0AE2950D85C5FE1FAF1D97BDE /* Core */,
 				0D61955BD002A7F274EC8FFE6E20C481 /* Support Files */,
 			);
-			name = CocoaLumberjack;
 			path = CocoaLumberjack;
 			sourceTree = "<group>";
 		};
@@ -1978,7 +1972,6 @@
 				2A713741ED2DF9D00A6F78D0C7FBAD5E /* SSHelpButtonModel.h */,
 				EA0F45F4FFA796F20064229664010F1C /* SSHelpButtonModel.m */,
 			);
-			name = UIButton;
 			path = UIButton;
 			sourceTree = "<group>";
 		};
@@ -2029,7 +2022,6 @@
 				AC3F1B4736CE8807191792EBB3EC76AA /* WebSocket.m */,
 				8FA29E572009F3C254C35B2F2B30E4E3 /* Support Files */,
 			);
-			name = CocoaHTTPServer;
 			path = CocoaHTTPServer;
 			sourceTree = "<group>";
 		};
@@ -2049,7 +2041,6 @@
 				B699A97E524463A51518309E9C54C5F3 /* Core */,
 				16F09220E30D5D13AA12F6254E9F67EB /* Support Files */,
 			);
-			name = SDWebImage;
 			path = SDWebImage;
 			sourceTree = "<group>";
 		};
@@ -2088,7 +2079,6 @@
 				65C96A3D6ED882CC9631F9D6C5BCB691 /* SSHelpPhotoManager.h */,
 				C598816D157FD5933A470E736AF7EF42 /* SSHelpPhotoManager.m */,
 			);
-			name = Photos;
 			path = Photos;
 			sourceTree = "<group>";
 		};
@@ -2131,7 +2121,6 @@
 				162962E030591F1973381E3A03DBE324 /* SSHelpLocationRequest.h */,
 				42059036892EE01F61C815FDBC40D98C /* SSHelpLocationRequest.m */,
 			);
-			name = Location;
 			path = Location;
 			sourceTree = "<group>";
 		};
@@ -2318,7 +2307,6 @@
 				88BA48547A19B3AEFBD1F04EF5B71E27 /* SSHelpTableViewModel.h */,
 				045C111F192DD4825FB92AC455F332FF /* SSHelpTableViewModel.m */,
 			);
-			name = TableView;
 			path = TableView;
 			sourceTree = "<group>";
 		};
@@ -2358,7 +2346,6 @@
 				C8603305278ADC515EADBA911836080D /* SSHelpTabBarApparance.h */,
 				CB2B7E41C687D0401DC96A558173E83C /* SSHelpTabBarApparance.m */,
 			);
-			name = BarAppearance;
 			path = BarAppearance;
 			sourceTree = "<group>";
 		};
@@ -2368,7 +2355,6 @@
 				5972A576D879D98298B3DDD7399FCC56 /* Core */,
 				96763C5B8F96514E3E7995029264716C /* Support Files */,
 			);
-			name = GCDWebServer;
 			path = GCDWebServer;
 			sourceTree = "<group>";
 		};
@@ -2382,7 +2368,6 @@
 				F5FC1F0ECD493FB63B907F553E7706E0 /* SSHelpViewController.h */,
 				8592F8D2DBD14F0C5C97E49B09F94FB3 /* SSHelpViewController.m */,
 			);
-			name = ViewController;
 			path = ViewController;
 			sourceTree = "<group>";
 		};
@@ -2407,7 +2392,6 @@
 				C0836558F39ECB5DEF2BA69CF25F708C /* WKWebViewJavascriptBridge.m */,
 				A1B52E9951F7987158512243D0D203CF /* Support Files */,
 			);
-			name = WebViewJavascriptBridge;
 			path = WebViewJavascriptBridge;
 			sourceTree = "<group>";
 		};
@@ -2555,7 +2539,6 @@
 				E72120DFD5CC5131C075152A4C9206F5 /* GCDAsyncUdpSocket.m */,
 				F7C9D09B14664E45A3E1D2CCFFFA1979 /* Support Files */,
 			);
-			name = CocoaAsyncSocket;
 			path = CocoaAsyncSocket;
 			sourceTree = "<group>";
 		};
@@ -2580,8 +2563,6 @@
 		AB1214FD36EDF40AC26A9DC00C29F9CD /* View */ = {
 			isa = PBXGroup;
 			children = (
-				CE409283F76C33A035DD6917B95ACEAA /* SSHelpCheckBox.h */,
-				524223FB56533628AAF9D09AD5D6849B /* SSHelpCheckBox.m */,
 				A93E201AAC63CA73D80CE00D3859A85E /* SSHelpDropdownMenu.h */,
 				40850932442060E8DEC37AEF0BEA7B59 /* SSHelpDropdownMenu.m */,
 				5AC445638DE55BF2D92749F5C4563B55 /* SSHelpSlidePageView.h */,
@@ -2589,7 +2570,6 @@
 				9539295D3078DCFC86773B6DDC7AC297 /* SSHelpView.h */,
 				55FEBF595E7D3E1BAE21DBD2B2135960 /* SSHelpView.m */,
 			);
-			name = View;
 			path = View;
 			sourceTree = "<group>";
 		};
@@ -2790,7 +2770,6 @@
 				46C9910EF26DF280E6081E8454A7926B /* SSHelpNavigationBarModel.h */,
 				90FFEE89C7880497FF39879CBA344C82 /* SSHelpNavigationBarModel.m */,
 			);
-			name = NavigationBar;
 			path = NavigationBar;
 			sourceTree = "<group>";
 		};
@@ -3009,7 +2988,6 @@
 				0C95ED9981993FFE3111C77FB3776629 /* no-arc */,
 				FB49AA4AF113E88E122FE77F58F4DED9 /* Support Files */,
 			);
-			name = YYKit;
 			path = YYKit;
 			sourceTree = "<group>";
 		};
@@ -3020,7 +2998,6 @@
 				6C25A2B8BE5A8326E1E57B8D2E8F0DEB /* Support Files */,
 				C4E64AA2AC7CAFB5067F45424B79831C /* SwiftSupport */,
 			);
-			name = FBSnapshotTestCase;
 			path = FBSnapshotTestCase;
 			sourceTree = "<group>";
 		};
@@ -3054,7 +3031,6 @@
 				817DB23DC507D6A371B6E3E388A9E1B3 /* ViewController+MASAdditions.m */,
 				613E20DD089A3610A02B488FB4251CE4 /* Support Files */,
 			);
-			name = Masonry;
 			path = Masonry;
 			sourceTree = "<group>";
 		};
@@ -3441,7 +3417,6 @@
 				1FE1C5502105E61A7F00ECCC8D4D8001 /* SSHelpBarApparance.h in Headers */,
 				F7A0091DD182608A2E18F02E1C0B54F5 /* SSHelpButton.h in Headers */,
 				98113E82BA7F963D2A1E6F4EDE6B6D9F /* SSHelpButtonModel.h in Headers */,
-				1C5DFC5B14E5B4369AC21818CB860505 /* SSHelpCheckBox.h in Headers */,
 				E60C845B6CFAB078D283346D0C5B978A /* SSHelpDefines.h in Headers */,
 				5E66FF6C522E4C5CE2789EF343CD9E9E /* SSHelpDropdownMenu.h in Headers */,
 				05E670E509A3609F44C4AB1040BBEFC1 /* SSHelpHeadingRequest.h in Headers */,
@@ -4077,7 +4052,6 @@
 				88A3BC436CF217FE7EEB1482EDDC4704 /* SSHelpBarApparance.m in Sources */,
 				68035962AEA222B4E2B0A87597C2CA05 /* SSHelpButton.m in Sources */,
 				B404B40017D6FE2789DA2401A37F5F8D /* SSHelpButtonModel.m in Sources */,
-				DD769012684AD0CA7400EC0625F1C7BA /* SSHelpCheckBox.m in Sources */,
 				D7470A1226DD42BFC27E0A1487C5E807 /* SSHelpDefines.m in Sources */,
 				E961EB0F95CE3C78D23F69C9222C25A4 /* SSHelpDropdownMenu.m in Sources */,
 				5E62EAE7E25E082EAB8E13E2F2E01248 /* SSHelpHeadingRequest.m in Sources */,
@@ -4939,8 +4913,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};
