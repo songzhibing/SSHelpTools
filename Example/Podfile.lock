@@ -30,23 +30,23 @@ PODS:
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
   - Masonry (1.1.0)
-  - SDWebImage (5.12.3):
-    - SDWebImage/Core (= 5.12.3)
-  - SDWebImage/Core (5.12.3)
-  - SSHelpTools (0.1.0):
-    - SSHelpTools/SSHelpLog (= 0.1.0)
-    - SSHelpTools/SSHelpNetwork (= 0.1.0)
-    - SSHelpTools/SSHelpTools (= 0.1.0)
-    - SSHelpTools/SSHelpWebView (= 0.1.0)
-  - SSHelpTools/SSHelpLog (0.1.0):
+  - SDWebImage (5.12.5):
+    - SDWebImage/Core (= 5.12.5)
+  - SDWebImage/Core (5.12.5)
+  - SSHelpTools (0.1.1):
+    - SSHelpTools/SSHelpLog (= 0.1.1)
+    - SSHelpTools/SSHelpNetwork (= 0.1.1)
+    - SSHelpTools/SSHelpTools (= 0.1.1)
+    - SSHelpTools/SSHelpWebView (= 0.1.1)
+  - SSHelpTools/SSHelpLog (0.1.1):
     - CocoaLumberjack
     - GCDWebServer
-  - SSHelpTools/SSHelpNetwork (0.1.0):
+  - SSHelpTools/SSHelpNetwork (0.1.1):
     - AFNetworking
-  - SSHelpTools/SSHelpTools (0.1.0):
+  - SSHelpTools/SSHelpTools (0.1.1):
     - Masonry
     - SDWebImage
-  - SSHelpTools/SSHelpWebView (0.1.0):
+  - SSHelpTools/SSHelpWebView (0.1.1):
     - SSHelpTools/SSHelpTools
     - WebViewJavascriptBridge
   - WebViewJavascriptBridge (6.0.3)
@@ -57,6 +57,7 @@ PODS:
 DEPENDENCIES:
   - CocoaHTTPServer
   - FBSnapshotTestCase
+  - SDWebImage
   - SSHelpTools (from `../`)
   - YYKit
 
@@ -85,11 +86,11 @@ SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
-  SDWebImage: 53179a2dba77246efa8a9b85f5c5b21f8f43e38f
-  SSHelpTools: 25954866bcc6ef8dfebaca3877c4d0fc96dccd39
+  SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
+  SSHelpTools: e23bfdb0a6a6d7fb9480b1d8db8f5b3caf7114e5
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: 05048a0dce0735e99c0617160625ebe97be01079
+PODFILE CHECKSUM: 4e3700f05de1413d0304e87062a6042793ff667a
 
 COCOAPODS: 1.11.2

@@ -13,7 +13,7 @@
 /// @param string 文字
 - (UIImage *)ss_writeString:(NSString *)string
 {
-    UIFont *font = [UIFont systemFontOfSize:14];
+    UIFont  *font  = [UIFont systemFontOfSize:14];
     UIColor *color = [ UIColor whiteColor];
     
     //画布大小
@@ -51,5 +51,61 @@
     UIGraphicsEndImageContext();
     return newImage;
 }
+
+/// 颜色生成图片
++ (UIImage *)ss_imageWithColor:(UIColor *)color
+{
+    return [UIImage ss_imageWithColor:color size:CGSizeMake(1, 1)];
+}
+
+/// 颜色生成图片
++ (UIImage *)ss_imageWithColor:(UIColor *)color size:(CGSize)size
+{
+    CGRect rect = CGRectMake(0, 0, size.width, size.height);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
+}
+
+/// 图片绘制圆角
+- (UIImage *)ss_setCornerRadius:(CGFloat)cornerRadius
+{
+    CGRect rect = CGRectMake(0, 0, self.size.width, self.size.height);
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:cornerRadius];
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextAddPath(ctx, path.CGPath);
+    CGContextClip(ctx);
+    [self drawInRect:rect];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CGContextRelease(ctx);
+    return newImage;
+}
+
+/// 改变图片颜色
+- (UIImage *)ss_imageWithTintColor:(UIColor *)color
+{
+    if (@available(iOS 13.0, *)) {
+        return [self imageWithTintColor:color renderingMode:UIImageRenderingModeAlwaysTemplate];
+    } else {
+        UIGraphicsBeginImageContextWithOptions(self.size, NO, 0.0f);
+        [color setFill];
+        CGRect bounds = CGRectMake(0, 0, self.size.width, self.size.height);
+        UIRectFill(bounds);
+        //绘制一次 保留灰度信息
+        [self drawInRect:bounds blendMode:kCGBlendModeOverlay alpha:1.0f];
+        //再绘制一次 保留透明度信息
+        [self drawInRect:bounds blendMode:kCGBlendModeDestinationIn alpha:1.0f];
+        UIImage *tintedImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return tintedImage;
+    }
+}
+
 
 @end

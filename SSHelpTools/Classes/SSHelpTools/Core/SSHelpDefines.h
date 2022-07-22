@@ -1,21 +1,58 @@
 //
 //  SSHelpDefines.h
-//  SSHelpTools
+//  Pods
 //
-//  Created by 宋直兵 on 2021/12/17.
+//  Created by 宋直兵 on 2022/6/9.
 //
 
-#ifndef SSHelpDefines_h
-#define SSHelpDefines_h
-
+#import <Foundation/Foundation.h>
 #import "SSHelpMetamacros.h"
 #import "SSHelpToolsConfig.h"
 #import "UIColor+SSHelp.h"
+#import "NSDate+SSHelp.h"
 
-typedef void(^ _Nullable BlockVoid)(void);
-typedef void(^ _Nullable BlockInt)(int number);
-typedef void(^ _Nullable BlockBool)(BOOL state);
-typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
+NS_ASSUME_NONNULL_BEGIN
+
+typedef void(^ _Nullable SSBlockVoid)(void);
+typedef void(^ _Nullable SSBlockInt )(int number);
+typedef void(^ _Nullable SSBlockBool)(BOOL success);
+typedef void(^ _Nullable SSBlockDict)(__kindof NSDictionary * _Nullable dict);
+typedef void(^ _Nullable SSBlockString)(__kindof NSString * _Nullable string);
+
+/// 字符串读取
+/// @param dict 原始数据
+/// @param key 目标字段
+FOUNDATION_EXTERN NSString * _Nonnull SSEncodeStringFromDict(NSDictionary *dict, NSString *key);
+
+/// 字典读取
+/// @param dict 原始数据
+/// @param key 目标字段
+FOUNDATION_EXTERN NSDictionary * _Nullable SSEncodeDictFromDict(NSDictionary *dict, NSString *key);
+
+/// 数组读取
+/// @param dict 原始数据
+/// @param key 目标字段
+FOUNDATION_EXTERN NSArray * _Nullable SSEncodeArrayFromDict(NSDictionary *dict, NSString *key);
+
+/// 自定义数组读取
+/// @param dic 原始数据
+/// @param key 目标字段
+FOUNDATION_EXTERN NSArray * _Nullable SSEncodeArrayFromDictUsingBlock(NSDictionary *dic, NSString *key, id(^usingBlock)(NSDictionary *item));
+
+/// 判断是空， 如：nil、Nil、NSNull、@""、@"<null>"、@[]、@{}、0Data
+FOUNDATION_EXTERN BOOL SSEqualToEmpty(id object);
+
+/// 非空对象
+FOUNDATION_EXTERN BOOL SSEqualToNotEmpty(id object);
+
+/// 非空字符串
+FOUNDATION_EXTERN BOOL SSEqualToNotEmptyString(id string);
+
+/// 非空数组
+FOUNDATION_EXTERN BOOL SSEqualToNotEmptyArray(id array);
+
+/// 非空字典
+FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 //缩写
 
@@ -34,14 +71,6 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 
 #define _kNotificationCenter   [NSNotificationCenter defaultCenter]
 
-#define _kPostNotice(name,obj,info) [_kNotificationCenter postNotificationName:name \
-                                                                        object:obj \
-                                                                      userInfo:info];
-
-#define _kListenNotice(name, observer, sel) [_kNotificationCenter addObserver:observer \
-                                                                     selector:sel \
-                                                                         name:name \
-                                                                       object:nil];
 //设备
 
 #define _kDeviceIsiPad ([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
@@ -62,21 +91,23 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 
 //颜色
 
-#define _kColorRGB(R, G, B)  [UIColor colorWithRed:(R)/255.0 \
-                                             green:(G)/255.0 \
-                                              blue:(B)/255.0 alpha:1.0]
+#define _kColorRGB(R, G, B)      [UIColor colorWithRed:(R)/255.0 \
+                                                 green:(G)/255.0 \
+                                                  blue:(B)/255.0 \
+                                                 alpha:(1.0)]
 
 #define _kColorRGBA(R, G, B, A)  [UIColor colorWithRed:(R)/255.0 \
                                                  green:(G)/255.0 \
-                                                 blue:(B)/255.0 alpha:A]
+                                                  blue:(B)/255.0 \
+                                                 alpha:(A)]
 
-#define _kColorFromHexRGB(hexString)  [UIColor ss_colorWithHexString:hexString alpha:1]
+#define _kColorFromHexRGB(hexString)      [UIColor ss_colorWithHexString:hexString alpha:1]
 
 #define _kColorFromHexRGBA(hexString, a)  [UIColor ss_colorWithHexString:hexString alpha:a]
 
-#define _kColorFromHexNumber(hexNumber)  [UIColor ss_colorWithHex:hexNumber alpha:1]
+#define _kColorFromHexNumber(hexNumber)   [UIColor ss_colorWithHex:hexNumber alpha:1]
 
-#define _kRandomColor  [UIColor ss_randomColor]
+#define _kRandomColor  [[UIColor ss_randomColor] colorWithAlphaComponent:0.75f]
 
 #define _kClearColor   [UIColor clearColor]
 
@@ -102,14 +133,17 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 //日志
 
 #ifdef DEBUG
-    #define SSLog(fmt, ...) @autoreleasepool { (void)fprintf(stderr,"[SSLOG][%s]:[line-%d] %s\n", [[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String]); };
+    #define SSLog(fmt, ...) @autoreleasepool { (void)fprintf(stderr,"\n[SSLOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String]); };
 #else
     #define SSLog(...) @{};
 #endif
 
-#define SSToolsLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"[SSTOOLSLOG][%s]:[line-%d] %s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
+#define SSToolsLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"\n[SSTOOLSLOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
 
-#define SSWebLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"[SSWEBLOG][%s]:[line-%d] %s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
+// WKWebView日志
+#define SSWebLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"\n[SSWEBLOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
+
+#define SSLifeCycleLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLifeCycleLog)?((void)fprintf(stderr,"\n[SSLIFELOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
 
 //文件
 
@@ -126,7 +160,7 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 
 //__weak && __strong
 
-#ifndef weakify
+#ifndef weakify // 该宏在YYKit、ReactiveObjC、...  等内部都含有
     #define weakify(...) \
         ss_keywordify \
         metamacro_foreach_cxt(ss_weakify_,, __weak, __VA_ARGS__)
@@ -140,6 +174,19 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
         metamacro_foreach(ss_strongify_,, __VA_ARGS__) \
         _Pragma("clang diagnostic pop")
 #endif
+
+// 为了消除 Ambiguous expansion of macro 'weakify' 警告，增加变体
+#define Tweakify(...) \
+    ss_keywordify \
+    metamacro_foreach_cxt(ss_weakify_,, __weak, __VA_ARGS__)
+
+#define Tstrongify(...) \
+    ss_keywordify \
+    _Pragma("clang diagnostic push") \
+    _Pragma("clang diagnostic ignored \"-Wshadow\"") \
+    metamacro_foreach(ss_strongify_,, __VA_ARGS__) \
+    _Pragma("clang diagnostic pop")
+
 
 #if DEBUG
     #define ss_keywordify autoreleasepool {}
@@ -161,5 +208,10 @@ typedef void(^ _Nullable BlockDict)(NSDictionary * _Nullable dict);
 
 //Other
 
+#define _kRandSixValue [NSString stringWithFormat:@"%06d",arc4random() % 100000]
 
-#endif /* SSHelpDefines_h */
+@interface SSHelpDefines : NSObject
+
+@end
+
+NS_ASSUME_NONNULL_END

@@ -73,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)basePresentViewController:(UIViewController *)viewControllerToPresent
                          animated:(BOOL)flag
-                       completion:(BlockVoid)completion;
+                       completion:(SSBlockVoid)completion;
 
 @end
 

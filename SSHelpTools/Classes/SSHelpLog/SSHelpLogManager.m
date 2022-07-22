@@ -19,13 +19,20 @@
 static NSString *logCurrentTime(void)
 {
     static dispatch_once_t onceToken;
-    static NSDateFormatter *dateFromatter;
+    static NSDateFormatter *dateFormatter;
     dispatch_once(&onceToken, ^{
-        dateFromatter = [NSDateFormatter new];
-        dateFromatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"];
-        [dateFromatter setDateFormat:@"YYYY.MM.dd.HH.mm.ss.SSS"];
+        dateFormatter = [NSDateFormatter new];
+        //时区
+        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT+0800"]];
+        //地区
+        //[dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+        [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"]];
+        //公历
+        [dateFormatter setCalendar:[[NSCalendar  alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian]];
+        //格式
+        dateFormatter.dateFormat = @"yyyy.MM.dd.HH.mm.ss.SSS";
     });
-    return [dateFromatter stringFromDate:NSDate.date];
+    return [dateFormatter stringFromDate:NSDate.date];
 }
 
 //##############################################################################
@@ -41,12 +48,13 @@ static NSString *logCurrentTime(void)
 - (NSString *)newLogFileName
 {
     NSString *timeStamp = logCurrentTime();
-    return [NSString stringWithFormat:@"%@.log.html", timeStamp];
+    return [NSString stringWithFormat:@"%@.log.txt", timeStamp];
 }
+
 //重写方法(是否是log文件)
 - (BOOL)isLogFile:(NSString *)fileName
 {
-    BOOL hasProperSuffix = [fileName hasSuffix:@".log.html"];
+    BOOL hasProperSuffix = [fileName hasSuffix:@".log.txt"];
     return hasProperSuffix;
 }
 
@@ -115,7 +123,8 @@ static NSString *logCurrentTime(void)
         [_logger addXcodeLogger];
         [_logger addFileLogger];
         #ifdef DEBUG
-            SSLogDebug(@"日志文件:%@\n%@",_logger.fileLogger.logFileManager.logsDirectory,_logger.fileLogger.logFileManager.sortedLogFileNames);
+            DDLogDebug(@"日志路径:%@",_logger.fileLogger.logFileManager.logsDirectory);
+            DDLogDebug(@"日志文件:%@",_logger.fileLogger.logFileManager.sortedLogFileNames);
         #endif
     });
     return _logger;

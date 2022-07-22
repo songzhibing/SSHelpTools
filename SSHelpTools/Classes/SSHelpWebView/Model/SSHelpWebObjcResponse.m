@@ -57,7 +57,7 @@
     _response.code = code;
     _response.data = data;
     _response.error = error;
-    return _response.finalJsonString;
+    return _response.toJsonString;
 }
 
 - (instancetype)init
@@ -70,10 +70,10 @@
     return self;
 }
 
-- (NSString *)finalJsonString
+- (NSString *)toJsonString
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    if (self.code==1) {
+    if (self.code == 1) {
         [dict setValue:[NSNumber numberWithInteger:1] forKey:@"code"];
         [dict setValue:@"success" forKey:@"state"];
     }else{

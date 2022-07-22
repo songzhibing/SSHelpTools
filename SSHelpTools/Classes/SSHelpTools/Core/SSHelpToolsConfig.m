@@ -7,6 +7,11 @@
 
 #import "SSHelpToolsConfig.h"
 #import "NSBundle+SSHelp.h"
+#import "UIColor+SSHelp.h"
+#import "UIImage+SSHelp.h"
+
+NSNotificationName const SSNavBarAppearanceDidChangeNotification = @"ss.navbar.appearance.change";
+NSNotificationName const SSTabBarAppearanceDidChangeNotification = @"ss.tabbar.appearance.change";
 
 @implementation SSHelpToolsConfig
 
@@ -16,30 +21,101 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _config = [[SSHelpToolsConfig alloc] init];
-        [_config setupConfig];
-        
     });
     return _config;
 }
 
-#pragma mark - Private Method
-
-- (void)setupConfig
+- (instancetype)init
 {
-    /// 打印日志
-    _enableLog = NO;
-
-    ///导航栏背景色
-    _navigationBarBackgroundColor = [UIColor colorWithRed:0.22f green:0.48 blue:0.93 alpha:1.0];
-    
-    ///导航栏左侧返回按钮图片
-    _navigationBarLeftBackImg = [NSBundle ss_navigationBackImage];
-    
-    _viewDefaultBackgroundColor = [UIColor whiteColor];
-    
+    self = [super init];
+    if (self) {
+        /// 打印日志
+        _enableLog = NO;
+        
+        _enableLifeCycleLog = NO;
+        
+        _supportMinSystemiOS = 10.0f;
+                
+        if (@available(iOS 13.0, *)) {
+            _backgroundColor = [UIColor systemBackgroundColor];
+        } else {
+            _backgroundColor = [UIColor whiteColor];
+        }
+        
+        if (@available(iOS 13.0, *)) {
+            _secondaryBackgroundColor = [UIColor secondarySystemBackgroundColor];
+        } else {
+            _secondaryBackgroundColor = [UIColor ss_colorWithString:@"#F2F2F7FF"];
+        }
+        
+        if (@available(iOS 13.0, *)) {
+            _labelColor = [UIColor labelColor];
+        } else {
+            _labelColor = [UIColor blackColor];
+        }
+        
+        if (@available(iOS 13.0, *)) {
+            _secondaryLabelColor = [UIColor secondaryLabelColor];
+        } else {
+            _secondaryLabelColor = [UIColor ss_colorWithString:@"#3C3C434C"];
+        }
+        
+        if (@available(iOS 13.0, *)) {
+            _linkColor = [UIColor linkColor];
+        } else {
+            _linkColor = [UIColor ss_colorWithString:@"#007AFFFF"];
+        }
+        
+        if (@available(iOS 13.0, *)) {
+            _blueColor = [UIColor systemBlueColor];
+        } else {
+            _blueColor = [UIColor ss_colorWithString:@"#007AFFFF"];
+        }
+        
+        
+        if (@available(iOS 13.0, *)) {
+            _groupedBackgroundColor = [UIColor systemGroupedBackgroundColor];
+        } else {
+            _groupedBackgroundColor = [UIColor ss_colorWithString:@"#F2F2F7FF"];
+        }
+        
+        if (@available(iOS 13.0, *)) {
+            _secondaryGroupedBackgroundColor = [UIColor secondarySystemGroupedBackgroundColor];
+        } else {
+            _secondaryGroupedBackgroundColor = [UIColor ss_colorWithString:@"#FFFFFFFF"];
+        }
+        
+        
+        if (@available(iOS 13.0, *)) {
+            _secondaryFillColor = [UIColor secondarySystemFillColor];
+        } else {
+            _secondaryFillColor = [UIColor ss_colorWithString:@"#78788028"];
+        }
+        
+        if (@available(iOS 13.0, *)) {
+            _tertiaryFillColor = [UIColor tertiarySystemFillColor];
+        } else {
+            _tertiaryFillColor = [UIColor ss_colorWithString:@"#7676801E"];
+        }
+    }
+    return self;
 }
 
-#pragma mark - Lazy load
+- (void)updateNavigationBarAppearance:(SSUpdateNavBarAppearance)block
+{
+    _customNavbarAppearance = block();
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:SSNavBarAppearanceDidChangeNotification object:nil];
+    });
+}
+
+- (void)updateTabBarAppearance:(SSUpdateTabBarAppearance)block
+{
+    _customTabBarAppearance = block();
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:SSTabBarAppearanceDidChangeNotification object:nil];
+    });
+}
 
 - (CGFloat)homeIndicatorHeight
 {

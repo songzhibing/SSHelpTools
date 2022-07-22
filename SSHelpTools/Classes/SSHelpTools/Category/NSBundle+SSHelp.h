@@ -11,17 +11,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSBundle (SSHelp)
 
-+ (instancetype)ss_toolsBundle;
+/// 获取指定bundle路径 ，支持静态库、动态库
++ (NSString * _Nullable)ss_bundlePath:(NSString *)bundleName;
 
-+ (UIImage *)ss_navigationBackImage;
+/// 从指定bundle获取指定图片，
++ (UIImage * _Nullable)ss_loadImage:(NSString *)imageName fromBundle:(NSString *)bundleName;
 
-+ (UIImage *)ss_flashlightOpenImg;
+/// 'SSHelpTools库'专属bundle
++ (NSBundle *)ss_toolsBundle;
 
-+ (UIImage *)ss_flashlightCloseImg;
-
-+ (UIImage *)ss_scanLineImg;
-
-+ (UIImage *)ss_scanGridImg;
+/// 'SSHelpTools库'专属bundle图
++ (UIImage *)ss_toolsBundleImage:(NSString *)imageName;
 
 @end
 

@@ -9,17 +9,11 @@
 
 @implementation UIColor (SSHelp)
 
-/**
- 16进制颜色转换为UIColor
-
- @param hexColor 16进制字符串（可以以0x开头，可以以#开头，也可以就是6位的16进制）
- @param alpha 透明度
- @return 16进制字符串对应的颜色,异常返回 blackColor
- */
-+(UIColor *)ss_colorWithHexString:(NSString *)hexColor alpha:(float)alpha
+/// 0XFFFFFF，#FFFFFF 转 Color
++ (UIColor *)ss_colorWithHexString:(NSString *)hexString alpha:(float)alpha
 {
-    if (hexColor && [hexColor isKindOfClass:[NSString class]]) {
-        NSString *cString = [[hexColor stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
+    if (hexString && [hexString isKindOfClass:[NSString class]]) {
+        NSString *cString = [[hexString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
 
         // String should be 6 or 8 characters
         if ([cString length] < 6) return [UIColor blackColor];
@@ -56,9 +50,30 @@
     return [UIColor blackColor];
 }
 
-/**
- 0x开头的十六进制数值转换成的颜色,透明度可调整
- */
+/// RGBA 转 Color
++ (UIColor *)ss_colorWithString:(NSString *)hexString
+{
+    NSString *hex = [NSString stringWithString:hexString];
+    if ([hex hasPrefix:@"#"]) {
+        hex = [hex substringFromIndex:1];
+    }
+    
+    if (hex.length == 6) {
+        hex = [hex stringByAppendingString:@"FF"];
+    } else if (hex.length != 8) {
+        return [UIColor blackColor];
+    }
+    
+    uint32_t rgba;
+    NSScanner *scanner = [NSScanner scannerWithString:hex];
+    [scanner scanHexInt:&rgba];
+    return [UIColor colorWithRed:((rgba >> 24)&0xFF) / 255.
+                           green:((rgba >> 16)&0xFF) / 255.
+                            blue:((rgba >> 8 )&0xFF) / 255.
+                           alpha:(rgba & 0xFF) / 255.];
+}
+
+/// 0xFFFFFF 转 Color
 + (UIColor *)ss_colorWithHex:(long)hexValue alpha:(float)alpha
 {
     float red = ((float)((hexValue & 0xFF0000) >> 16))/255.0;
@@ -67,9 +82,7 @@
     return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
-/**
- @return a random Color.
- */
+/// Return a random Color.
 + (UIColor *)ss_randomColor
 {
     return  [UIColor colorWithRed:arc4random_uniform(256)/255.0

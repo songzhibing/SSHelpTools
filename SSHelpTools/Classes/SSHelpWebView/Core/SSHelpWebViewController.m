@@ -11,7 +11,7 @@
 #import "SSHelpWebPhotoModule.h"
 #import "SSHelpWebTestJsBridgeModule.h"
 
-@interface SSHelpWebViewController ()<SSWebViewDelegate>
+@interface SSHelpWebViewController ()<SSHelpWebViewDelegate>
 
 @property(nonatomic, strong) SSHelpWebView *webView;
 
@@ -25,82 +25,40 @@
     self.webView = [[SSHelpWebView alloc] initWithFrame:self.view.bounds];
     self.webView.webViewDelegate = self;
     [self.view addSubview:self.webView];
-    
-//    NSString *cookieValue = @"document.cookie = 'sessionid=971650594598141';";
-//    WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:cookieValue injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
-//    self.webView.customUserScripts = @[cookieScript];
+
     [self.webView registerJsHandlerImpClass:[SSHelpWebTestJsBridgeModule class]];
     [self.webView registerJsHandlerImpClass:[SSHelpWebLocationModule class]];
     [self.webView registerJsHandlerImpClass:[SSHelpWebPhotoModule class]];
-    
-    [self.webView restorationIdentifier];
-    [self.webView loadRequest:self.indexRequest];
+
+    if (SSEqualToNotEmptyString(self.indexString)) {
+        NSString *url = [self.indexString stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        self.indexRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    }
+
+    if (self.indexRequest) {
+        [self.webView loadRequest:self.indexRequest];
+    }
+
+    if (self.fileURL && self.readAccessURL) {
+        [self.webView loadFileURL:self.fileURL allowingReadAccessToURL:self.readAccessURL];
+    }
 }
 
-//// 可在初始化时进行设置
-//- (NSString *)ajaxCookieScripts {
-//    NSMutableString *cookieScript = [[NSMutableString alloc] init];
-//    // 为JS增加设置、获取、删除Cookie的方法（需要用到删除方法）
-//    NSString *JSCookieFuncString =
-//    @"function setCookie(name,value,expires)\
-//    {\
-//    var oDate=new Date();\
-//    oDate.setDate(oDate.getDate()+expires);\
-//    document.cookie=name+'='+value+';expires='+oDate+';path=/'\
-//    }\
-//    function getCookie(name)\
-//    {\
-//    var arr = document.cookie.match(new RegExp('(^| )'+name+'=([^;]*)(;|$)'));\
-//    if(arr != null) return unescape(arr[2]); return null;\
-//    }\
-//    function delCookie(name)\
-//    {\
-//    var exp = new Date();\
-//    exp.setTime(exp.getTime() - 1);\
-//    var cval=getCookie(name);\
-//    if(cval!=null) document.cookie= name + '='+cval+';expires='+exp.toGMTString();\
-//    }";
-//    [cookieScript appendString:JSCookieFuncString];
-//    // 遍历 HTTPCookieStorage 中所有 Cookie，进行同步
-//    // Tips：系统会根据URL的Domain，自动判断携带Cookie，所以我们设置Cookie时不需要判断域名。
-//    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
-//
-//        // Skip cookies that will break our script
-//        if ([cookie.value rangeOfString:@"'"].location != NSNotFound) {
-//            continue;
-//        }
-//        // 设置Cookie前，先进行移除操作，防止出现重复设置的情况
-//        [cookieScript appendFormat:@"delCookie('%@');", cookie.name];
-//        // Create a line that appends this cookie to the web view's document's cookies
-//        [cookieScript appendFormat:@"document.cookie = '%@=%@;", cookie.name, cookie.value];
-//        if (cookie.domain || cookie.domain.length > 0) {
-//            [cookieScript appendFormat:@"domain=%@;", cookie.domain];
-//        }
-//        if (cookie.path || cookie.path.length > 0) {
-//            [cookieScript appendFormat:@"path=%@;", cookie.path];
-//        }
-//        if (cookie.expiresDate) {
-//            [cookieScript appendFormat:@"expires=%@;", cookie.properties[@"Expires"]];
-//        }
-//        if (cookie.secure) {
-//            // 只有 https 请求才能携带该 cookie
-//            [cookieScript appendString:@"Secure;"];
-//        }
-//        if (cookie.HTTPOnly) {
-//            // 保持 native 的 cookie 完整性，当 HTTPOnly 时，不能通过 document.cookie 来读取该 cookie。
-//            [cookieScript appendString:@"HTTPOnly;"];
-//        }
-//        [cookieScript appendFormat:@"';"];
-//    }
-//    return cookieScript;
-//}
+- (void)adjustSubviewsDisplay
+{
+    [super adjustSubviewsDisplay];
+    // 调整位置
+    [self.webView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsMake(self.viewSafeAreaInsets.top, self.viewSafeAreaInsets.left, 0, self.viewSafeAreaInsets.right));
+    }];
+}
 
 #pragma mark - WebView Delegate
 
 /// 标题变更
 - (void)webviewDidChangeTitle:(NSString * _Nullable)title
 {
-    self.navigationBar.titleLabel.text = title;
+    self.title = title;
 }
 
 /// 当接收到主frame的服务器重定向时调用
@@ -124,8 +82,32 @@
 /// @param navigation 导航
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
+    if (@available(iOS 11.0, *)) {
+        [webView.configuration.websiteDataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull item) {
+            //SSWebLog(@"cookie:%@",item);
+        }];
+    }
     SSWebLog(@"加载完成：%@",webView.URL);
 }
+
+/// 在提交的主frame导航期间发生错误时调用
+/// @param webView 调用委托方法的web视图
+/// @param navigation 导航
+/// @param error 错误信息
+- (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+{
+    SSWebLog(@"加载失败：%@",error.localizedDescription);
+}
+
+/// 当开始为主frame加载数据时发生错误时调用。
+/// @param webView 调用委托方法的web视图
+/// @param navigation 导航
+/// @param error 错误信息
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
+{
+    SSWebLog(@"加载失败：%@",error.localizedDescription);
+}
+
 /*
 #pragma mark - Navigation
 

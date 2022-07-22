@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SSHelpTools'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = '常用工具'
 
 # This description is used to generate tags and improve search results.
@@ -33,8 +33,10 @@ TODO: 代码逐渐完善中，欢迎提出问题.
   s.subspec 'SSHelpTools' do |tools|
     tools.source_files = 'SSHelpTools/Classes/SSHelpTools/**/*.{h,m}'
     tools.public_header_files = 'SSHelpTools/Classes/SSHelpTools/**/*.h'
-    tools.resource = 'SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.bundle'
-    tools.frameworks = 'UIKit','Foundation','CoreLocation','AVFoundation'
+    tools.resource_bundles = {
+      'SSHelpTools'=> ['SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.bundle','SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.xcassets']
+    }
+    tools.frameworks = 'UIKit','Foundation','CoreLocation','AVFoundation','PhotosUI'
     tools.dependency 'Masonry'
     tools.dependency 'SDWebImage'
   end

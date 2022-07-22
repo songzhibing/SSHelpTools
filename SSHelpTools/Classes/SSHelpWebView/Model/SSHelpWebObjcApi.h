@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define kWebApiTestObjcCallback @"testObjcCallback"
+#define kWebApiTestJSBridge     @"ObjcTestBridge"
 
 #define kWebApiTelNumber        @"ObjcTelNumber"
 

@@ -7,17 +7,9 @@
 
 #import "SSHelpWebView.h"
 #import "SSHelpWebTestJsBridgeModule.h"
+#import "SSHelpWebView+GestureRecognizer.h"
 
-WKWebsiteDataStore *sharedWebsiteDataStore(void){
-    static WKWebsiteDataStore *websiteDataStore;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        websiteDataStore = [WKWebsiteDataStore defaultDataStore];
-    });
-    return websiteDataStore;
-}
-
-@interface SSHelpWebView()<WKUIDelegate,WKNavigationDelegate,SSWebModuleDelegate>
+@interface SSHelpWebView()<WKUIDelegate,WKNavigationDelegate>
 
 @property(nonatomic, strong) UIProgressView *loadingPogressView;
 
@@ -27,7 +19,7 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 
 @property(nonatomic, strong) WKUserContentController *userContent;
  
-//Native & h5 交互
+/// Native & h5 交互
 @property(nonatomic, strong) WKWebViewJavascriptBridge *bridge;
 
 @property(nonatomic, strong) NSMutableDictionary <NSString *, SSBridgeJsHandler> *messageHandlers;
@@ -36,13 +28,26 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 
 @property(nonatomic, strong) NSMutableArray <__kindof SSHelpWebBaseModule *> *moduleImpInstances;
 
-@property(nonatomic,   copy) NSString *cookieDefaultsKey;
-
 @end
 
 @implementation SSHelpWebView
 
 #pragma mark - System Method
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _hiddenProgressView = NO;
+        _injectPageshowJs = YES;
+        _injectWebkitTouchCalloutJs = YES;
+        _injectWebkitUserSelectJs = YES;
+        _allowsBackForwardNavigationGestures = YES;
+        _supportLongPressGestureRecognizer = NO;
+        _cookiePolicy = SSHelpWebViewCookieEnableSystem;
+    }
+    return self;
+}
 
 - (void)dealloc
 {
@@ -67,13 +72,81 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 }
 
 #pragma mark - Public Method
-
+ 
 /// @abstract Navigates to a requested URL.
 /// @param request The request specifying the URL to which to navigate.
-- (void)loadRequest:(NSURLRequest *)request;
+- (void)loadRequest:(NSMutableURLRequest *)request;
+{    
+    NSMutableURLRequest *mutableRequest = request.mutableCopy;
+    NSArray <NSHTTPCookie *> *_cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:mutableRequest.URL];
+
+    if (self.cookiePolicy & SSHelpWebViewCookieEnablePHP) {
+        // Tip1: 在request header中设置Cookie,解决首个请求Cookie丢失问题,页面PHP等动态语言能够获取到（js获取不到）
+        if (_cookies) {
+            NSDictionary *cookieDict =  [NSHTTPCookie requestHeaderFieldsWithCookies:_cookies]; // @{Cookie = "dotcom_user=xxx; logged_in=yes; __Host-user_session_same_site=xxx; user_session=xxx; _octo=GH1.1.xx.xx; _device_id=xx"; }
+            NSString *cookieString = [cookieDict objectForKey:@"Cookie"];
+            [mutableRequest addValue:cookieString forHTTPHeaderField:@"Cookie"];
+        }
+    }
+    
+    if (self.cookiePolicy & SSHelpWebViewCookieEnableJs) {
+        // Tip2: 页面js可获取Cookie（PHP等动态语言获取不到）
+        if (_cookies) {
+            __block NSMutableString *jsCookiesString = @"".mutableCopy;
+            [_cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * _Nonnull cookie, NSUInteger idx, BOOL * _Nonnull stop) {
+                [jsCookiesString appendString:[NSString stringWithFormat:@"document.cookie = '%@=%@';", cookie.name, cookie.value]];
+            }];
+            if (jsCookiesString.length) {
+                WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:jsCookiesString injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
+                [self.customUserScripts addObject:cookieScript];
+            }
+        }
+    }
+    
+    @weakify(self);
+    void (^__startLoadingRequest)(void) = ^(void){
+        dispatch_main_async_safe(^{
+#ifdef DEBUG
+            if (@available(iOS 11.0, *)) {
+                [self_weak_.webView.configuration.websiteDataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull data) {
+                    //SSWebLog(@"Sync Cookie After:%@",data);
+                }];
+            }
+#endif
+            [self_weak_.webView loadRequest:mutableRequest];
+            SSWebLog(@"SSHelpWebView loadRequest %@ %@ ... ",[NSThread currentThread],mutableRequest);
+        });
+    };
+    
+    if (self.cookiePolicy & SSHelpWebViewCookieSyncCookieStore) {
+        // Tip3: NSHTTPCookieStorage-->同步到-->WKHTTPCookieStore
+        if (@available(iOS 11.0, *)) {
+            NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+            if (cookies.count) {
+#ifdef DEBUG
+                [self.webView.configuration.websiteDataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull data) {
+                    //SSWebLog(@"Sync Cookie Before:%@",data);
+                }];
+#endif
+                dispatch_group_t group = dispatch_group_create();
+                for (NSInteger index=0; index<cookies.count; index++) {
+                    dispatch_group_enter(group);
+                    NSHTTPCookie * _Nonnull cookie = cookies[index];
+                    [self.webView.configuration.websiteDataStore.httpCookieStore setCookie:cookie completionHandler:^{
+                        dispatch_group_leave(group);
+                    }];
+                }
+                dispatch_group_notify(group, dispatch_get_main_queue(), __startLoadingRequest);
+                return;
+            }
+        }
+    }
+    __startLoadingRequest();
+}
+
+- (void)showToast:(NSString *)message
 {
-    WKNavigation *navigation = [self.webView loadRequest:request];
-    SSWebLog(@"SSHelpWebView loadRequest %@ ... ",navigation);
+    SSWebLog(@"日志：%@",message);
 }
 
 /// @abstract Navigates to the requested file URL on the filesystem.
@@ -81,9 +154,8 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 /// @param readAccessURL The URL to allow read access to.  @discussion If readAccessURL references a single file, only that file may be loaded by WebKit.If readAccessURL references a directory, files inside that file may be loaded by WebKit.
 - (void)loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL;
 {
-    WKNavigation *navigation = [self.webView loadFileURL:URL
-                                 allowingReadAccessToURL:readAccessURL];
-    SSWebLog(@"SSHelpWebView loadFileURL:allowingReadAccessToURL %@ ... ",navigation);
+    [self.webView loadFileURL:URL allowingReadAccessToURL:readAccessURL];
+    SSWebLog(@"loadFileURL:allowingReadAccessToURL %@ %@... ",URL.absoluteString,readAccessURL.absoluteString);
 }
 
 /// 执行js语句
@@ -116,12 +188,13 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
     }
     if ([_moduleImpClasses containsObject:className]) {
         return NO;
-    }else{
+    } else {
         [_moduleImpClasses addObject:className];
         return YES;
     }
 }
 
+/// 加载视图控制器
 - (void)presentViewController:(UIViewController *)viewControllerToPresent animated: (BOOL)flag completion:(void (^ __nullable)(void))completion
 {
     if (self.ss_viewController) {
@@ -133,27 +206,31 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
 
 - (WKWebView *)webView
 {
-    if (!_webView){
-        //禁止长按
-        WKUserScript *touchClloutScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitTouchCallout='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
-        
-        //禁止选择
-        WKUserScript *selectScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitUserSelect='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
-        
-        //后退刷新
-        WKUserScript *reloadScript = [[WKUserScript alloc] initWithSource:@"window.addEventListener('pageshow', function(event){if(event.persisted || window.performance && window.performance.navigation.type == 2){location.reload();}});" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
-
+    if (!_webView) {
         /**
-         WKUserContentController初始化
-         :提供了一种向WebView发送JavaScript消息或者注入JavaScript脚本的方法
+         配置管理 JavaScript
          */
         _userContent = [[WKUserContentController alloc] init];
-        [_userContent addUserScript:touchClloutScript];
-        [_userContent addUserScript:selectScript];
-        [_userContent addUserScript:reloadScript];
+        
+        if (_injectWebkitTouchCalloutJs) {  //禁止长按显示系统菜单
+            WKUserScript *touchClloutScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitTouchCallout='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
+            [_userContent addUserScript:touchClloutScript];
+        }
+        
+        if (_injectWebkitUserSelectJs) { //禁止用户进行复制、选择
+            WKUserScript *selectScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitUserSelect='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
+            [_userContent addUserScript:selectScript];
+        }
+        
+        if (_injectPageshowJs) { //页面后退刷新
+            WKUserScript *reloadScript = [[WKUserScript alloc] initWithSource:@"window.addEventListener('pageshow', function(event){if(event.persisted || window.performance && window.performance.navigation.type == 2){location.reload();}});" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
+            [_userContent addUserScript:reloadScript];
+        }
+        
         for (WKUserScript *scriptItem in _customUserScripts) {
             [_userContent addUserScript:scriptItem]; ///自定义的js
         }
+        
         id handler = [[SSHelpWeakProxy alloc] initWithTarget:self];
         for (NSString *key in _messageHandlers.allKeys) { ///添加js方法
             [_userContent addScriptMessageHandler:handler name:key]; //注意，需要手动释放
@@ -166,13 +243,13 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
          不能用此类来改变一个已经初始化完成的webview的配置。
          */
         _configuration = [[WKWebViewConfiguration alloc] init];
-        _configuration.processPool = self.sharedProcessPool;
-        _configuration.preferences = self.sharedPreferences;
+        _configuration.processPool = self.processPool;
+        _configuration.preferences = self.preferences;
         _configuration.websiteDataStore = self.websiteDataStore;
         _configuration.allowsInlineMediaPlayback = YES; ///允许在线播放
         _configuration.userContentController = _userContent;
         if (@available(iOS 13.0, *)) {
-            _configuration.defaultWebpagePreferences = self.sharedWebpagePreferences;
+            _configuration.defaultWebpagePreferences = self.webpagePreferences;
         }
         
         /**
@@ -195,23 +272,34 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
         /**
          初始化进度条
          */
-        if (_hiddenProgressView==NO) {
+        if (!_hiddenProgressView) {
             _loadingPogressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-            _loadingPogressView.frame = CGRectMake(0, 0, self.ss_width, 6);
-            _loadingPogressView.trackTintColor = [UIColor grayColor]; //设置进度条颜色
-            _loadingPogressView.progressTintColor = [UIColor greenColor]; //设置进度条上进度的颜色
+            _loadingPogressView.frame = CGRectMake(0, 0, self.ss_width, 3);
+            _loadingPogressView.progressTintColor = SSHELPTOOLSCONFIG.blueColor;
+            _loadingPogressView.trackTintColor = [UIColor clearColor];
             [self addSubview:_loadingPogressView];
             [_loadingPogressView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.left.right.mas_equalTo(0);
-                make.height.mas_equalTo(6);
+                make.height.mas_equalTo(3);
             }];
         }
         
-        [_webView addObserver:self forKeyPath:@"estimatedProgress"
-                      options:NSKeyValueObservingOptionNew context:NULL];
-        [_webView addObserver:self forKeyPath:@"title"
-                      options:NSKeyValueObservingOptionNew context:NULL];
         
+        // KVO
+        [_webView addObserver:self
+                   forKeyPath:@"estimatedProgress"
+                      options:NSKeyValueObservingOptionNew
+                      context:NULL];
+        
+        [_webView addObserver:self
+                   forKeyPath:@"title"
+                      options:NSKeyValueObservingOptionNew
+                      context:NULL];
+        
+        // 手势识别
+        if (_supportLongPressGestureRecognizer) {
+            [self addLongPressGestureRecognizer:_webView];
+        }
         
         /**
          初始化 WKWebViewJavascriptBridge
@@ -230,7 +318,7 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
                 __kindof SSHelpWebBaseModule *jsModuleObj = [[jsModuleClass alloc] init];
                 jsModuleObj.webView = _webView;
                 jsModuleObj.bridge = _bridge;
-                jsModuleObj.moduleDelegate = self;
+                jsModuleObj.moduleDelegate = _moduleDelegate;
                 if ([jsModuleObj respondsToSelector:@selector(moduleRegisterJsHandler)]) {
                     [jsModuleObj moduleRegisterJsHandler];
                 }else{
@@ -244,52 +332,17 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
     return _webView;
 }
 
-#pragma mark - Js交互代理
-
-/// 是否要自定义api
-/// @param identifier 模块标识符
-/// @param api jsName
-- (NSString *)webModule:(NSString *)identifier hookJsName:(NSString *)api
-{
-    if (_moduleDelegate && [_moduleDelegate respondsToSelector:@selector(webModule:hookJsName:)]) {
-        return [_moduleDelegate webModule:identifier hookJsName:api];
-    }
-    return api;
-}
-
-/// 是否要自定义api实现逻辑
-/// @param identifier 模块标识符
-/// @param jsHandler 参数实例
-/// @param moduleHandler 模块回调
-- (void)webModule:(NSString *)identifier hookJsHandler:(SSHelpWebObjcJsHandler *)jsHandler moduleHandler:(SSBridgeJsHandler)moduleHandler
-{
-    if (_moduleDelegate && [_moduleDelegate respondsToSelector:@selector(webModule:hookJsHandler:moduleHandler:)]) {
-        [_moduleDelegate webModule:identifier hookJsHandler:jsHandler moduleHandler:moduleHandler];
-    }
-}
-
-/// 功能模块实现不了，需要调用者实现
-/// @param identifier 模块标识符
-/// @param jsHandler 参数实例
-- (void)webModule:(NSString *)identifier invokeJsHandler:(SSHelpWebObjcJsHandler *)jsHandler
-{
-    if (_moduleDelegate && [_moduleDelegate respondsToSelector:@selector(webModule:invokeJsHandler:)]) {
-        [_moduleDelegate webModule:identifier invokeJsHandler:jsHandler];
-    }
-}
-
 #pragma mark - KVO的监听代理
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     //加载进度值
-    if ([keyPath isEqualToString:@"estimatedProgress"]){
-        if (object == _webView){
+    if ([keyPath isEqualToString:@"estimatedProgress"]) {
+        if (object == _webView) {
             if (_loadingPogressView) {
                 [_loadingPogressView setAlpha:1.0f];
                 [_loadingPogressView setProgress:_webView.estimatedProgress animated:YES];
-                if(_webView.estimatedProgress >= 1.0f)
-                {
+                if (_webView.estimatedProgress >= 1.0f) {
                     [UIView animateWithDuration:0.5f
                                           delay:0.3f
                                         options:UIViewAnimationOptionCurveEaseOut
@@ -301,150 +354,51 @@ WKWebsiteDataStore *sharedWebsiteDataStore(void){
                                      }];
                 }
             }
-        }else{
-            [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+            return;
         }
-    }else if ([keyPath isEqualToString:@"title"]){ //网页title
+    } else if ([keyPath isEqualToString:@"title"]) { //网页title
         if (object == _webView){
             NSString *newTitle = _webView.title;
             if (_webViewDelegate && [_webViewDelegate respondsToSelector:@selector(webviewDidChangeTitle:)]) {
                 [_webViewDelegate webviewDidChangeTitle:newTitle];
             }
-        }else{
-            [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+            return;
         }
-    }else{
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
+    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
-#pragma mark - Cookie
+#pragma mark - WKWebViewConfiguraion
 
-- (NSString *)cookieDefaultsKey
-{
-    if (!_cookieDefaultsKey) {
-        _cookieDefaultsKey = [[NSBundle mainBundle].bundleIdentifier stringByAppendingString:@".defaults.cookies.key"];
-    }
-    return _cookieDefaultsKey;
-}
-
-- (nullable NSMutableArray <NSHTTPCookie *> *)getAllCookies
-{
-    NSMutableArray <NSHTTPCookie *>*_cookies = [NSMutableArray array];
-    
-    // 获取NSHTTPCookieStorage中的Cookie
-    NSHTTPCookieStorage *shareCookie = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    for (NSHTTPCookie *cookie in shareCookie.cookies){
-        [_cookies addObject:cookie];
-    }
-
-    // 获取存储的Cookie
-    NSData *defaultsCookieData = [[NSUserDefaults standardUserDefaults] objectForKey:self.cookieDefaultsKey];
-    NSMutableArray <NSHTTPCookie*>* defaultsCookieArray = nil;
-    if (defaultsCookieData) {
-        if (@available(iOS 11.0, *)) {
-            defaultsCookieArray = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:defaultsCookieData error:NULL];
-        }else{
-            defaultsCookieArray = [NSKeyedUnarchiver unarchiveObjectWithData:defaultsCookieData];
-        }
-    }
-    NSDate *nowDate = [NSDate date]; //时区 UTC
-    SSWebLog(@"defaultsCookieData=%@",defaultsCookieData);
-    [defaultsCookieArray enumerateObjectsUsingBlock:^(NSHTTPCookie * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (!obj.expiresDate) {
-            [_cookies addObject:obj];
-        }else{
-            if ([obj.expiresDate compare:nowDate]) {
-                [_cookies addObject:obj];
-            }else{
-                //[defaultsCookieArray removeObject:obj];
-            }
-        }
-    }];
-    
-    //更新存储的数据
-    NSData *newCookiesData = nil;
-    if (_cookies && _cookies.count) {
-        if (@available(iOS 11.0, *)) {
-            newCookiesData = [NSKeyedArchiver archivedDataWithRootObject:_cookies requiringSecureCoding:YES error:NULL];
-        }else{
-            newCookiesData = [NSKeyedArchiver archivedDataWithRootObject:_cookies];
-        }
-        if (newCookiesData) {
-            [[NSUserDefaults standardUserDefaults] setObject:newCookiesData forKey:self.cookieDefaultsKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-    }
-
-    return _cookies;
-}
-
-
-#pragma mark - WebViewConfiguraion
-
-/**
- 与WebView关联的WKWebsiteDataStore对象
- 网站的各种类型的数据，数据类型包括:cookies, disk and memory caches, and persistent data such as WebSQL, IndexedDB databases, and local storage。
- 如果一个WebView关联了一个非持久化的WKWebsiteDataStore，将不会有数据被写入到文件系统
- 该特性可以用来实现隐私浏览。
- */
 - (WKWebsiteDataStore *)websiteDataStore
 {
-    return sharedWebsiteDataStore();
+    return [SSHelpWebViewSharedConfigurations sharedWebsiteDataStore];
 }
 
-+ (void)clearWebsiteDataStore
+- (WKProcessPool *)processPool
 {
-    WKWebsiteDataStore *dataStore = sharedWebsiteDataStore();
-    if (dataStore.isPersistent) {
-        NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
-        NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
-        [dataStore removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{
-            
-        }];
+    return [SSHelpWebViewSharedConfigurations sharedProcessPool];
+}
+
+- (WKPreferences *)preferences
+{
+    return [SSHelpWebViewSharedConfigurations sharedPreferences];
+}
+
+- (WKWebpagePreferences *)webpagePreferences API_AVAILABLE(ios(13.0))
+{
+    return [SSHelpWebViewSharedConfigurations sharedWebpagePreferences];
+}
+
+#pragma mark - Lazy loading
+
+- (NSMutableArray <WKUserScript *> *)customUserScripts
+{
+    if (!_customUserScripts) {
+        _customUserScripts = [[NSMutableArray alloc] initWithCapacity:1];
     }
+    return _customUserScripts;
 }
 
-/**
- 一个WKProcessPool对象代表Web Content的进程池。
-
- 与WebView的进程池关联的进程池通过其configuration来配置。每个WebView都有自己的Web Content进程，最终由一个有具体实现的进程来限制;在此之后，具有相同进程池的WebView最终共享Web Content进程。
-
- WKProcessPool对象只是一个简单的不透明token，本身没有属性或者方法。
- */
-- (WKProcessPool *)sharedProcessPool
-{
-    static WKProcessPool *processPool;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        processPool = [[WKProcessPool alloc] init];
-    });
-    return processPool;
-}
-
-- (WKWebpagePreferences *)sharedWebpagePreferences API_AVAILABLE(ios(13.0))
-{
-    static WKWebpagePreferences *webpagePreferences;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        webpagePreferences = [[WKWebpagePreferences alloc] init];
-        if (@available(iOS 14.0, *)) {
-            webpagePreferences.allowsContentJavaScript = YES;
-        }
-        webpagePreferences.preferredContentMode = WKContentModeMobile;
-    });
-    return webpagePreferences;
-}
-
-- (WKPreferences *)sharedPreferences
-{
-    static WKPreferences *preferences;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        preferences = [[WKPreferences alloc] init];
-        preferences.javaScriptCanOpenWindowsAutomatically = YES; //允许使用js自动打开Window，默认不允许，js在调用window.open方法的时候，必须将改值设置为YES，才能从WKUIDelegate的代理方法中获取到.类似打开一个新的标签
-    });
-    return preferences;
-}
 
 @end

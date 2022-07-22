@@ -18,13 +18,6 @@
     return [[[self class] alloc] init];
 }
 
-- (void)dealloc
-{
-    #ifdef DEBUG
-    NSLog(@"[SSHelpTools Log] %@ dealloc......",self);
-    #endif
-}
-
 - (instancetype)init
 {
     self = [super init];
@@ -119,9 +112,6 @@
 
 - (void)dealloc
 {
-    #ifdef DEBUG
-    NSLog(@"[SSHelpTools Log] %@ dealloc......",self);
-    #endif
 }
 
 - (instancetype)init
@@ -168,8 +158,6 @@
 
 - (void)cleanCallbackBlocks
 {
-    _batchSuccessBlock = nil;
-    _batchFailureBlock = nil;
     _batchFinishedBlock = nil;
 }
 
@@ -191,9 +179,6 @@
 
 - (void)dealloc
 {
-#ifdef DEBUG
-    NSLog(@"[SSHelpTools Log] %@ dealloc......",self);
-#endif
 }
 
 - (instancetype)init
@@ -235,21 +220,15 @@
             
             //是否被调用者主动中断
             if (!sendNext) {
-                if (_chainFailureBlock) {
-                    _chainFailureBlock(_responseArray);
-                }
                 if (_chainFinishedBlock) {
-                    _chainFinishedBlock(nil,_responseArray);
+                    _chainFinishedBlock(_responseArray);
                 }
                 [self cleanCallbackBlocks];
                 isFinished = YES;
             }
         } else {
-            if (_chainSuccessBlock) {
-                _chainSuccessBlock(_responseArray);
-            }
             if (_chainFinishedBlock) {
-                _chainFinishedBlock(_responseArray,nil);
+                _chainFinishedBlock(_responseArray);
             }
             [self cleanCallbackBlocks];
             isFinished = YES;
@@ -258,11 +237,8 @@
         if (error) {
             [_responseArray replaceObjectAtIndex:_chainIndex withObject:error];
         }
-        if (_chainFailureBlock) {
-            _chainFailureBlock(_responseArray);
-        }
         if (_chainFinishedBlock) {
-            _chainFinishedBlock(nil,_responseArray);
+            _chainFinishedBlock(_responseArray);
         }
         [self cleanCallbackBlocks];
         isFinished = YES;
@@ -274,8 +250,6 @@
 - (void)cleanCallbackBlocks
 {
     _runningRequest = nil;
-    _chainSuccessBlock = nil;
-    _chainFailureBlock = nil;
     _chainFinishedBlock = nil;
     [_nextBlockArray removeAllObjects];
 }
@@ -288,9 +262,6 @@
 
 - (void)dealloc
 {
-#ifdef DEBUG
-    //NSLog(@"[SSHelpTools Log] %@ dealloc......",self);
-#endif
 }
 
 + (instancetype)formDataWithName:(NSString *)name

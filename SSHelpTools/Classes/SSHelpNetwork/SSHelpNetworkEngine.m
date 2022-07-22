@@ -116,10 +116,10 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
     [_reachablilityManager stopMonitoring];
 
     if (_sessionManager) {
-        [_sessionManager invalidateSessionCancelingTasks:YES resetSession:YES];
+        //[_sessionManager invalidateSessionCancelingTasks:YES resetSession:YES];
     }
     if (_securitySessionManager) {
-        [_securitySessionManager invalidateSessionCancelingTasks:YES resetSession:YES];
+        //[_securitySessionManager invalidateSessionCancelingTasks:YES resetSession:YES];
     } 
 }
 

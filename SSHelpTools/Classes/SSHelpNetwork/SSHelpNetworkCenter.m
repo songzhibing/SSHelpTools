@@ -216,16 +216,14 @@
 
 
 - (nullable NSString *)sendBatchRequest:(SSNetBatchRequestSetup)setup
-                                success:(SSNetArraySuccess)success
-                                failure:(SSNetArrayFailure)failure
                                finished:(SSNetArrayFinished)finished
 {
     __block SSHelpNetworkBatchRequest *batchRequest = [[SSHelpNetworkBatchRequest alloc] init];
     setup(batchRequest);  //内部添加一组请求
     
-    if (batchRequest.requestArray.count==0) return nil; //没有请求直接返回nil
-    batchRequest.batchSuccessBlock = success;
-    batchRequest.batchFailureBlock = failure;
+    if (batchRequest.requestArray.count==0) {
+        return nil; //没有请求直接返回nil
+    }
     batchRequest.batchFinishedBlock = finished;
 
     [self.lock lock];
@@ -248,21 +246,8 @@
         __strong __typeof(__weak_self) __strong_self = __weak_self;
         BOOL allFinished = [batchRequest handleFinishedRequest:request response:responseObject error:error];
         if (allFinished) {
-            //并发请求，有一个失败则走失败回调：
-            if (batchRequest.anyRequestFailed) {
-                if (batchRequest.batchFailureBlock) {
-                    batchRequest.batchFailureBlock(batchRequest.responseArray);
-                }
-                if (batchRequest.batchFinishedBlock) {
-                    batchRequest.batchFinishedBlock(nil,batchRequest.responseArray);
-                }
-            }else{
-                if (batchRequest.batchSuccessBlock) {
-                    batchRequest.batchSuccessBlock(batchRequest.responseArray);
-                }
-                if (batchRequest.batchFinishedBlock) {
-                    batchRequest.batchFinishedBlock(batchRequest.responseArray, nil);
-                }
+            if (batchRequest.batchFinishedBlock) {
+                batchRequest.batchFinishedBlock(batchRequest.responseArray);
             }
             [batchRequest cleanCallbackBlocks];
             
@@ -275,16 +260,12 @@
 }
 
 - (NSString *)sendChainRequest:(SSNetChainRequestSetup)setupBlock
-                       success:(SSNetArraySuccess)successBlock
-                       failure:(SSNetArrayFailure)failureBlock
                       finished:(SSNetArrayFinished)finishedBlock
 {
     __block SSHelpNetworkChainRequest *chainRequest = [[SSHelpNetworkChainRequest alloc] init];
     setupBlock(chainRequest);
     if (chainRequest.runningRequest)
     {
-        chainRequest.chainSuccessBlock = successBlock;
-        chainRequest.chainFailureBlock = failureBlock;
         chainRequest.chainFinishedBlock = finishedBlock;
         
         [self.lock lock];
@@ -433,9 +414,10 @@
             responseObject = changedResponseObject;
         }
     }
+    
     if (processError) {
         [self request:request didRecivedError:processError];
-    }else{
+    } else {
         void (^completion)(void) = ^(void){
             if (request.successBlock) {
                 request.successBlock(responseObject);
@@ -447,7 +429,7 @@
         };
         if (_callbackQueue) {
             dispatch_async(_callbackQueue, completion);
-        }else{
+        } else {
             completion();
         }
     }
@@ -464,7 +446,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self toSendRequest:request];
         });
-    }else{
+    } else {
         void (^completion)(void) = ^(void){
             if (request.failureBlock) {
                 request.failureBlock(error);

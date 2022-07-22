@@ -10,23 +10,29 @@
 
 @implementation NSDictionary (SSHelp)
 
+- (NSData * _Nullable)ss_jsonDataEncoded
+{
+    if ([NSJSONSerialization isValidJSONObject:self]) {
+        NSJSONWritingOptions opt = kNilOptions;
+        if (@available(iOS 11.0, *)) {
+            opt = NSJSONWritingSortedKeys;
+        }
+        NSData *data = [NSJSONSerialization dataWithJSONObject:self options:opt error:NULL];
+        if (data) {
+            return data;
+        }
+    }
+    return nil;
+}
+
 /**
  Convert dictionary to json string. return "" if an error occurs.
  */
 - (NSString *)ss_jsonStringEncoded
 {
-    if ([NSJSONSerialization isValidJSONObject:self])
-    {
-        NSJSONWritingOptions opt = kNilOptions;
-        if (@available(iOS 11.0, *)) {
-            opt = NSJSONWritingSortedKeys;
-        }
-        NSData *data = [NSJSONSerialization dataWithJSONObject:self
-                                                       options:opt
-                                                         error:NULL];
-        if (data) {
-            return data.ss_utf8String?:@"";
-        }
+    NSData *data = [self ss_jsonDataEncoded];
+    if (data) {
+        return data.ss_utf8String?:@"";
     }
     return @"";
 }

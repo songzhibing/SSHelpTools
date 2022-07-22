@@ -8,17 +8,21 @@
 
 #import "SSTestViewController.h"
 #import <SSHelpTools/SSHelpNetwork.h>
+#import <SSHelpTools/SSHelpTableViewController.h>
+#import <SSHelpTools/SSHelpDropdownMenu.h>
 
-@interface SSTestViewController ()
+@interface SSTestViewController ()<SSHelpDropdownMenuDelegate>
 //@property(nonatomic, strong) SSHelpLocationManager *locationManager;
-
+@property(nonatomic, strong) SSHelpButton *tapBtn;
+@property(nonatomic, strong) dispatch_semaphore_t t;
+@property(nonatomic, strong) SSHelpDropdownMenu *selectMenu;
 @end
 
 @implementation SSTestViewController
 
 - (void)dealloc
 {
-//    SSLog(@"%@ dealloc ... ", self);
+    SSLog(@"%@ dealloc ... ", self);
 //    SSLog(@"Self reation count：%td",_kRetainCount(self));
 }
 
@@ -26,33 +30,94 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    
-    SSHelpButton *tapBtn = [SSHelpButton buttonWithType:UIButtonTypeCustom];
-    tapBtn.frame = CGRectMake(10, 88, 88, 44);
-    tapBtn.normalTitle = @"PushTest";
-    tapBtn.normalTitleColor = [UIColor blueColor];
-    tapBtn.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    [self.view addSubview:tapBtn];
+        
+    self.tapBtn = [SSHelpButton buttonWithType:UIButtonTypeCustom];
+    self.tapBtn.frame = CGRectMake(10, 88, 88, 44);
+    self.tapBtn.normalTitle = @"tapTest";
+    self.tapBtn.normalTitleColor = [UIColor blueColor];
+    self.tapBtn.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    [self.view addSubview:self.tapBtn];
 
-    tapBtn.onClick = ^(SSHelpButton * _Nonnull sender) {
-        SSLogDebug(@"444");
-    };
     @weakify(self);
-    [tapBtn setOnClick:^(SSHelpButton *sender) {
-//        @strongify(self);
-        SSLogDebug(@"1111");
-
-//        [self testNetwork];
+    [self.tapBtn setOnClick:^(SSHelpButton *sender) {
+        @strongify(self);
+        [self testNetwork];
     }];
     
-    [tapBtn setOnClick:^(SSHelpButton *sender) {
+    CGRect frame = CGRectMake(10, 88*4, self.view.ss_width*0.8, 44);
+    NSMutableArray *data= [[NSMutableArray alloc] init];
+    for (NSInteger index=0; index<6; index++) {
+        SSHelpDropdownMenuItem *item = [SSHelpDropdownMenuItem new];
+        item.title = [NSString stringWithFormat:@"tt%td",index];
+        [data addObject:item];
+    }
+    SSHelpDropdownMenu *selectMenu = [[SSHelpDropdownMenu alloc] initWithFrame:frame];
+//    selectMenu.data = data;
+//    selectMenu.title = @"请选择";
+//    selectMenu.titleColor = [UIColor redColor];//UIColorFromRGB(0x666666);
+//    selectMenu.titleFont = [UIFont systemFontOfSize:13];
+//    selectMenu.rotateIcon = [UIImage imageNamed:@"TableViewArrow"];
+//    
+//    selectMenu.optionLineColor = [UIColor redColor];//UIColorFromRGB(0x666666);
+//    selectMenu.optionBgColor = [UIColor whiteColor];
+//    selectMenu.optionTextAlignment = NSTextAlignmentLeft;
+    
+    selectMenu.layer.borderWidth = 0.5f;
+    selectMenu.layer.borderColor = [UIColor blackColor].CGColor;
+    selectMenu.layer.cornerRadius = 6;
+    
+    selectMenu.delegate = self;
+    self.selectMenu = selectMenu;
+//    selectMenu.dataSource = self;
+    [self.view addSubview:selectMenu];
+    
+//    @weakify(self);
+//    [selectMenu setDidSelect:^(SSHelpDropdownMenu * _Nonnull menu, NSInteger index, SSHelpDropdownMenuItem * _Nonnull item) {
 //        @strongify(self);
-        SSLogDebug(@"222");
-    }];
-    [tapBtn ss_removeTouchUpInsideBlock];
-    tapBtn.onClick = ^(SSHelpButton * _Nonnull sender) {
-        SSLogDebug(@"333");
-    };
+//        self.tapBtn.normalTitle = item.title;
+//    }];
+    
+    
+//    
+//    SSHelpCheckBox *checkbok = [[SSHelpCheckBox alloc] initWithFrame:CGRectMake(100, 100, 88, 44)];
+//    checkbok.dataSouce = [[NSMutableArray alloc] initWithCapacity:6];
+//    [checkbok.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"123"]];
+//    [checkbok.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"abc"]];
+//    [checkbok.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"你好呀"]];
+//    [checkbok.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"1a2c3你"]];
+//
+////    checkbok.title = @"123";
+////    checkbok.optionBgColor = self.
+//    [self.view addSubview:checkbok];
+//    
+//    
+//    
+//    SSHelpCheckBox *checkbokLeft = [[SSHelpCheckBox alloc] initWithFrame:CGRectMake(5, 120, 88, 44)];
+//    checkbokLeft.dataSouce = [[NSMutableArray alloc] initWithCapacity:6];
+//    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"123"]];
+//    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"abc"]];
+//    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"你好呀"]];
+//    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"1a2c3你"]];
+//    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"123"]];
+//    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"abc"]];
+//    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"你好呀"]];
+//    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"1a2c3你"]];
+//    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"123"]];
+//    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"abc"]];
+//    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"你好呀"]];
+//    [checkbokLeft.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"1a2c3你"]];
+//    [self.view addSubview:checkbokLeft];
+//    
+//    SSHelpCheckBox *checkbok2 = [[SSHelpCheckBox alloc] initWithFrame:CGRectMake(100, self.view.ss_height-44*3, 88, 44)];
+//    checkbok2.dataSouce = [[NSMutableArray alloc] initWithCapacity:6];
+//    [checkbok2.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"123"]];
+//    [checkbok2.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"abc"]];
+//    [checkbok2.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"你好呀"]];
+//    [checkbok2.dataSouce addObject:[SSHelpCheckBoxItem itemWithTitle:@"1a2c3你"]];
+//
+////    checkbok.title = @"123";
+////    checkbok.optionBgColor = self.
+//    [self.view addSubview:checkbok2];
 }
 
 - (void)testSSHelpViewController
@@ -86,7 +151,7 @@
         SSLogDebug(@"请求：%@",error);
     }];
     
-    return;
+//    return;
     
     [[SSHelpNetworkCenter defaultCenter] sendBatchRequest:^(SSHelpNetworkBatchRequest * _Nonnull batchRequest) {
         SSHelpNetworkRequest *request1 = [SSHelpNetworkRequest request];
@@ -101,20 +166,15 @@
         request2.url = @"https://www.bing.com/HPImageArchive.aspx?format=js&idx=1&n=1&mkt=en-US";
           // set other properties for request2
 
-        SSHelpNetworkRequest *request3 = [SSHelpNetworkRequest request];
+//        SSHelpNetworkRequest *request3 = [SSHelpNetworkRequest request];
 //        request3.url = @"https://www.bing.com/HPImageArchive.aspx?format=js";
           // set other properties for request2
 
         [batchRequest addRequest:request1];
 //        [batchRequest addRequest:request3];
         [batchRequest addRequest:request2];
-    } success:^(NSArray * _Nullable responseObjects) {
-        //
-    } failure:^(NSArray * _Nullable errors) {
-        //
-    } finished:^(NSArray * _Nullable responseObjects, NSArray * _Nullable errors) {
-        SSLogDebug(@"请求结果：%@ +++%@",responseObjects,errors);
-
+    } finished:^(NSArray * _Nullable responseObjects) {
+        SSLogDebug(@"请求结果：%@",responseObjects);
     }];
 //
 //    [[SSHelpNetworkCenter defaultCenter] sendChainRequest:^(SSHelpNetworkChainRequest * _Nonnull chainRequest) {

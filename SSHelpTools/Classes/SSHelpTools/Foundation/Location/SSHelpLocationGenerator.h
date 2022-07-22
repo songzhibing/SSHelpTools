@@ -30,11 +30,11 @@ NS_ASSUME_NONNULL_BEGIN
 #   endif /* DEBUG */
 #endif /* SSLOC_ENABLE_LOGGING */
 
-#if SSLOC_ENABLE_LOGGING
-#   define SSLOCLog(...)  NSLog(@"SSHelpLocationManager: %@", [NSString stringWithFormat:__VA_ARGS__]);
-#else
-#   define SSLOCLog(...)
-#endif /* SSLOC_ENABLE_LOGGING */
+//#if SSLOC_ENABLE_LOGGING
+//#   define SSLOCLog(...)  NSLog(@"SSHelpLocationManager: %@", [NSString stringWithFormat:__VA_ARGS__]);
+//#else
+//#   define SSLOCLog(...)
+//#endif /* SSLOC_ENABLE_LOGGING */
 
 
 static const CLLocationAccuracy kSSLOCHorizontalAccuracyThresholdCity =         5000.0;  // in meters
