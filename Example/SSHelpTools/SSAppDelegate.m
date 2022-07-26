@@ -7,7 +7,6 @@
 //
 
 #import "SSAppDelegate.h"
-#import <SSHelpLogManager.h>
 
 @implementation SSAppDelegate
 

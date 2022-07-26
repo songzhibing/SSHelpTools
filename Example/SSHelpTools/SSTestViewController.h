@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SSTestViewController : UIViewController
+@interface SSTestViewController : UITableViewController
 
 @end
 

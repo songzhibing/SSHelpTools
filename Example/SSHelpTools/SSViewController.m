@@ -10,7 +10,6 @@
 #import "SSTestViewController.h"
 
 @interface SSViewController ()
-
 @end
 
 @implementation SSViewController
@@ -28,20 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationController.navigationBarHidden = YES;
-    self.title = @"12";
-//    [UIApplication sharedApplication].statusBarHidden = YES;
-//    [UIViewController prefersStatusBarHidden];
-    //    SSHelpView *backView = [[SSHelpView alloc] initWithFrame:CGRectZero];
-//    backView.backgroundColor = [UIColor darkGrayColor];
-//    [self.view addSubview:backView];
-//    [backView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(_kStatusBarHeight);
-//        make.left.mas_equalTo(2);
-//        make.right.mas_equalTo(-2);
-//        make.bottom.mas_equalTo(-(_kHomeIndicatorHeight)-2);
-//    }];
-    
+    self.title = @"Demo";
     
     __block SSHelpButton *tapBtn = [SSHelpButton buttonWithType:UIButtonTypeCustom];
     tapBtn.frame = CGRectMake(10, 88, 88, 44);
@@ -50,7 +36,7 @@
     tapBtn.backgroundColor = [UIColor groupTableViewBackgroundColor];
     [self.view addSubview:tapBtn];
 
-    @weakify(self);
+    @Tweakify(self);
     [tapBtn setOnClick:^(SSHelpButton *sender) {
         SSTestViewController *testVC = [SSTestViewController new];
         [self_weak_.navigationController pushViewController:testVC animated:YES];
@@ -93,10 +79,6 @@
             SSLogDebug(@"下载失败：%@",error);
         }];
     }];
-    
-    
-
-
 }
 
 - (BOOL)prefersStatusBarHidden
