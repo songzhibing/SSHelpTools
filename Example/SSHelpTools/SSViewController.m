@@ -106,7 +106,7 @@
          */
 
     } failure:^(NSError * _Nullable error) {
-        SSLog(@"下载失败：%@",error);
+        //SSLog(@"下载失败：%@",error);
     }];
 }
 
