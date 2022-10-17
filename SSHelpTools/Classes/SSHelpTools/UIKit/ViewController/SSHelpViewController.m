@@ -37,13 +37,12 @@
     [super viewWillAppear:animated];
 }
 
-- (void)viewLayoutMarginsDidChange NS_REQUIRES_SUPER API_AVAILABLE(ios(11.0), tvos(11.0))
+- (void)viewLayoutMarginsDidChange
 {
     [super viewLayoutMarginsDidChange];
-    [self adjustSubviewsDisplay];
 }
 
-- (void)viewSafeAreaInsetsDidChange NS_REQUIRES_SUPER API_AVAILABLE(ios(11.0), tvos(11.0))
+- (void)viewSafeAreaInsetsDidChange
 {
     [super viewSafeAreaInsetsDidChange];
     [self adjustSubviewsDisplay];
@@ -57,11 +56,6 @@
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    if (@available(iOS 11.0, *)) {
-        // iOS11之后使用 - (void)viewSafeAreaInsetsDidChange
-    } else {
-        [self adjustSubviewsDisplay];
-    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -79,34 +73,35 @@
     [super viewDidDisappear:animated];
 }
 
+#pragma mark -
+#pragma mark - Private Method
+
 - (void)tryGoBack
 {
-    if (self.navigationController) {
-        if ([self.navigationController presentationController].presentedViewController == self) {
-            [self dismissViewControllerAnimated:YES completion:NULL];
-        } else {
-            if (self.navigationController.topViewController == self) {
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-        }
+    if (self.presentingViewController) {
+        [self dismissViewControllerAnimated:YES completion:nil];
     } else {
-        if (self.presentingViewController) {
-            [self dismissViewControllerAnimated:YES completion:NULL];
+        BOOL pop = self.navigationController &&
+        self.navigationController.viewControllers.count>=2 &&
+        self.navigationController.topViewController == self;
+        if (pop) {
+            [self.navigationController popViewControllerAnimated:YES];
         }
     }
 }
 
 /// 调整子视图位置
-- (void)adjustSubviewsDisplay API_AVAILABLE(ios(10.0)) NS_REQUIRES_SUPER
+- (void)adjustSubviewsDisplay
 {
-    CGFloat statusBarHeight    = 0;
-    CGRect  navigationBarFrame = CGRectZero;
-    CGFloat tabBarHeight       = 0;
-    UIEdgeInsets safeAreaInsets= UIEdgeInsetsZero;
+    CGFloat statusBarHeight     = 0;
+    CGRect  navigationBarFrame  = CGRectZero;
+    UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
     
     if (self.navigationController && !self.navigationController.isNavigationBarHidden) {
         // 使用系统导航栏
         navigationBarFrame = self.navigationController.navigationBar.frame;
+        // 计算内容安全区域
+        safeAreaInsets = self.view.safeAreaInsets;
         // 隐藏自定义导航栏
         if (_customNavigationBar) {
             _customNavigationBar.frame = navigationBarFrame;
@@ -115,49 +110,24 @@
         }
     } else {
         // 未使用系统导航栏
-        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-        if (orientation==UIInterfaceOrientationLandscapeLeft || orientation==UIInterfaceOrientationLandscapeRight) {
-            statusBarHeight = 0; //横屏状态高度为0
-        } else {
-            if (@available(iOS 11.0, *)) {
-                statusBarHeight = self.view.safeAreaInsets.top;
-            } else {
-                statusBarHeight = 20; //竖屏
-            }
-        }
+        statusBarHeight = self.view.safeAreaInsets.top;
+        // 计算内容安全区域
+        safeAreaInsets = self.view.safeAreaInsets;
         // 处理自定义导航栏
         if (_customNavigationBar) {
             navigationBarFrame = CGRectMake(0, 0, self.view.ss_width, statusBarHeight+_kNavBarHeight);
             _customNavigationBar.frame = navigationBarFrame;
             _customNavigationBar.hidden = NO; //显示
+            //调整安全区域
+            safeAreaInsets.top += _kNavBarHeight;
         }
-    }
-    
-    // 计算间距
-    if (@available(iOS 11.0, *)) {
-        if (self.navigationController && !self.navigationController.isNavigationBarHidden) {
-            safeAreaInsets = self.view.safeAreaInsets;
-        } else {
-            CGFloat navgationBarHeight = (_customNavigationBar && !_customNavigationBar.hidden)?_kNavBarHeight:0;
-            safeAreaInsets = UIEdgeInsetsMake(self.view.safeAreaInsets.top+navgationBarHeight,
-                                              self.view.safeAreaInsets.left,
-                                              self.view.safeAreaInsets.bottom,
-                                              self.view.safeAreaInsets.right);
-        }
-    } else {
-        if (self.tabBarController && self.tabBarController.tabBar && !self.tabBarController.tabBar.isHidden) {
-            tabBarHeight = CGRectGetHeight(self.tabBarController.tabBar.frame);
-        } else {
-            tabBarHeight = 0;
-        }
-        safeAreaInsets = UIEdgeInsetsMake(navigationBarFrame.size.height,0,tabBarHeight,0);
     }
     
     CGRect contentFrame = CGRectMake(safeAreaInsets.left,
                                      safeAreaInsets.top,
                                      self.view.ss_width-(safeAreaInsets.left+safeAreaInsets.right),
                                      self.view.ss_height-(safeAreaInsets.top+safeAreaInsets.bottom));
-    // 调整
+    // 重新赋值
     _viewSafeAreaInsets = safeAreaInsets;
     if (_contentView) {
         _contentView.frame = contentFrame;

@@ -182,7 +182,7 @@
             self.titleLabel.hidden = YES;
             self.titleImage.hidden = NO;
             self.titleImage.image = model.titleImage;
-        }else if ([model.titleImage isKindOfClass:[NSString class]]){
+        } else if ([model.titleImage isKindOfClass:[NSString class]]) {
             NSData *imageDta = [[NSData alloc] initWithBase64EncodedString:model.titleImage
                                                                    options:NSDataBase64DecodingIgnoreUnknownCharacters];
             if (imageDta) {

@@ -8,6 +8,8 @@
 
 #import "SSHelpView.h"
 #import "SSHelpNavigationBarModel.h"
+#import "SSHelpButton.h"
+
 @class SSHelpNavigationBar;
 
 NS_ASSUME_NONNULL_BEGIN

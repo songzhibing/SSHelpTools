@@ -11,12 +11,13 @@
 
 #import <PhotosUI/PhotosUI.h>
 #import <objc/runtime.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 API_AVAILABLE_BEGIN(ios(14))
 
 @interface PHPickerViewController (SSHelp) <PHPickerViewControllerDelegate>
 
-@property(nonatomic, copy) void(^completion)(UIImage *image);
+@property(nonatomic, copy) void(^completion)(NSArray <UIImage *> *images);
 
 @end
 
@@ -27,12 +28,12 @@ API_AVAILABLE_BEGIN(ios(14))
     SSLifeCycleLog(@"%@ dealloc ...",self);
 }
 
-- (void (^)(UIImage *))completion
+- (void (^)(NSArray<UIImage *> *))completion
 {
     return objc_getAssociatedObject(self, _cmd);
 }
 
-- (void)setCompletion:(void (^)(UIImage *))completion
+- (void)setCompletion:(void (^)(NSArray<UIImage *> *))completion
 {
     objc_setAssociatedObject(self, @selector(completion), completion, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -41,36 +42,29 @@ API_AVAILABLE_BEGIN(ios(14))
 /// @discussion The picker won't be automatically dismissed when this method is called.
 - (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results
 {
-    @Tweakify(self);
-    __block UIImage *__selectedImage = nil;
-    
-    void (^__callback)(void) = ^(void){
-        dispatch_main_async_safe(^{
-            [self dismissViewControllerAnimated:YES completion:^{
-                @Tstrongify(self);
-                if (self.completion) {
-                    self.completion(__selectedImage);
-                }
-            }];
-        });
-    };
-    
-    //取出PHPickerResult对象,PHPickerResult类公开itemProvider和assetIdentifier属性，其中itemProvider⽤
-    //来获取资源⽂件的数据或对象，assetIdentifier⽂档⾥只做了属性说明就是⽂件的⼀个本地唯⼀ID，苹果官⽅操作指南也
-    //没有提到这个属性⽤法，只是对assetIdentifier做了⼀下简单的本地缓存和过滤操作（是否选择同⼀个⽂件）
-    if (results) {
-        NSItemProvider *itemPro = results.firstObject.itemProvider;
+    __block NSMutableArray <UIImage *> *__selectedImages = [[NSMutableArray alloc] initWithCapacity:results.count];
+    [results enumerateObjectsUsingBlock:^(PHPickerResult * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSItemProvider *itemPro = obj.itemProvider;
         if ([itemPro canLoadObjectOfClass:[UIImage class]]) {
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
             [itemPro loadObjectOfClass:[UIImage class] completionHandler:^(__kindof id<NSItemProviderReading>  _Nullable object, NSError * _Nullable error) { //异步
-                //返回的object属于PHLivePhoto对象，如果load的类是UIImage这⾥的object返回UIImage类
-                //处理PHLivePhoto对象
-                __selectedImage = object;
-                __callback();
+                if (object) {
+                    [__selectedImages addObject:object];
+                }
+                dispatch_semaphore_signal(semaphore);
             }];
-            return;
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
         }
-    }
-    __callback();
+    }];
+    @Tweakify(self);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self dismissViewControllerAnimated:YES completion:^{
+            @Tstrongify(self);
+            if (self.completion) {
+                self.completion(__selectedImages);
+            }
+        }];
+    });
 }
 
 @end
@@ -84,7 +78,7 @@ API_AVAILABLE_END
 
 @property(nonatomic, copy) void(^completion)(UIImage *image);
 
-@property(nonatomic, assign) BOOL navBarHidden;
+@property(nonatomic, copy) void(^recordCompletion)(NSURL *url);
 
 @end
 
@@ -126,7 +120,11 @@ API_AVAILABLE_END
         configuration.filter = [PHPickerFilter imagesFilter];
         PHPickerViewController *picker = [[PHPickerViewController alloc] initWithConfiguration:configuration];
         picker.delegate = picker;
-        picker.completion = [completion copy];
+        picker.completion = ^(NSArray<UIImage *> *images) {
+            if (completion) {
+                completion(images.firstObject);
+            }
+        };
         [controller presentViewController:picker animated:YES completion:nil];
         return;
     }
@@ -139,6 +137,48 @@ API_AVAILABLE_END
             pickerController.allowsEditing = YES;
             pickerController.modalPresentationStyle = UIModalPresentationFullScreen;
             pickerController.completion = [completion copy];
+            [controller presentViewController:pickerController animated:YES completion:nil];
+        } else {
+            if (completion) {
+                completion(nil);
+            }
+        }
+    }];
+}
+
+/// 从相册选择多张图片 （iOS14开始支持）
+/// @param completion 回调
++ (void)selectPhoto:(void(^)(NSArray <UIImage *> *_Nullable images))completion selectionLimit:(NSInteger)limit presentingViewController:(__kindof UIViewController *)controller
+{
+    if (@available(iOS 14, *)) {
+        PHPickerConfiguration *configuration = [[PHPickerConfiguration alloc] initWithPhotoLibrary:[PHPhotoLibrary sharedPhotoLibrary]];
+        configuration.selectionLimit = limit;
+        configuration.filter = [PHPickerFilter imagesFilter];
+        PHPickerViewController *picker = [[PHPickerViewController alloc] initWithConfiguration:configuration];
+        picker.delegate = picker;
+        picker.completion = [completion copy];
+        [controller presentViewController:picker animated:YES completion:nil];
+    } else {
+        if (completion) {
+            completion(nil);
+        }
+    }
+}
+
+/// 用相机录制视频 默认录制最大时长30秒
+/// @param completion 回调
++ (void)recordVideo:(void(^)(NSURL *_Nullable url))completion videoMaximumDuration:(NSTimeInterval)duration presentingViewController:(UIViewController *)controller
+{
+    [SSHelpPhotoManager enableAccessCamera:^(BOOL enable) {
+        if (enable) {
+            SSHelpImagePickerController *pickerController = [[SSHelpImagePickerController alloc]init];
+            pickerController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+            pickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+            pickerController.allowsEditing = YES;
+            pickerController.mediaTypes =  [[NSArray alloc] initWithObjects:(NSString*)kUTTypeMovie,nil];
+            pickerController.modalPresentationStyle = UIModalPresentationFullScreen;
+            pickerController.videoMaximumDuration = (duration<=0)?30:duration;
+            pickerController.recordCompletion  = [completion copy];
             [controller presentViewController:pickerController animated:YES completion:nil];
         } else {
             if (completion) {
@@ -175,7 +215,9 @@ API_AVAILABLE_END
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey, id> *)info
 {
-    UIImage *_photo = nil;
+    __block UIImage *_photo = nil;
+    __block NSURL *_videoUrl = nil;
+    
     NSString *type = [info objectForKey:UIImagePickerControllerMediaType];
     if ([type isEqualToString:@"public.image"]) {
         _photo = info[UIImagePickerControllerEditedImage];
@@ -183,12 +225,19 @@ API_AVAILABLE_END
             _photo = [info objectForKey:UIImagePickerControllerOriginalImage];
         }
     } else if ([type isEqualToString:@"public.movie"]) {
+        _videoUrl = [info objectForKey:UIImagePickerControllerMediaURL];
+
     }
+    
+    
     @Tweakify(self);
     [picker dismissViewControllerAnimated:YES completion:^{
         @Tstrongify(self);
         if (self.completion) {
             self.completion(_photo);
+        }
+        if (self.recordCompletion) {
+            self.recordCompletion(_videoUrl);
         }
     }];
 }

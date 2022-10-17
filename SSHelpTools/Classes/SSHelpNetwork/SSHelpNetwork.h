@@ -11,6 +11,5 @@
 #import "SSHelpNetworkRequest.h"
 #import "SSHelpNetworkCenter.h"
 #import "SSHelpNetworkEngine.h"
-#import "SSHelpNetworkInfoManager.h"
 
 #endif /* SSHelpNetwork_h */

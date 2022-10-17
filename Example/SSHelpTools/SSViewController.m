@@ -10,6 +10,7 @@
 #import "SSTestViewController.h"
 
 @interface SSViewController ()
+@property(nonatomic, strong) SSHelpNetworkCenter *netCenter;
 
 @end
 
@@ -28,20 +29,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationController.navigationBarHidden = YES;
-    self.title = @"12";
-//    [UIApplication sharedApplication].statusBarHidden = YES;
-//    [UIViewController prefersStatusBarHidden];
-    //    SSHelpView *backView = [[SSHelpView alloc] initWithFrame:CGRectZero];
-//    backView.backgroundColor = [UIColor darkGrayColor];
-//    [self.view addSubview:backView];
-//    [backView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(_kStatusBarHeight);
-//        make.left.mas_equalTo(2);
-//        make.right.mas_equalTo(-2);
-//        make.bottom.mas_equalTo(-(_kHomeIndicatorHeight)-2);
-//    }];
-    
+    self.title = @"Demo";
     
     __block SSHelpButton *tapBtn = [SSHelpButton buttonWithType:UIButtonTypeCustom];
     tapBtn.frame = CGRectMake(10, 88, 88, 44);
@@ -50,7 +38,7 @@
     tapBtn.backgroundColor = [UIColor groupTableViewBackgroundColor];
     [self.view addSubview:tapBtn];
 
-    @weakify(self);
+    @Tweakify(self);
     [tapBtn setOnClick:^(SSHelpButton *sender) {
         SSTestViewController *testVC = [SSTestViewController new];
         [self_weak_.navigationController pushViewController:testVC animated:YES];
@@ -79,23 +67,10 @@
     dowBtn.backgroundColor = [UIColor groupTableViewBackgroundColor];
     [self.view addSubview:dowBtn];
     [dowBtn setOnClick:^(SSHelpButton * _Nonnull sender) {
-        [[SSHelpNetworkCenter defaultCenter] sendRequest:^(SSHelpNetworkRequest * _Nonnull request) {
-            request.url = @"https://camo.githubusercontent.com/a17b4fe76167f7782bc6e339f76543743422027dab002197bbccbfaa3aa10b6a/68747470733a2f2f7261772e6769746875622e636f6d2f41464e6574776f726b696e672f41464e6574776f726b696e672f6173736574732f61666e6574776f726b696e672d6c6f676f2e706e67";
-            request.httpMethod = SSNetHTTPMethodGET;
-            request.requestType = SSNetRequestDownload;
-            request.downloadSavePath = [_kLibPath stringByAppendingPathComponent:@"123"];
-        } progress:^(NSProgress * _Nullable progress) {
-            CGFloat gress = 1.0 * progress.completedUnitCount / progress.totalUnitCount;
-            SSLogDebug(@"下载进度：%.4f",gress);
-        } success:^(id  _Nullable responseObject) {
-            SSLogDebug(@"下载成功：%@",responseObject);
-        } failure:^(NSError * _Nullable error) {
-            SSLogDebug(@"下载失败：%@",error);
-        }];
+        [self_weak_ testRequest];
     }];
     
-    
-
+    _netCenter = [SSHelpNetworkCenter center];
 
 }
 
@@ -108,6 +83,31 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)testRequest
+{
+    __block NSString *requestId = @"";
+    requestId = [_netCenter sendRequest:^(SSHelpNetworkRequest * _Nonnull request) {
+        request.url = @"https://api.vvhan.com/api/en";
+
+    } success:^(id  _Nullable responseObject) {
+        /**
+         {
+             data =     {
+                 day = 13;
+                 en = "I dreamed a lot when I was a child, but now I just want to get rich overnight.";
+                 month = Oct;
+                 pic = "https://staticedu-wps.cache.iciba.com/image/b42419f347ac7f02d5c8a8fa27a0b4b0.jpg";
+                 zh = "\U5c0f\U65f6\U5019\U7684\U6211\U68a6\U60f3\U6709\U5f88\U591a\Uff0c\U53ef\U73b0\U5728\U6211\U53ea\U60f3\U4e00\U591c\U66b4\U5bcc\U3002";
+             };
+             success = 1;
+         }
+         */
+
+    } failure:^(NSError * _Nullable error) {
+        SSLog(@"下载失败：%@",error);
+    }];
 }
 
 @end

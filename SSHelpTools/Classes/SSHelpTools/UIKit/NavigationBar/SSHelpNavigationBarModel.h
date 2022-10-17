@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SSHelpButton.h"
+#import "SSHelpButtonModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

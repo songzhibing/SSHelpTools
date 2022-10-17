@@ -1,6 +1,6 @@
 {
   "name": "SSHelpTools",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "summary": "常用工具",
   "description": "TODO: 代码逐渐完善中，欢迎提出问题.",
   "homepage": "https://github.com/songzhibing/SSHelpTools",
@@ -13,10 +13,10 @@
   },
   "source": {
     "git": "https://github.com/songzhibing/SSHelpTools.git",
-    "tag": "0.1.1"
+    "tag": "0.1.2"
   },
   "platforms": {
-    "ios": "10.0"
+    "ios": "11.0"
   },
   "subspecs": [
     {
@@ -34,13 +34,22 @@
         "Foundation",
         "CoreLocation",
         "AVFoundation",
-        "PhotosUI"
+        "PhotosUI",
+        "CoreTelephony",
+        "NetworkExtension",
+        "SystemConfiguration"
       ],
       "dependencies": {
         "Masonry": [
 
         ],
         "SDWebImage": [
+
+        ],
+        "UICKeyChainStore": [
+
+        ],
+        "SVProgressHUD": [
 
         ]
       }
@@ -81,11 +90,19 @@
     {
       "name": "SSHelpNetwork",
       "source_files": "SSHelpTools/Classes/SSHelpNetwork/**/*",
-      "public_header_files": "SSHelpTools/Classes/SSHelpNetwork/*.h",
+      "public_header_files": "SSHelpTools/Classes/SSHelpNetwork/**/*.h",
       "frameworks": "CoreTelephony",
       "dependencies": {
         "AFNetworking": [
 
+        ],
+        "ReactiveObjC": [
+
+        ]
+      },
+      "configuration_pod_whitelist": {
+        "ReactiveObjC": [
+          "debug"
         ]
       }
     }

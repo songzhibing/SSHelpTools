@@ -211,4 +211,14 @@
     return @{};
 }
 
+/// 是否包含中文
+- (BOOL)ss_containChinese
+{
+    NSRegularExpression *reg = [[NSRegularExpression alloc] initWithPattern:@"[\u4e00-\u9fa5]" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSInteger value = [reg numberOfMatchesInString:self
+                                           options:NSMatchingReportProgress
+                                             range:NSMakeRange(0, self.length)];
+    return (value > 0);
+}
+
 @end

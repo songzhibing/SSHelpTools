@@ -103,7 +103,7 @@ typedef void (^ _Nonnull SSNetNextBlock)(SSHelpNetworkRequest * _Nonnull request
  
  @param request The current SSHelpNetworkRequest object.
  */
-typedef void (^ _Nullable SSNetCenterRequestProcess)(SSHelpNetworkRequest *_Nullable request);
+typedef void (^ _Nullable SSNetCenterRequestProcess)(SSHelpNetworkRequest *_Nonnull request);
 
 /**
  The custom response process block for all SSHelpNetworkRequest invoked by SSHelpNetworkCenter.

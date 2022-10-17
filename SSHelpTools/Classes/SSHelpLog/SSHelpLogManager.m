@@ -19,20 +19,15 @@
 static NSString *logCurrentTime(void)
 {
     static dispatch_once_t onceToken;
-    static NSDateFormatter *dateFormatter;
+    static NSDateFormatter *dateFromatter;
     dispatch_once(&onceToken, ^{
-        dateFormatter = [NSDateFormatter new];
-        //时区
-        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT+0800"]];
-        //地区
-        //[dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-        [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"]];
-        //公历
-        [dateFormatter setCalendar:[[NSCalendar  alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian]];
-        //格式
-        dateFormatter.dateFormat = @"yyyy.MM.dd.HH.mm.ss.SSS";
+        dateFromatter = [NSDateFormatter new];
+        dateFromatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        dateFromatter.calendar = [[NSCalendar  alloc] initWithCalendarIdentifier:NSCalendarIdentifierISO8601];
+        dateFromatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT+0800"];
+        dateFromatter.dateFormat = @"yyyy.MM.dd.HH.mm.ss.SSS";
     });
-    return [dateFormatter stringFromDate:NSDate.date];
+    return [dateFromatter stringFromDate:NSDate.date];
 }
 
 //##############################################################################

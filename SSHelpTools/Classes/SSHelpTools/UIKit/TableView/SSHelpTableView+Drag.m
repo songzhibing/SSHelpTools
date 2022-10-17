@@ -127,8 +127,7 @@
 #pragma mark - UICollectionViewDragDelegate Method
 
 /// 拖动item
-- (NSArray <UIDragItem *>*)collectionView:(UICollectionView *)collectionView itemsForBeginningDragSession:(id<UIDragSession>)session atIndexPath:(NSIndexPath *)indexPath
-API_AVAILABLE(ios(11.0))
+- (NSArray <UIDragItem *>*)collectionView:(UICollectionView *)collectionView itemsForBeginningDragSession:(id<UIDragSession>)session atIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(11.0))
 {
     self.moveRule.moveBeginIndexPath = indexPath;
     
@@ -140,7 +139,8 @@ API_AVAILABLE(ios(11.0))
 }
 
 /// 设置拖动预览信息
-- (nullable UIDragPreviewParameters *)collectionView:(UICollectionView *)collectionView dragPreviewParametersForItemAtIndexPath:(NSIndexPath *)indexPath  API_AVAILABLE(ios(11.0)){
+- (nullable UIDragPreviewParameters *)collectionView:(UICollectionView *)collectionView dragPreviewParametersForItemAtIndexPath:(NSIndexPath *)indexPath  API_AVAILABLE(ios(11.0))
+{
     // 预览图为圆角，背景色为clearColor。
 //    UIDragPreviewParameters *previewParameters = [[UIDragPreviewParameters alloc] init];
 //    SSHelpTableViewCell *cell = (SSHelpTableViewCell *)[collectionView cellForItemAtIndexPath:indexPath];

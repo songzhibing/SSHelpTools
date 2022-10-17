@@ -87,16 +87,6 @@
                 }
             }
         };
-        
-        /// 框架参数字段为params
-        /*
-        NSMutableDictionary *params = data;
-        if (data && [data isKindOfClass:[NSDictionary class]]) {
-            NSString *jsonString = SSEncodeStringFromDict(data, @"params");
-            params = jsonString.ss_toDictionary.mutableCopy;
-        }
-        */
-        
         /// 转成OC对象
         SSHelpWebObjcJsHandler *jshandler = nil;
         jshandler = [SSHelpWebObjcJsHandler handlerWithData:data callBack:_nonullCallBack];

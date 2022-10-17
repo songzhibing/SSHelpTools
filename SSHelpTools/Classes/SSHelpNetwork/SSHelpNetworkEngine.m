@@ -8,6 +8,10 @@
 #import "SSHelpNetworkRequest.h"
 #import <objc/runtime.h>
 
+#ifdef DEBUG
+    #import <ReactiveObjC/ReactiveObjC.h>
+#endif
+
 static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, CFStringRef keyPassword, SecIdentityRef *outIdentity, SecTrustRef *outTrust) {
     OSStatus securityError = errSecSuccess;
     
@@ -151,7 +155,7 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
     __block __kindof NSURLSessionTask *task = nil;
     if (tasks.count > 0) {
         [tasks enumerateObjectsUsingBlock:^(NSURLSessionTask *obj, NSUInteger idx, BOOL *stop) {
-            if ([task.bindedRequest.identifier isEqualToString:identifier]) {
+            if ([obj.bindedRequest.identifier isEqualToString:identifier]) {
                 task = obj;
                 *stop = YES;
             }
@@ -241,8 +245,7 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
     NSMutableURLRequest *urlRequest = nil;
     
     //上传请求序列化
-    if(SSNetRequestUpload == request.requestType)
-    {
+    if(SSNetRequestUpload == request.requestType){
         urlRequest = [requestSerializer multipartFormRequestWithMethod:httpMethod
                                                              URLString:request.url
                                                             parameters:request.parameters
@@ -268,10 +271,8 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
                 }
             }];
         } error:&serializationError];
-    }
-    //普通&&下载请求序列化
-    else
-    {
+    } else {
+        //普通&&下载请求序列化
         urlRequest = [requestSerializer requestWithMethod:httpMethod
                                                 URLString:request.url
                                                parameters:request.parameters
@@ -295,11 +296,10 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
     }
     
     __weak __typeof(self) __weak_self = self;
-    __block __kindof NSURLSessionDataTask *dataTask = nil;
+    __kindof NSURLSessionDataTask *dataTask = nil;
     
     //上传请求
-    if(SSNetRequestUpload == request.requestType)
-    {
+    if(SSNetRequestUpload == request.requestType){
         dataTask = [sessionManager uploadTaskWithStreamedRequest:urlRequest progress:request.progressBlock  completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
             __strong typeof(__weak_self) __strong_self = __weak_self;
             [__strong_self p_didReceiveResponse:response
@@ -308,10 +308,8 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
                                         request:request
                               completionHandler:completionHandler];
         }];
-    }
-    //下载请求
-    else if(SSNetRequestDownload == request.requestType)
-    {
+    } else if(SSNetRequestDownload == request.requestType) {
+        //下载请求
         NSURL *(^__destination)(NSURL *targetPath, NSURLResponse *response)  = ^NSURL *(NSURL *targetPath, NSURLResponse *response) {
             if (request.downloadSavePath && request.downloadSavePath.length) {
                 //指定目录，并创建
@@ -339,17 +337,15 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
                 }
             }];
         //新下载
-        }else{
+        } else {
             dataTask =  (__kindof NSURLSessionDataTask *)[sessionManager downloadTaskWithRequest:urlRequest progress:request.progressBlock destination:__destination completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
                 if (completionHandler) {
                     completionHandler(filePath, error);
                 }
             }];
         }
-    }
-    //普通请求
-    else
-    {
+    } else {
+        //普通请求
         dataTask = [sessionManager dataTaskWithRequest:urlRequest uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
             __strong typeof(__weak_self) __strong_self = __weak_self;
             [__strong_self p_didReceiveResponse:response
@@ -370,6 +366,12 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
     
     //最后,开始请求
     [dataTask resume];
+    
+#ifdef DEBUG
+    [[dataTask rac_willDeallocSignal] subscribeNext:^(id  _Nullable x) {
+        NSLog(@"%@ dealloc...",x);
+    }];
+#endif
 }
 
 /// 处理请求结果

@@ -31,10 +31,7 @@ typedef SSHelpTabBarApparance *_Nonnull(^SSUpdateTabBarAppearance)(void);
 /// OC对象生命周期日志输出,方便调试内存泄露等问题,default is NO
 @property(nonatomic, assign) BOOL enableLifeCycleLog;
 
-/// 支持最低iOS版本，默认iOS10.0 推荐iOS13.0
-@property(nonatomic, assign) CGFloat supportMinSystemiOS;
-
-/// return [UIApplication sharedApplication].delegate.window
+/// 返回[UIApplication sharedApplication].delegate.window
 @property(nonatomic, strong, readwrite, nullable) UIWindow *window;
 
 @property(nonatomic, assign) CGFloat homeIndicatorHeight;

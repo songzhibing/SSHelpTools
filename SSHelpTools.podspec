@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SSHelpTools'
-  s.version          = '0.1.1'
+  s.version          = '0.1.2'
   s.summary          = '常用工具'
 
 # This description is used to generate tags and improve search results.
@@ -27,7 +27,7 @@ TODO: 代码逐渐完善中，欢迎提出问题.
   s.author           = { '宋直兵' => '569204317@qq.com' }
   s.source           = { :git => 'https://github.com/songzhibing/SSHelpTools.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '11.0'
   
   # SSHelpTools 常用工具库
   s.subspec 'SSHelpTools' do |tools|
@@ -36,9 +36,11 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     tools.resource_bundles = {
       'SSHelpTools'=> ['SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.bundle','SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.xcassets']
     }
-    tools.frameworks = 'UIKit','Foundation','CoreLocation','AVFoundation','PhotosUI'
+    tools.frameworks = 'UIKit','Foundation','CoreLocation','AVFoundation','PhotosUI','CoreTelephony','NetworkExtension','SystemConfiguration'
     tools.dependency 'Masonry'
     tools.dependency 'SDWebImage'
+    tools.dependency 'UICKeyChainStore'
+    tools.dependency 'SVProgressHUD'
   end
   
   # SSHelpWebView 库
@@ -61,9 +63,10 @@ TODO: 代码逐渐完善中，欢迎提出问题.
   # SSHelpNetwork 网络封装库
   s.subspec 'SSHelpNetwork' do |network|
     network.source_files = 'SSHelpTools/Classes/SSHelpNetwork/**/*'
-    network.public_header_files = 'SSHelpTools/Classes/SSHelpNetwork/*.h'
+    network.public_header_files = 'SSHelpTools/Classes/SSHelpNetwork/**/*.h'
     network.frameworks = 'CoreTelephony'
     network.dependency 'AFNetworking'
+    network.dependency 'ReactiveObjC', :configurations => ['Debug']
   end
   
 end

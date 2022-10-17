@@ -26,10 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) SSHelpView *contentView;
 
 /// 内容视图安全间距
-@property(nonatomic, readonly) UIEdgeInsets viewSafeAreaInsets API_AVAILABLE(ios(10.0));
+@property(nonatomic, readonly) UIEdgeInsets viewSafeAreaInsets;
 
 /// 调整子视图位置
-- (void)adjustSubviewsDisplay API_AVAILABLE(ios(10.0)) NS_REQUIRES_SUPER;
+- (void)adjustSubviewsDisplay NS_REQUIRES_SUPER;
 
 /// 设置屏幕方向
 - (void)resetDeviceOrientation:(UIDeviceOrientation)orientation;

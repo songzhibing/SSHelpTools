@@ -7,6 +7,7 @@
 
 #import <AVFoundation/AVCaptureDevice.h>
 #import <AVFoundation/AVMediaFormat.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 #import <Photos/PHPhotoLibrary.h>
 #import <Photos/Photos.h>
 
@@ -181,7 +182,9 @@
 /// 从相册选中多张图片
 /// @param completion 回调
 /// @param max 多选最大值
-+ (void)toAccessPhotoLibrary:(void(^)(NSArray<UIImage *> *photos))completion maxCount:(NSInteger)max presentingViewController:(UIViewController *)controller
++ (void)toAccessPhotoLibrary:(void(^)(NSArray<UIImage *> *photos))completion
+                    maxCount:(NSInteger)max
+    presentingViewController:(UIViewController *)controller
 {
     if (max<=0) {
         max = 1;
@@ -196,13 +199,16 @@
     
     [SSHelpPhotoManager enableAccessPhotoAlbum:^(BOOL enable) {
         if (enable) {
-            
-            [SSHelpImagePickerController selectPhoto:^(UIImage * _Nullable image) {
-                if (completion) {
-                    completion(image?@[image]:nil);
-                }
-            } presentingViewController:controller];
-        }else{
+            if (@available(iOS 14, *)) {
+                [SSHelpImagePickerController selectPhoto:completion selectionLimit:max presentingViewController:controller];
+            } else {
+                [SSHelpImagePickerController selectPhoto:^(UIImage * _Nullable image) {
+                    if (completion) {
+                        completion(image?@[image]:nil);
+                    }
+                } presentingViewController:controller];
+            }
+        } else {
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"无法访问您的相册,请至设置中开启." preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                 if (completion) {
@@ -231,11 +237,43 @@
 + (void)saveImage:(UIImage *)image completionHandler:(void(^)(BOOL success, NSError *_Nullable error))completionHandler
 {
     [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-         //写入图片到相册
-         [PHAssetChangeRequest creationRequestForAssetFromImage:image];
+        //写入图片到相册
+        [PHAssetChangeRequest creationRequestForAssetFromImage:image];
     } completionHandler:^(BOOL success, NSError * _Nullable error) {
-         completionHandler ? completionHandler(success, error) : NULL;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionHandler ? completionHandler(success, error) : NULL;
+        });
     }];
 }
+
+/// 用相机录制视频 默认录制最大时长1分钟
+/// @param completion 回调
++ (void)recordVideo:(void(^)(NSURL *_Nullable url))completion videoMaximumDuration:(NSTimeInterval)duration presentingViewController:(UIViewController *)controller
+{
+    [SSHelpPhotoManager enableAccessCamera:^(BOOL enable) {
+        if (enable) {
+            [SSHelpImagePickerController  recordVideo:completion videoMaximumDuration:duration presentingViewController:controller];
+        } else {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"无法访问您的相机,请至设置中开启." preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                if (completion) {
+                    completion(nil);
+                }
+            }];
+            UIAlertAction *toset = [UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                
+                if (completion) {
+                    completion(nil);
+                }
+                
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
+            }];
+            [alert addAction:toset];
+            [alert addAction:cancel];
+            [controller presentViewController:alert animated:YES completion:nil];
+        }
+    }];
+}
+
 
 @end

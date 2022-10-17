@@ -18,6 +18,11 @@
     return [[[self class] alloc] init];
 }
 
+- (void)dealloc
+{
+    
+}
+
 - (instancetype)init
 {
     self = [super init];
@@ -112,6 +117,9 @@
 
 - (void)dealloc
 {
+#ifdef DEBUG
+    NSLog(@"%@ dealloc ... ",self);
+#endif
 }
 
 - (instancetype)init

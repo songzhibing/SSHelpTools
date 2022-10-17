@@ -124,7 +124,6 @@
     if (self) {
         _footerClass = [SSHelpTableViewFooterView class];
         _footerIdentifier = @"SSHelpTableViewFooterView";
-
     }
     return self;
 }

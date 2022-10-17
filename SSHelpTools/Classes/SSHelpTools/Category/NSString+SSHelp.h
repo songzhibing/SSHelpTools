@@ -76,6 +76,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nonnull NSDictionary *)ss_toDictionary;
 
+/**
+ 是否包含中文
+ */
+- (BOOL)ss_containChinese;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -7,11 +7,11 @@
 
 #import "SSHelpWebViewController.h"
 #import "SSHelpWebView.h"
-#import "SSHelpWebLocationModule.h"
-#import "SSHelpWebPhotoModule.h"
 #import "SSHelpWebTestJsBridgeModule.h"
 
-@interface SSHelpWebViewController ()<SSHelpWebViewDelegate>
+@interface SSHelpWebViewController ()
+
+@property(nonatomic, strong) UIProgressView *loadingPogressView;
 
 @property(nonatomic, strong) SSHelpWebView *webView;
 
@@ -22,13 +22,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.webView = [[SSHelpWebView alloc] initWithFrame:self.view.bounds];
-    self.webView.webViewDelegate = self;
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(goRefresh)];
+    
+    self.webView = [SSHelpWebView defauleWebView];
     [self.view addSubview:self.webView];
-
-    [self.webView registerJsHandlerImpClass:[SSHelpWebTestJsBridgeModule class]];
-    [self.webView registerJsHandlerImpClass:[SSHelpWebLocationModule class]];
-    [self.webView registerJsHandlerImpClass:[SSHelpWebPhotoModule class]];
 
     if (SSEqualToNotEmptyString(self.indexString)) {
         NSString *url = [self.indexString stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
@@ -53,60 +51,27 @@
     }];
 }
 
-#pragma mark - WebView Delegate
-
-/// 标题变更
-- (void)webviewDidChangeTitle:(NSString * _Nullable)title
+- (void)goBack
 {
-    self.title = title;
-}
-
-/// 当接收到主frame的服务器重定向时调用
-/// @param webView 调用委托方法的web视图
-/// @param navigation 导航
-- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(null_unspecified WKNavigation *)navigation
-{
-    SSWebLog(@"导航重定向时：%@",webView.URL);
-
-}
-/// 当主frame导航开始时调用
-/// @param webView 调用委托方法的web视图
-/// @param navigation 导航
-- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation
-{
-    SSWebLog(@"导航开始：%@",webView.URL);
-
-}
-/// 当主frame导航完成时调用
-/// @param webView 调用委托方法的web视图
-/// @param navigation 导航
-- (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
-{
-    if (@available(iOS 11.0, *)) {
-        [webView.configuration.websiteDataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull item) {
-            //SSWebLog(@"cookie:%@",item);
+    if ([self.webView canGoBack]) {
+        [self.webView.backForwardList.backList enumerateObjectsUsingBlock:^(WKBackForwardListItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            SSLog(@"第%ld页：%@",idx,obj.URL);
         }];
+        [self.webView goBack];
+    } else {
+        if (self.navigationController && self.navigationController.viewControllers.count > 1) {
+            [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+        }
     }
-    SSWebLog(@"加载完成：%@",webView.URL);
 }
 
-/// 在提交的主frame导航期间发生错误时调用
-/// @param webView 调用委托方法的web视图
-/// @param navigation 导航
-/// @param error 错误信息
-- (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+- (void)goRefresh
 {
-    SSWebLog(@"加载失败：%@",error.localizedDescription);
+    [self.webView reload];
 }
 
-/// 当开始为主frame加载数据时发生错误时调用。
-/// @param webView 调用委托方法的web视图
-/// @param navigation 导航
-/// @param error 错误信息
-- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
-{
-    SSWebLog(@"加载失败：%@",error.localizedDescription);
-}
 
 /*
 #pragma mark - Navigation

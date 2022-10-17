@@ -40,6 +40,9 @@ static NSString *kNSDateSSHelpeFormatSQLDateWithTime     = @"yyyy-MM-dd HH:mm:ss
 /// @param calendar NSCalendar - Desired calendar,  default by 'NSCalendarIdentifierGregorian'
 - (NSString *)ss_stringWithFormat:(NSString *)format timeZone:(NSTimeZone * _Nullable)timeZone locale:(NSLocale * _Nullable)locale calendar:(NSCalendar * _Nullable)calendar;
 
+/// 当前时分秒 yyyyMMddHHmmss
++ (NSString *)ss_currentTime;
+
 @end
 
 NS_ASSUME_NONNULL_END

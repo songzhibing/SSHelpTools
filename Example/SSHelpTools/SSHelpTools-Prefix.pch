@@ -17,4 +17,5 @@
     #import <SSHelpTools/SSHelpNetwork.h>
     #import <SSHelpTools/SSHelpWebViewController.h>
     #import <SSHelpTools/SSHelpLog.h>
+    #import <YYKit/YYKit.h>
 #endif

@@ -58,4 +58,10 @@
     return [formatter stringFromDate:self];
 }
 
++ (NSString *)ss_currentTime
+{
+    NSString *timeString = [NSDate ss_stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:[NSDate timeIntervalSinceReferenceDate]] withFormat:@"yyyyMMddHHmmss"];
+    return timeString;
+}
+
 @end

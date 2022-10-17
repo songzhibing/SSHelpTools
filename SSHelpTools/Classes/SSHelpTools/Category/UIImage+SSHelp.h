@@ -11,20 +11,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIImage (SSHelp)
 
-/// 图片上写文字
-- (UIImage *)ss_writeString:(NSString *)string;
+- (UIImage *)ss_imageWithTintColor:(UIColor *)color;
 
-/// 图片绘制圆角
-- (UIImage *)ss_setCornerRadius:(CGFloat)cornerRadius;
+/// 纯色图
++ (UIImage *)ss_imageWithcolor:(UIColor *)color;
 
-/// 改变图片颜色
-- (UIImage *)ss_imageWithTintColor:(UIColor *)tintColor;
+/// 压缩大小
++ (NSData *)ss_compressImageQuality:(UIImage *)image toByte:(NSInteger)maxLength;
 
-/// 颜色生成图片 CGSizeMake(1,1)
-+ (UIImage *)ss_imageWithColor:(UIColor *)color;
+/// 添加水印
++ (UIImage *)ss_addWatermarkInImage:(UIImage *)image atPonit:(CGPoint)point withText:(NSString *)text;
 
-/// 颜色生成图片
-+ (UIImage *)ss_imageWithColor:(UIColor *)color size:(CGSize)size;
+/// 截屏
++ (UIImage * _Nullable)ss_takeScreenShot;
+
+/// 识别二维码
++ (void)ss_featuresInImage:(UIImage *)image
+                  callback:(void(^_Nonnull)(NSString *_Nullable result))callback;
 
 @end
 

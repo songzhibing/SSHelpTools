@@ -39,10 +39,14 @@ typedef void(^SSAccessPhotoCompletion)(UIImage * _Nullable image);
 /// @param completion 回调
 + (void)toAccessPhotoLibrary:(void(^)(UIImage *_Nullable image))completion presentingViewController:(UIViewController *)controller;
 
-/// 从相册选择多张图片
+/// 从相册选择多张图片 (iOS14支持多选)
 /// @param completion 回调
 /// @param max 多选最大值
 + (void)toAccessPhotoLibrary:(void(^)(NSArray<UIImage *> *photos))completion maxCount:(NSInteger)max presentingViewController:(UIViewController *)controller;
+
+/// 用相机录制视频 默认录制最大时长30秒
+/// @param completion 回调
++ (void)recordVideo:(void(^)(NSURL *_Nullable url))completion videoMaximumDuration:(NSTimeInterval)duration presentingViewController:(UIViewController *)controller;
 
 @end
 

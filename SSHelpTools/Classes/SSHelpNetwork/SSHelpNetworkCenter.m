@@ -20,16 +20,17 @@
 /// @name SSHelpNetworkCenter
 ///-----------------------------------------------------------------------------
 
+static NSInteger kSSHelpRequestIndex = 0;
+
 @interface SSHelpNetworkCenter ()
 @property(nonatomic, strong, readwrite) NSLock *lock;
-@property(nonatomic, assign) NSUInteger autoIncrement;
 @property(nonatomic, strong) NSMutableDictionary<NSString *, id> *runningBatchAndChainPool;
 @property(nonatomic, strong, readwrite) NSMutableDictionary<NSString *, id> *generalParameters;
 @property(nonatomic, strong, readwrite) NSMutableDictionary<NSString *, NSString *> *generalHeaders;
 
-@property(nonatomic, copy) SSNetCenterRequestProcess requestProcessHandler;
+@property(nonatomic, copy) SSNetCenterRequestProcess  requestProcessHandler;
 @property(nonatomic, copy) SSNetCenterResponseProcess responseProcessHandler;
-@property(nonatomic, copy) SSNetCenterErrorProcess errorProcessHandler;
+@property(nonatomic, copy) SSNetCenterErrorProcess    errorProcessHandler;
 
 @end
 
@@ -63,7 +64,6 @@
 {
     self = [super init];
     if (self) {
-        _autoIncrement = 0;
         _consoleLog = NO;
         _lock = [[NSLock alloc] init];
         _runningBatchAndChainPool = [NSMutableDictionary dictionary];
@@ -93,7 +93,7 @@
     if (config.generalHeaders.count > 0) {
         [self.generalHeaders addEntriesFromDictionary:config.generalHeaders];
     }
-    if (config.callbackQueue != NULL) {
+    if (config.callbackQueue) {
         self.callbackQueue = config.callbackQueue;
     }
     if (config.generalUserInfo) {
@@ -122,12 +122,24 @@
 
 - (void)setGeneralHeaderValue:(NSString *)value forField:(NSString *)field
 {
-    [self.generalHeaders setValue:value forKey:field];
+    if (value) {
+        [self.generalHeaders setValue:value forKey:field];
+    } else {
+        if ([self.generalHeaders.allKeys containsObject:field]) {
+            [self.generalHeaders removeObjectForKey:field];
+        }
+    }
 }
 
 - (void)setGeneralParameterValue:(id)value forKey:(NSString *)key
 {
-    [self.generalParameters setValue:value forKey:key];
+    if (value) {
+        [self.generalParameters setValue:value forKey:key];
+    } else {
+        if ([self.generalParameters.allKeys containsObject:key]) {
+            [self.generalParameters removeObjectForKey:key];
+        }
+    }
 }
 
 #pragma mark - 发送请求
@@ -227,7 +239,7 @@
     batchRequest.batchFinishedBlock = finished;
 
     [self.lock lock];
-    batchRequest.identifier = [NSString stringWithFormat:@"BC%lu", self.autoIncrement++];
+    batchRequest.identifier = [NSString stringWithFormat:@"BC%lu", kSSHelpRequestIndex++];
     self.runningBatchAndChainPool[batchRequest.identifier] = batchRequest;
     [self.lock unlock];
 
@@ -269,7 +281,7 @@
         chainRequest.chainFinishedBlock = finishedBlock;
         
         [self.lock lock];
-        chainRequest.identifier = [NSString stringWithFormat:@"BC%lu", self.autoIncrement++];
+        chainRequest.identifier = [NSString stringWithFormat:@"BC%lu", kSSHelpRequestIndex++];
         self.runningBatchAndChainPool[chainRequest.identifier] = chainRequest;
         [self.lock unlock];
         
@@ -442,7 +454,7 @@
     }
     if (request.retryCount>0) {
         request.retryCount--;
-        ///retry current request after 2 seconds.
+        ///retry current request after 1 seconds.
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self toSendRequest:request];
         });
