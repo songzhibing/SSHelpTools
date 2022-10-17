@@ -7,9 +7,6 @@
 
 #import "SSHelpSimplePingManager.h"
 #import "SSHelpSimplePing.h"
-
-#import <SDWebImage/SDWeakProxy.h>
-
 #include <sys/socket.h>
 #include <netdb.h>
 
