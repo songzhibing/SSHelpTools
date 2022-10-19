@@ -1,5 +1,5 @@
 //
-//  SSHelpTableViewModel.h
+//  SSHelpCollectionViewModel.h
 //  SSHelpTools
 //
 //  Created by 宋直兵 on 2022/5/12.
@@ -7,30 +7,26 @@
 
 #import <Foundation/Foundation.h>
 @class
-SSHelpTableView,
-SSHelpTableViewCell,
-SSHelpTabViewSectionModel,
-SSHelpTabViewHeaderModel,
-SSHelpTabViewCellModel,
-SSHelpTabViewFooterModel;
+SSCollectionViewSectionModel,
+SSCollectionViewHeaderModel,
+SSCollectionViewCellModel,
+SSCollectionViewFooterModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^SSHelpTabViewItemOnClick)(SSHelpTableView * _Nullable tableView, __kindof UICollectionReusableView * _Nullable reusableView, NSIndexPath * _Nullable indexPath);
-
-typedef void (^SSHelpTabViewItemSubOnClick)(__kindof UICollectionReusableView * _Nullable reusableView, id _Nullable data);
+typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nullable collectionView, __kindof UICollectionReusableView * _Nullable reusableView, NSIndexPath * _Nullable indexPath, id _Nullable data);
 
 //******************************************************************************
 
-@interface SSHelpTableViewModel : NSObject
+@interface SSHelpCollectionViewModel : NSObject
 
-@property(nonatomic, strong) NSMutableArray <SSHelpTabViewSectionModel *> *sectionModels;
+@property(nonatomic, strong) NSMutableArray <SSCollectionViewSectionModel *> *sectionModels;
 
 @end
 
 //******************************************************************************
 
-@interface SSHelpTableViewMoveRule : NSObject
+@interface SSCollectionVieDragDropRule : NSObject
 
 /// 是否支持移动、交换，默认NO
 @property(nonatomic, assign) BOOL canMove;
@@ -42,28 +38,28 @@ typedef void (^SSHelpTabViewItemSubOnClick)(__kindof UICollectionReusableView * 
 @property(nonatomic, strong) NSIndexPath *moveBeginIndexPath;
 
 /// 结束位置
-@property(nonatomic, strong) NSIndexPath *moveEndIndexPath;
+@property(nonatomic, strong, nullable) NSIndexPath *moveEndIndexPath;
 
 /// 开始移动
-@property(nonatomic, strong, nullable) void(^beginBlock)(SSHelpTableViewMoveRule *rule);
+@property(nonatomic, strong, nullable) void(^beginBlock)(SSCollectionVieDragDropRule *rule);
 
 /// 结束移动
-@property(nonatomic, strong, nullable) BOOL (^endBlock)(SSHelpTableViewMoveRule *rule);
+@property(nonatomic, strong, nullable) BOOL (^endBlock)(SSCollectionVieDragDropRule *rule);
 
 @end
 
 //******************************************************************************
 
-@interface SSHelpTabViewSectionModel : NSObject
+@interface SSCollectionViewSectionModel : NSObject
 
-@property(nonatomic, strong) SSHelpTabViewHeaderModel * _Nullable headerModel;
+@property(nonatomic, strong) SSCollectionViewHeaderModel * _Nullable headerModel;
 
 /// 列数，默认1列
 @property(nonatomic, assign) NSInteger columnCount;
 
-@property(nonatomic, strong) NSMutableArray <SSHelpTabViewCellModel *> *cellModels;
+@property(nonatomic, strong) NSMutableArray <SSCollectionViewCellModel *> *cellModels;
 
-@property(nonatomic, strong) SSHelpTabViewFooterModel * _Nullable footerModel;
+@property(nonatomic, strong) SSCollectionViewFooterModel * _Nullable footerModel;
 
 @property(nonatomic, assign) CGFloat minimumLineSpacing;
 
@@ -73,13 +69,10 @@ typedef void (^SSHelpTabViewItemSubOnClick)(__kindof UICollectionReusableView * 
 
 //******************************************************************************
 
-@interface SSHelpTableViewItemModel: NSObject
+@interface SSCollectionReusableViewModel: NSObject
 
-/// item点击事件
-@property(nonatomic, copy, nullable) SSHelpTabViewItemOnClick onClick;
-
-/// item内部子控件点击事件
-@property(nonatomic, copy, nullable) SSHelpTabViewItemSubOnClick subOnClick;
+/// 点击事件传递参数
+@property(nonatomic, copy, nullable) SSCollectionReusableViewOnClick onClick;
 
 /// 推荐存储字典数据
 @property(nonatomic, strong, nullable) __kindof NSDictionary *data;
@@ -91,7 +84,7 @@ typedef void (^SSHelpTabViewItemSubOnClick)(__kindof UICollectionReusableView * 
 
 //******************************************************************************
 
-@interface SSHelpTabViewHeaderModel : SSHelpTableViewItemModel
+@interface SSCollectionViewHeaderModel : SSCollectionReusableViewModel
 
 @property(nonatomic, assign) CGFloat headerHeight;
 
@@ -103,24 +96,23 @@ typedef void (^SSHelpTabViewItemSubOnClick)(__kindof UICollectionReusableView * 
 
 //******************************************************************************
 
-@interface SSHelpTabViewCellModel : SSHelpTableViewItemModel
+@interface SSCollectionViewCellModel : SSCollectionReusableViewModel
 
-@property(nonatomic, copy) NSString *cellIdentifier;
+@property(nonatomic, copy  ) NSString *cellIdentifier;
 
 @property(nonatomic, assign) Class cellClass;
 
 @property(nonatomic, assign) CGFloat cellHeght;
 
-@property(nonatomic, strong) NSIndexPath *cellIndexPath;
+@property(nonatomic, strong) UIColor *cellBackgrounColor;
 
-/// 是否移动中
-@property(nonatomic, assign) BOOL cellMoving;
+@property(nonatomic, strong) NSIndexPath *cellIndexPath;
 
 @end
 
 //******************************************************************************
 
-@interface SSHelpTabViewFooterModel : SSHelpTableViewItemModel
+@interface SSCollectionViewFooterModel : SSCollectionReusableViewModel
 
 @property(nonatomic, assign) CGFloat footerHeight;
 

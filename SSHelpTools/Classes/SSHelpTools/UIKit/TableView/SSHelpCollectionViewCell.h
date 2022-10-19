@@ -6,17 +6,17 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SSHelpTableViewModel.h"
+#import "SSHelpCollectionViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SSHelpTableViewCell : UICollectionViewCell
+@interface SSHelpCollectionViewCell : UICollectionViewCell
 
 /// 索引
 @property(nonatomic, strong) NSIndexPath *indexPath;
 
 /// 模型数据
-@property(nonatomic, strong) SSHelpTabViewCellModel *modelData;
+@property(nonatomic, strong) SSCollectionViewCellModel *dataModel;
 
 /// 复用重置
 - (void)prepareForReuse NS_REQUIRES_SUPER;

@@ -6,15 +6,17 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SSHelpTableViewModel.h"
+#import "SSHelpCollectionViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SSHelpTableViewFooterView : UICollectionReusableView
+@interface SSHelpCollectionViewFooter : UICollectionReusableView
 
 @property(nonatomic, strong) NSIndexPath *indexPath;
 
-@property(nonatomic, strong) SSHelpTabViewFooterModel*modelData;
+@property(nonatomic, strong) SSCollectionViewFooterModel *dataModel;
+
+- (void)prepareForReuse NS_REQUIRES_SUPER;
 
 /// 刷新
 - (void)refresh;

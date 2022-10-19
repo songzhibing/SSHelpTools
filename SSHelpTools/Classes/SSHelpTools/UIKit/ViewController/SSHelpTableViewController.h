@@ -6,13 +6,13 @@
 //
 
 #import "SSHelpViewController.h"
-#import "SSHelpTableView.h"
+#import "SSHelpCollectionView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpTableViewController : SSHelpViewController
 
-@property(nonatomic, strong) SSHelpTableView *tableView;
+@property(nonatomic, strong) SSHelpCollectionView *tableView;
 
 @end
 

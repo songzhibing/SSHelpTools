@@ -1,25 +1,25 @@
 //
-//  SSHelpTableViewModel.m
+//  SSHelpCollectionViewModel.m
 //  SSHelpTools
 //
 //  Created by 宋直兵 on 2022/5/12.
 //
 
-#import "SSHelpTableViewModel.h"
-#import "SSHelpTableViewHeaderView.h"
-#import "SSHelpTableViewCell.h"
-#import "SSHelpTableViewFooterView.h"
+#import "SSHelpCollectionViewModel.h"
+#import "SSHelpCollectionViewHeader.h"
+#import "SSHelpCollectionViewCell.h"
+#import "SSHelpCollectionViewFooter.h"
 #import "SSHelpTools/SSHelpDefines.h"
 
 //******************************************************************************
 
-@implementation SSHelpTableViewModel
+@implementation SSHelpCollectionViewModel
 
 @end
 
 //******************************************************************************
 
-@implementation SSHelpTableViewMoveRule
+@implementation SSCollectionVieDragDropRule
 
 - (void)dealloc
 {
@@ -41,7 +41,7 @@
 
 //******************************************************************************
 
-@implementation SSHelpTabViewSectionModel
+@implementation SSCollectionViewSectionModel
 
 - (instancetype)init
 {
@@ -56,7 +56,7 @@
 
 //******************************************************************************
 
-@implementation SSHelpTableViewItemModel
+@implementation SSCollectionReusableViewModel
 
 - (instancetype)init
 {
@@ -71,13 +71,13 @@
 
 //******************************************************************************
 
-@implementation SSHelpTabViewHeaderModel
+@implementation SSCollectionViewHeaderModel
 
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        _headerClass = [SSHelpTableViewHeaderView class];
+        _headerClass = [SSHelpCollectionViewHeader class];
         _headerIdentifier = @"SSHelpTableViewHeaderView";
     }
     return self;
@@ -93,15 +93,18 @@
 
 //******************************************************************************
 
-@implementation SSHelpTabViewCellModel
+@implementation SSCollectionViewCellModel
 
 - (instancetype)init
 {
     self = [super init];
     if (self) {
         _cellHeght = 44;
-        _cellClass = [SSHelpTableViewCell class];
+        _cellClass = [SSHelpCollectionViewCell class];
         _cellIdentifier = @"SSHelpTableViewCell";
+#ifdef DEBUG
+        _cellBackgrounColor = _kRandomColor;
+#endif
     }
     return self;
 }
@@ -116,13 +119,13 @@
 
 //******************************************************************************
 
-@implementation SSHelpTabViewFooterModel
+@implementation SSCollectionViewFooterModel
 
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        _footerClass = [SSHelpTableViewFooterView class];
+        _footerClass = [SSHelpCollectionViewFooter class];
         _footerIdentifier = @"SSHelpTableViewFooterView";
     }
     return self;

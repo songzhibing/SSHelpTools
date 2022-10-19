@@ -5,18 +5,19 @@
 //  Created by 宋直兵 on 2022/5/11.
 //
 
-#import "SSHelpTableViewCell.h"
+#import "SSHelpCollectionViewCell.h"
 #import <Masonry/Masonry.h>
 #import "SSHelpDefines.h"
 
-@interface SSHelpTableViewCell()
+@interface SSHelpCollectionViewCell()
+@property(nonatomic, strong) UILabel *debugTitleLab;
 @end
 
-@implementation SSHelpTableViewCell
+@implementation SSHelpCollectionViewCell
 
 - (void)dealloc
 {
-    _modelData = nil;
+    _dataModel = nil;
     _indexPath = nil;
 }
 
@@ -25,12 +26,27 @@
 {
     [super prepareForReuse];
     [self stopMovingShakeAnimation];
+    _debugTitleLab.text = @"";
 }
 
 /// 刷新
 - (void)refresh
 {
-
+    if (_dataModel.cellBackgrounColor) {
+        self.contentView.backgroundColor = _dataModel.cellBackgrounColor;
+    }
+#ifdef DEBUG
+    if (!_debugTitleLab) {
+        _debugTitleLab = [[UILabel alloc] init];
+        _debugTitleLab.textAlignment = NSTextAlignmentCenter;
+        _debugTitleLab.textColor = [UIColor blackColor];
+        [self.contentView addSubview:_debugTitleLab];
+        [_debugTitleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsMake(2, 2, 2, 2));
+        }];
+    }
+    _debugTitleLab.text = [NSString stringWithFormat:@"[%td,%td]",_dataModel.cellIndexPath.section,_dataModel.cellIndexPath.item];
+#endif
 }
 
 /// 开始摆动动画

@@ -5,9 +5,9 @@
 //  Created by 宋直兵 on 2021/10/29.
 //
 
-#import "SSHelpTableViewLayout.h"
+#import "SSHelpCollectionViewLayout.h"
 
-@interface SSHelpTableViewLayout()
+@interface SSHelpCollectionViewLayout()
 
 @property(nonatomic, strong) NSMutableArray <NSMutableArray <UICollectionViewLayoutAttributes *> *> *itemLayoutAttributes;
 
@@ -23,7 +23,7 @@
 
 @end
 
-@implementation SSHelpTableViewLayout
+@implementation SSHelpCollectionViewLayout
 
 - (void)prepareLayout
 {

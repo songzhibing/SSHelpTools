@@ -6,7 +6,6 @@
 //
 
 #import "SSHelpTableViewController.h"
-#import "SSHelpTableView.h"
 
 @interface SSHelpTableViewController ()
 
@@ -17,7 +16,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _tableView = [[SSHelpTableView alloc] initWithFrame:self.contentView.bounds];
+    _tableView = [SSHelpCollectionView creatWithFrame:self.contentView.bounds];
     [self.contentView addSubview:_tableView];
     [_tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsZero);

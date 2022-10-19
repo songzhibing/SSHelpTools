@@ -9,18 +9,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString *kNSDateSSHelperFormatFullDateWithTime   = @"MMM d, yyyy h:mm a";
-static NSString *kNSDateSSHelpeFormatFullDate            = @"MMM d, yyyy";
-static NSString *kNSDateSSHelpeFormatShortDateWithTime   = @"MMM d h:mm a";
-static NSString *kNSDateSSHelpeFormatShortDate           = @"MMM d";
-static NSString *kNSDateSSHelpeFormatWeekday             = @"EEEE";
-static NSString *kNSDateSSHelpeFormatWeekdayWithTime     = @"EEEE h:mm a";
-static NSString *kNSDateSSHelpeFormatTime                = @"h:mm a";
-static NSString *kNSDateSSHelpeFormatTimeWithPrefix      = @"'at' h:mm a";
-static NSString *kNSDateSSHelpeFormatSQLDate             = @"yyyy-MM-dd";
-static NSString *kNSDateSSHelpeFormatSQLDay              = @"yyyyMMdd";
-static NSString *kNSDateSSHelpeFormatSQLTime             = @"HH:mm:ss";
-static NSString *kNSDateSSHelpeFormatSQLDateWithTime     = @"yyyy-MM-dd HH:mm:ss";
+static NSString *_kNSDateFormatFullDateWithTime    = @"MMM d, yyyy h:mm a";
+static NSString *_kNSDateFormatFullDate            = @"MMM d, yyyy";
+static NSString *_kNSDateFormatShortDateWithTime   = @"MMM d h:mm a";
+static NSString *_kNSDateFormatShortDate           = @"MMM d";
+static NSString *_kNSDateFormatWeekday             = @"EEEE";
+static NSString *_kNSDateFormatWeekdayWithTime     = @"EEEE h:mm a";
+static NSString *_kNSDateFormatTime                = @"h:mm a";
+static NSString *_kNSDateFormatTimeWithPrefix      = @"'at' h:mm a";
+static NSString *_kNSDateFormatSQLDate             = @"yyyy-MM-dd";
+static NSString *_kNSDateFormatSQLDay              = @"yyyyMMdd";
+static NSString *_kNSDateFormatSQLTime             = @"HH:mm:ss";
+static NSString *_kNSDateFormatSQLDateWithTime     = @"yyyy-MM-dd HH:mm:ss";
 
 @interface NSDate (SSHelp)
 

@@ -6,15 +6,17 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SSHelpTableViewModel.h"
+#import "SSHelpCollectionViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SSHelpTableViewHeaderView : UICollectionReusableView
+@interface SSHelpCollectionViewHeader : UICollectionReusableView
 
 @property(nonatomic, strong) NSIndexPath *indexPath;
 
-@property(nonatomic, strong) SSHelpTabViewHeaderModel*modelData;
+@property(nonatomic, strong) SSCollectionViewHeaderModel *dataModel;
+
+- (void)prepareForReuse NS_REQUIRES_SUPER;
 
 - (void)refresh;
 

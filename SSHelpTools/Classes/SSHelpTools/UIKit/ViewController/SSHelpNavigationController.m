@@ -46,6 +46,13 @@
 
 - (void)updateNavigationBarAppearance
 {
+    if (@available(iOS 11.0, *)) {
+        [[UICollectionView appearance] setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
+    }
+    if (@available(iOS 13.0, *)) {
+        [[UITableView appearance] setAutomaticallyAdjustsScrollIndicatorInsets:NO];
+    }
+    
     SSHelpNavigationBarAppearance *newAppearance = SSHELPTOOLSCONFIG.customNavbarAppearance;
     if (!newAppearance) return;
     
@@ -69,13 +76,6 @@
     }
     self.navigationBar.tintColor = newAppearance.titleTextAttributes[NSForegroundColorAttributeName];
     self.navigationBar.translucent = newAppearance.translucent;
-    
-    if (@available(iOS 11.0, *)) {
-        [[UICollectionView appearance] setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
-    }
-    if (@available(iOS 13.0, *)) {
-        [[UITableView appearance] setAutomaticallyAdjustsScrollIndicatorInsets:NO];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
