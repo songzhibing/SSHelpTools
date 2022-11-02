@@ -40,7 +40,7 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     tools.dependency 'Masonry'
     tools.dependency 'SDWebImage'
     tools.dependency 'UICKeyChainStore'
-    tools.dependency 'SVProgressHUD'
+    tools.dependency 'MBProgressHUD'
   end
   
   # SSHelpWebView 库

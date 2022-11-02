@@ -17,7 +17,7 @@
 
 - (void)dealloc
 {
-    _dataModel = nil;
+    _cellModel = nil;
     _indexPath = nil;
 }
 
@@ -25,15 +25,16 @@
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-    [self stopMovingShakeAnimation];
+#ifdef DEBUG
     _debugTitleLab.text = @"";
+#endif
 }
 
 /// 刷新
 - (void)refresh
 {
-    if (_dataModel.cellBackgrounColor) {
-        self.contentView.backgroundColor = _dataModel.cellBackgrounColor;
+    if (_cellModel.cellBackgrounColor) {
+        self.contentView.backgroundColor = _cellModel.cellBackgrounColor;
     }
 #ifdef DEBUG
     if (!_debugTitleLab) {
@@ -45,30 +46,9 @@
             make.edges.mas_equalTo(UIEdgeInsetsMake(2, 2, 2, 2));
         }];
     }
-    _debugTitleLab.text = [NSString stringWithFormat:@"[%td,%td]",_dataModel.cellIndexPath.section,_dataModel.cellIndexPath.item];
+    _debugTitleLab.text = [NSString stringWithFormat:@"[%td,%td]",_cellModel.cellIndexPath.section,_cellModel.cellIndexPath.item];
 #endif
 }
 
-/// 开始摆动动画
-- (void)startMovingShakeAnimation
-{
-    [self stopMovingShakeAnimation];
-    CAKeyframeAnimation * keyAnimaion = [CAKeyframeAnimation animation];
-    keyAnimaion.keyPath = @"transform.rotation";
-    keyAnimaion.values = @[@(-3 / 180.0 * M_PI),@(3 /180.0 * M_PI),@(-3/ 180.0 * M_PI)];//度数转弧度
-    keyAnimaion.removedOnCompletion = NO;
-    keyAnimaion.fillMode = kCAFillModeForwards;
-    keyAnimaion.duration = 0.3;
-    keyAnimaion.repeatCount = MAXFLOAT;
-    [self.layer addAnimation:keyAnimaion forKey:@"cellShake"];
-}
-
-/// 停止摆动动画
-- (void)stopMovingShakeAnimation
-{
-    if ([self.layer.animationKeys containsObject:@"cellShake"]) {
-        [self.layer removeAnimationForKey:@"cellShake"];
-    }
-}
 
 @end

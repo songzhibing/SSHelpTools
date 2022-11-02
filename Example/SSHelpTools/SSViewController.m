@@ -8,6 +8,7 @@
 
 #import "SSViewController.h"
 #import "SSTestViewController.h"
+#import "SSTestPodsViewController.h"
 
 @interface SSViewController ()
 @property(nonatomic, strong) SSHelpNetworkCenter *netCenter;
@@ -33,14 +34,14 @@
     
     __block SSHelpButton *tapBtn = [SSHelpButton buttonWithType:UIButtonTypeCustom];
     tapBtn.frame = CGRectMake(10, 88, 88, 44);
-    tapBtn.normalTitle = @"PushTest";
+    tapBtn.normalTitle = @"SSTestPodsViewController";
     tapBtn.normalTitleColor = [UIColor blueColor];
     tapBtn.backgroundColor = [UIColor groupTableViewBackgroundColor];
     [self.view addSubview:tapBtn];
 
     @Tweakify(self);
     [tapBtn setOnClick:^(SSHelpButton *sender) {
-        SSTestViewController *testVC = [SSTestViewController new];
+        SSTestPodsViewController *testVC = [SSTestPodsViewController new];
         [self_weak_.navigationController pushViewController:testVC animated:YES];
     }];
     

@@ -19,7 +19,7 @@
 
 //******************************************************************************
 
-@implementation SSCollectionVieDragDropRule
+@implementation SSCollectionVieMoveRule
 
 - (void)dealloc
 {

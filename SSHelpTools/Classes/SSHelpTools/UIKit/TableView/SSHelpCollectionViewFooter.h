@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) NSIndexPath *indexPath;
 
-@property(nonatomic, strong) SSCollectionViewFooterModel *dataModel;
+@property(nonatomic, strong) SSCollectionViewFooterModel *footerModel;
 
 - (void)prepareForReuse NS_REQUIRES_SUPER;
 

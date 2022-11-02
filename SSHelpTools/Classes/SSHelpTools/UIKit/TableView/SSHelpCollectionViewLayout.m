@@ -6,6 +6,7 @@
 //
 
 #import "SSHelpCollectionViewLayout.h"
+#import "SSHelpDefines.h"
 
 @interface SSHelpCollectionViewLayout()
 
@@ -24,6 +25,11 @@
 @end
 
 @implementation SSHelpCollectionViewLayout
+
+- (void)dealloc
+{
+    SSLifeCycleLog(@"%@ dealloc ... ",self)
+}
 
 - (void)prepareLayout
 {

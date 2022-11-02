@@ -8,14 +8,14 @@ platform :ios, '11.0'
 
 target 'SSHelpTools_Example' do
   pod 'YYKit'
+  pod 'CocoaHTTPServer'
+  pod 'ReactiveObjC'
   pod 'SSHelpTools', :path => '../'
 
   target 'SSHelpTools_Tests' do
     inherit! :search_paths
     pod 'SDWebImage'
-
     pod 'FBSnapshotTestCase'
-    pod 'CocoaHTTPServer'
   end
 end
 
@@ -27,6 +27,13 @@ post_install do |installer|
       #project 里面同时要配置Build Settings -> Excluded Architectures 选项，添加Any iOS Simulator SDK选项，并设置值为arm64
       config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
     end
+    
+    if target.name == "CocoaHTTPServer"
+        target.build_configurations.each do |config|
+            config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'DD_LEGACY_MACROS=1']
+        end
+    end
+
   end
 end
 
