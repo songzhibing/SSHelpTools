@@ -18,7 +18,7 @@ NSString *_Nonnull SSEncodeStringFromDict(NSDictionary *dict, NSString *key)
             if ([value isKindOfClass:[NSString class]]) {
                 return value;
             } else if ([value isKindOfClass:[NSNumber class]]) {
-                return [value stringValue];
+                return [(NSNumber *)value stringValue];
             }
         }
     }
