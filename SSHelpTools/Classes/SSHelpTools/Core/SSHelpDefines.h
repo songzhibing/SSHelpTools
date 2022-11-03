@@ -58,7 +58,7 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 #define _kApplicationWindow    ([SSHelpToolsConfig sharedConfig].window)
 
-#define _kGetImage(imageName)  [UIImage imageNamed:[NSString stringWithFormat:@"%@",imageName]]
+#define _kGetImage(imageName)  [UIImage imageNamed:imageName]
 
 #define _kDeviceSystemVersion  ([[UIDevice currentDevice] systemVersion])
 

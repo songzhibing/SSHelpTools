@@ -85,15 +85,15 @@ BOOL SSEqualToEmpty(id object)
         }
     } else if ([object isKindOfClass:[NSArray class]]) {
         if ([object respondsToSelector:@selector(count)]) {
-            return 0==[object count];
+            return 0==[(NSArray *)object count];
         }
     } else if ([object isKindOfClass:[NSDictionary class]]) {
         if ([object respondsToSelector:@selector(allKeys)]) {
-            return 0==[object allKeys];
+            return 0==[(NSArray *)[object allKeys] count];
         }
     } else if ([object isKindOfClass:[NSData class]]) {
         if ([object respondsToSelector:@selector(length)]) {
-            return 0==[object length];
+            return 0==[(NSData *)object length];
         }
     }
     return NO;

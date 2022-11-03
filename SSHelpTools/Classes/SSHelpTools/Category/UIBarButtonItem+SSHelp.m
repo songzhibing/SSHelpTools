@@ -12,11 +12,6 @@
 
 @implementation UIBarButtonItem (SSHelp)
 
-- (void)dealloc
-{
-    SSLifeCycleLog(@"%@ dealloc ... ",self);
-}
-
 - (void (^)(id _Nonnull))ss_onClick
 {
     SSHelpBlockTarget *target = objc_getAssociatedObject(self, _cmd);
