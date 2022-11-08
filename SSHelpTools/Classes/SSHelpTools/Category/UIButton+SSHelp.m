@@ -7,95 +7,54 @@
 
 #import "UIButton+SSHelp.h"
 #import <objc/runtime.h>
+#import "SSHelpBlockTarget.h"
 
-static const int block_target_key;
+#ifdef DEBUG
+    #import "SSHelpDefines.h"
+#endif
 
-@interface _UIButtonBlockTarget : NSObject
-
-@property(nonatomic, copy) void (^block)(id sender);
-
-@property(nonatomic, assign) UIControlEvents events;
-
-- (id)initWithBlock:(void (^)(id sender))block events:(UIControlEvents)events;
-
-- (void)invoke:(id)sender;
-
-@end
-
-@implementation _UIButtonBlockTarget
-
-- (id)initWithBlock:(void (^)(id sender))block events:(UIControlEvents)events
-{
-    self = [super init];
-    if (self) {
-        _block = [block copy];
-        _events = events;
-    }
-    return self;
-}
-
-- (void)invoke:(id)sender
-{
-    if (_block) _block(sender);
-}
-
-@end
-
-//******************************************************************************
+static int _ss_targets_key;
 
 @implementation UIButton (SSHelp)
 
 - (void)dealloc
 {
-    [[self _allBlockTargets] removeAllObjects];
+    NSMutableArray *targets = objc_getAssociatedObject(self, &_ss_targets_key);
+    if (targets) {
+        [targets removeAllObjects];
+    }
+#ifdef DEBUG
+    //SSLifeCycleLog(@"%@ dealloc ... ", self);
+#endif
 }
 
-- (void)ss_addTouchUpInsideBlock:(void (^)(id sender))block
-{
-    [self ss_addControlEvents:UIControlEventTouchUpInside block:block];
-}
-
-- (void)ss_removeTouchUpInsideBlock
-{
-    [self ss_removeAllBlocksForControlEvents:UIControlEventTouchUpInside];
-}
-
-/// 添加*事件回调
+/// 添加事件回调
 - (void)ss_addControlEvents:(UIControlEvents)event block:(void (^)(id sender))block
 {
-    _UIButtonBlockTarget *target = [[_UIButtonBlockTarget alloc] initWithBlock:block events:event];
-
+    SSHelpBlockTarget *target = [[SSHelpBlockTarget alloc] initWithBlock:block events:event];
     [self addTarget:target action:@selector(invoke:) forControlEvents:event];
-    [[self _allBlockTargets] addObject:target];
+    [[self _targets] addObject:target];
 }
 
-/// 移除*事件回调
-- (void)ss_removeAllBlocksForControlEvents:(UIControlEvents)event
+/// 移除事件回调
+- (void)ss_removeBlockForControlEvents:(UIControlEvents)event
 {
-    NSMutableArray *targets = [self _allBlockTargets];
-    NSMutableArray *removes = [NSMutableArray array];
-    for (_UIButtonBlockTarget *target in targets) {
-        if (target.events & event) {
-            UIControlEvents newEvent = target.events & (~event);
-            if (newEvent) {
-                [self removeTarget:target action:@selector(invoke:) forControlEvents:target.events];
-                target.events = newEvent;
-                [self addTarget:target action:@selector(invoke:) forControlEvents:target.events];
-            } else {
-                [self removeTarget:target action:@selector(invoke:) forControlEvents:target.events];
-                [removes addObject:target];
-            }
+    __weak typeof (self) weak_self = self;
+    //倒序删除，才能全部删除掉
+    [[self _targets] enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(SSHelpBlockTarget * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.event == event) {
+            [weak_self removeTarget:obj action:@selector(invoke:) forControlEvents:event];
+            [[weak_self _targets] removeObject:obj];
         }
-    }
-    [targets removeObjectsInArray:removes];
+    }];
 }
 
-- (NSMutableArray *)_allBlockTargets
+- (NSMutableArray <SSHelpBlockTarget *> *)_targets
 {
-    NSMutableArray *targets = objc_getAssociatedObject(self, &block_target_key);
+    NSMutableArray *targets = objc_getAssociatedObject(self, &_ss_targets_key);
     if (!targets) {
-        targets = [NSMutableArray array];
-        objc_setAssociatedObject(self, &block_target_key, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        targets = [[NSMutableArray alloc] initWithCapacity:1];
+        objc_setAssociatedObject(self, &_ss_targets_key, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return targets;
 }

@@ -62,6 +62,7 @@
 #import "SSHelpCollectionViewModel.h"
 #import "SSHelpButton.h"
 #import "SSHelpButtonModel.h"
+#import "SSHelpLabel.h"
 #import "SSHelpDropdownMenu.h"
 #import "SSHelpSlidePageView.h"
 #import "SSHelpView.h"

@@ -11,17 +11,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIButton (SSHelp)
 
-/// 添加UIControlEventTouchUpInside事件回调
-- (void)ss_addTouchUpInsideBlock:(void (^)(id sender))block;
-
-/// 移除UIControlEventTouchUpInside事件回调
-- (void)ss_removeTouchUpInsideBlock;
-
-/// 添加*事件回调
+/// 添加事件回调
 - (void)ss_addControlEvents:(UIControlEvents)event block:(void (^)(id sender))block;
 
-/// 移除*事件回调
-- (void)ss_removeAllBlocksForControlEvents:(UIControlEvents)event;
+/// 移除事件回调
+- (void)ss_removeBlockForControlEvents:(UIControlEvents)event;
 
 @end
 

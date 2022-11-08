@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) SSHelpButtonStyle style;
 
+@property(nonatomic, copy  ) void (^onClick)(SSHelpButton *sender);
+
 @property(nonatomic, copy  ) NSString *identifier;
 
 @property(nonatomic, copy  ) NSString *normalTitle;
@@ -40,11 +42,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) CGRect titleContentRect;
 
-@property(nonatomic, assign) UIEdgeInsets outsideEdge; /// 调整响应区域大小，负值扩大，正值缩小
+/// 调整响应区域大小，负值扩大，正值缩小
+@property(nonatomic, assign) UIEdgeInsets outsideEdge;
 
 @property(nonatomic, strong) NSArray <NSDictionary *> *_Nullable childButtons;
-
-@property(nonatomic, copy  ) void (^onClick)(SSHelpButton *sender); /// 点击回调，支持多设
 
 @end
 

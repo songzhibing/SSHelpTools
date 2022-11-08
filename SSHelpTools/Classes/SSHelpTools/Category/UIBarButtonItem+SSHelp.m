@@ -8,9 +8,18 @@
 #import <objc/runtime.h>
 #import "UIBarButtonItem+SSHelp.h"
 #import "SSHelpBlockTarget.h"
-#import "SSHelpDefines.h"
+#ifdef DEBUG
+    #import "SSHelpDefines.h"
+#endif
 
 @implementation UIBarButtonItem (SSHelp)
+
+- (void)dealloc
+{
+#ifdef DEBUG
+    //SSLifeCycleLog(@"%@ dealloc ... ", self);
+#endif
+}
 
 - (void (^)(id _Nonnull))ss_onClick
 {
