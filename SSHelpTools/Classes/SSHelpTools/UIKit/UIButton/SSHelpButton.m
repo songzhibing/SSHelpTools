@@ -68,7 +68,7 @@
     _button.childButtons = model.childButtons;
     
     if (model.block) {
-        [_button ss_addTouchUpInsideBlock:model.block];
+        [_button ss_addControlEvents:UIControlEventTouchUpInside block:model.block];
     }
     
     if (model.icon) {
@@ -148,9 +148,11 @@
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event
 {
-    UIEdgeInsets outsideEdge = self.outsideEdge;
-    CGRect boundsInsetOutsideEdge = CGRectMake(CGRectGetMinX(self.bounds) + outsideEdge.left, CGRectGetMinY(self.bounds) + outsideEdge.top, CGRectGetWidth(self.bounds) -(outsideEdge.left+outsideEdge.right), CGRectGetHeight(self.bounds) - (outsideEdge.top+outsideEdge.bottom));
-    return CGRectContainsPoint(boundsInsetOutsideEdge, point);
+    CGRect bounds = CGRectMake(CGRectGetMinX(self.bounds) + _outsideEdge.left,
+                               CGRectGetMinY(self.bounds) + _outsideEdge.top,
+                               CGRectGetWidth(self.bounds) - (_outsideEdge.left+_outsideEdge.right),
+                               CGRectGetHeight(self.bounds) - (_outsideEdge.top+_outsideEdge.bottom));
+    return CGRectContainsPoint(bounds, point);
 }
 
 #pragma mark - Rect
@@ -191,7 +193,7 @@
 
 - (void)setOnClick:(void (^)(SSHelpButton *))onClick
 {
-    [self ss_addTouchUpInsideBlock:onClick];
+    [self ss_addControlEvents:UIControlEventTouchUpInside block:onClick];
 }
 
 @end

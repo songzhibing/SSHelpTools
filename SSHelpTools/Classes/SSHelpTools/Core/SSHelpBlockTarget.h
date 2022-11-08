@@ -11,7 +11,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpBlockTarget : NSObject
 
-@property (nonatomic, copy) void (^block)(id sender);
+@property(nonatomic, copy, readonly) void (^block)(id sender);
+
+@property(nonatomic, assign, readonly) UIControlEvents event;
+
+
+- (id)initWithBlock:(void (^)(id sender))block events:(UIControlEvents)event;
 
 - (id)initWithBlock:(void (^)(id sender))block;
 

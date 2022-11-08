@@ -26,7 +26,7 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 
 //******************************************************************************
 
-@interface SSCollectionVieDragDropRule : NSObject
+@interface SSCollectionVieMoveRule : NSObject
 
 /// 是否支持移动、交换，默认NO
 @property(nonatomic, assign) BOOL canMove;
@@ -41,10 +41,10 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 @property(nonatomic, strong, nullable) NSIndexPath *moveEndIndexPath;
 
 /// 开始移动
-@property(nonatomic, strong, nullable) void(^beginBlock)(SSCollectionVieDragDropRule *rule);
+@property(nonatomic, strong, nullable) void(^beginBlock)(SSCollectionVieMoveRule *rule);
 
 /// 结束移动
-@property(nonatomic, strong, nullable) BOOL (^endBlock)(SSCollectionVieDragDropRule *rule);
+@property(nonatomic, strong, nullable) BOOL (^endBlock)(SSCollectionVieMoveRule *rule);
 
 @end
 

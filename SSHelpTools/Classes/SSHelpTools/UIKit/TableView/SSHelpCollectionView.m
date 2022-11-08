@@ -43,7 +43,7 @@ UICollectionViewDropDelegate>
         if (@available(iOS 13.0, *)) {
             self.automaticallyAdjustsScrollIndicatorInsets = NO;
         }
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = SSHELPTOOLSCONFIG.groupedBackgroundColor;
 #ifdef DEBUG
         self.debugLogEnable = YES;
 #endif
@@ -51,7 +51,12 @@ UICollectionViewDropDelegate>
     return self;
 }
 
-- (void)setMoveRule:(SSCollectionVieDragDropRule *)moveRule
+- (void)dealloc
+{
+    SSLifeCycleLog(@"%@ dealloc ... ",self)
+}
+
+- (void)setMoveRule:(SSCollectionVieMoveRule *)moveRule
 {
     _moveRule = moveRule;
     if (moveRule.canMove) {
@@ -74,11 +79,14 @@ UICollectionViewDropDelegate>
                      layout:(SSHelpCollectionViewLayout*)layout
     numberOfColumnInSection:(NSInteger)section
 {
-    SSCollectionViewSectionModel *sectionModel = _data[section];
-    if (sectionModel && sectionModel.columnCount!= NSNotFound) {
-        return sectionModel.columnCount;
+    NSInteger columnNumber = 1;
+    if (section < _data.count) {
+        SSCollectionViewSectionModel *sectionModel = _data[section];
+        if (sectionModel.columnCount > 0) {
+            columnNumber = sectionModel.columnCount;
+        }
     }
-    return 1;
+    return columnNumber;
 }
 
 /// Return per item's height
@@ -92,9 +100,15 @@ UICollectionViewDropDelegate>
             SSCollectionViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
             return model.cellHeght;
         } else {
-            /// 特殊，跨Section移动item时，需要预模拟排版当前Section所在的item样式，这里会
-            /// 加上"被移动的Item",数据+1，导致这里cellModels溢出，因此这里特殊处理
-            return 0;
+            // Tip: 在跨Section区域移动item时，需要预模拟排版目标Section所在的item样式，
+            // 导致目标数据源+1，会crash溢出，在这种情况下默认高度返回0，如果是单区间同尺寸内移动，
+            // 可以返回固定值；
+
+            // Tip: 这里返回最后一个item尺寸
+            SSCollectionViewCellModel *model = _data[indexPath.section].cellModels.lastObject;
+            if (model) {
+                return model.cellHeght;
+            }
         }
     }
     return 0;
@@ -104,9 +118,11 @@ UICollectionViewDropDelegate>
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(SSHelpCollectionViewLayout*)layout referenceHeightForHeaderInSection:(NSInteger)section
 {
-    SSCollectionViewSectionModel *sectionModel = _data[section];
-    if (sectionModel && sectionModel.headerModel) {
-        return sectionModel.headerModel.headerHeight;
+    if (section<_data.count) {
+        SSCollectionViewSectionModel *sectionModel = _data[section];
+        if (sectionModel && sectionModel.headerModel) {
+            return sectionModel.headerModel.headerHeight;
+        }
     }
     return 0;
 }
@@ -115,9 +131,11 @@ UICollectionViewDropDelegate>
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(SSHelpCollectionViewLayout*)layout referenceHeightForFooterInSection:(NSInteger)section
 {
-    SSCollectionViewSectionModel *sectionModel = _data[section];
-    if (sectionModel && sectionModel.footerModel) {
-        return sectionModel.footerModel.footerHeight;
+    if (section<_data.count) {
+        SSCollectionViewSectionModel *sectionModel = _data[section];
+        if (sectionModel && sectionModel.footerModel) {
+            return sectionModel.footerModel.footerHeight;
+        }
     }
     return 0;
 }
@@ -126,16 +144,22 @@ UICollectionViewDropDelegate>
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(SSHelpCollectionViewLayout*)layout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
-    SSCollectionViewSectionModel *sectionModel = _data[section];
-    return sectionModel.minimumLineSpacing;
+    if (section<_data.count) {
+        SSCollectionViewSectionModel *sectionModel = _data[section];
+        return sectionModel.minimumLineSpacing;
+    }
+    return 0;
 }
 
 /// The spacing between rows and rows
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(SSHelpCollectionViewLayout*)layout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
 {
-    SSCollectionViewSectionModel *sectionModel = _data[section];
-    return sectionModel.minimumInteritemSpacing;
+    if (section<_data.count) {
+        SSCollectionViewSectionModel *sectionModel = _data[section];
+        return sectionModel.minimumInteritemSpacing;
+    }
+    return 0;
 }
 
 #pragma mark - UICollectionViewDataSource Method
@@ -145,10 +169,9 @@ UICollectionViewDropDelegate>
     return _data.count;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    if (_data && section<_data.count) {
+    if (section<_data.count) {
         return _data[section].cellModels.count;
     }
     return 0;
@@ -170,7 +193,7 @@ UICollectionViewDropDelegate>
             }
             SSHelpCollectionViewHeader *headerView = nil;
             headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:_identifier forIndexPath:indexPath];
-            headerView.dataModel = sectionModel.headerModel;
+            headerView.headerModel = sectionModel.headerModel;
             headerView.indexPath = indexPath;
             if (headerView && [headerView respondsToSelector:@selector(refresh)]) {
                 [headerView refresh];
@@ -189,7 +212,7 @@ UICollectionViewDropDelegate>
             
             SSHelpCollectionViewFooter *footerView = nil;
             footerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:_identifier forIndexPath:indexPath];
-            footerView.dataModel = sectionModel.footerModel;
+            footerView.footerModel = sectionModel.footerModel;
             footerView.indexPath = indexPath;
             if (footerView && [footerView respondsToSelector:@selector(refresh)]) {
                 [footerView refresh];
@@ -212,7 +235,7 @@ UICollectionViewDropDelegate>
     }
     
     SSHelpCollectionViewCell *cell = (__kindof SSHelpCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:model.cellIdentifier forIndexPath:indexPath];
-    cell.dataModel = model;
+    cell.cellModel = model;
     cell.indexPath = indexPath;
     [cell refresh];
     return cell;
@@ -225,6 +248,7 @@ UICollectionViewDropDelegate>
     return canMode;
 }
 
+#pragma mark -
 #pragma mark - UICollectionViewDelegate Method
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -232,7 +256,7 @@ UICollectionViewDropDelegate>
     SSCollectionViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
     if (model.onClick) {
         __kindof UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-        model.onClick(self, cell, indexPath, nil);
+        model.onClick(collectionView, cell, indexPath, model.data);
     }
 }
 

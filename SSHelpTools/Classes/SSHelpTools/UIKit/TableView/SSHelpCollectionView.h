@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSMutableArray <SSCollectionViewSectionModel *> *data;
 
 // 设置拖放策略
-@property(nonatomic, strong, nullable) SSCollectionVieDragDropRule *moveRule;
+@property(nonatomic, strong, nullable) SSCollectionVieMoveRule *moveRule;
 
 @end
 

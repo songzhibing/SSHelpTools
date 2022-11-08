@@ -65,12 +65,11 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
 
 @end
 
-#pragma mark - SSHelpNetworkConfig
+#pragma mark - SSHelpNetworkEngine
 
 @interface SSHelpNetworkEngine ()
 
 @property(nonatomic, strong) AFNetworkReachabilityManager *reachablilityManager;
-@property(nonatomic, strong) NSLock *lock;
 @property(nonatomic, strong) AFURLSessionManager *sessionManager;
 @property(nonatomic, strong) AFURLSessionManager *securitySessionManager;
 
@@ -78,6 +77,7 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
 @property(nonatomic, strong) AFJSONRequestSerializer *afJSONRequestSerializer;
 @property(nonatomic, strong) AFPropertyListRequestSerializer *afPListRequestSerializer;
 
+@property(nonatomic, strong) NSLock *lock;
 @property(nonatomic, strong) NSMutableArray *sslPinningHosts;
 
 @end
@@ -299,7 +299,7 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
     __kindof NSURLSessionDataTask *dataTask = nil;
     
     //上传请求
-    if(SSNetRequestUpload == request.requestType){
+    if (SSNetRequestUpload == request.requestType) {
         dataTask = [sessionManager uploadTaskWithStreamedRequest:urlRequest progress:request.progressBlock  completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
             __strong typeof(__weak_self) __strong_self = __weak_self;
             [__strong_self p_didReceiveResponse:response
@@ -366,12 +366,6 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
     
     //最后,开始请求
     [dataTask resume];
-    
-#ifdef DEBUG
-    [[dataTask rac_willDeallocSignal] subscribeNext:^(id  _Nullable x) {
-        NSLog(@"%@ dealloc...",x);
-    }];
-#endif
 }
 
 /// 处理请求结果
@@ -525,9 +519,9 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
 
 - (BOOL)p_matchedSSLPinningWithURL:(NSString *)urlString
 {
-    if (urlString && [urlString hasPrefix:@"https"]){
+    if (urlString && [urlString hasPrefix:@"https"]) {
         NSString *host = [self p_getHostFromURLString:urlString];
-        if ([self.sslPinningHosts containsObject:host]){
+        if ([self.sslPinningHosts containsObject:host]) {
             return YES;
         }
     }
@@ -537,12 +531,9 @@ static OSStatus SSNetExtractIdentityAndTrustFromPKCS12(CFDataRef inPKCS12Data, C
 /// 选择响应的Session
 - (AFURLSessionManager *)p_getMatchedSessionManager:(SSHelpNetworkRequest *)request
 {
-    if ([self p_matchedSSLPinningWithURL:request.url])
-    {
+    if ([self p_matchedSSLPinningWithURL:request.url]) {
         return self.securitySessionManager;
-    }
-    else
-    {
+    } else {
         return self.sessionManager;
     }
 }

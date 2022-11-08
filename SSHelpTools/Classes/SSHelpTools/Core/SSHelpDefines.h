@@ -58,7 +58,7 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 #define _kApplicationWindow    ([SSHelpToolsConfig sharedConfig].window)
 
-#define _kGetImage(imageName)  [UIImage imageNamed:[NSString stringWithFormat:@"%@",imageName]]
+#define _kGetImage(imageName)  [UIImage imageNamed:imageName]
 
 #define _kDeviceSystemVersion  ([[UIDevice currentDevice] systemVersion])
 
@@ -111,6 +111,13 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 #define _kClearColor   [UIColor clearColor]
 
+//View.layer圆角
+#define _kViewBorderRadius(View, Radius, Width, Color) \
+                                        [View.layer setCornerRadius:(Radius)];\
+                                        [View.layer setMasksToBounds:YES];\
+                                        [View.layer setBorderWidth:(Width)];\
+                                        [View.layer setBorderColor:[Color CGColor]]
+
 //GCD
 
 #ifndef dispatch_main_async_safe
@@ -122,13 +129,16 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
         }
 #endif
 
+
 #ifndef dispatch_global_queue_safe
     #define dispatch_global_queue_safe(block) \
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
 #endif
 
-/******************************************************************************/
-/******************************************************************************/
+
+#ifndef dispatch_once_safe
+    #define dispatch_once_safe(block) static dispatch_once_t onceToken; dispatch_once(&onceToken, block);
+#endif
 
 //日志
 

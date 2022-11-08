@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) NSIndexPath *indexPath;
 
-@property(nonatomic, strong) SSCollectionViewHeaderModel *dataModel;
+@property(nonatomic, strong) SSCollectionViewHeaderModel *headerModel;
 
 - (void)prepareForReuse NS_REQUIRES_SUPER;
 

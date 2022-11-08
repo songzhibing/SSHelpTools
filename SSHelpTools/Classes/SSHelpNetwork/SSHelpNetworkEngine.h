@@ -40,12 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
 ///---------------------
 
 /**
- Creates and returns a new `SSHelpNetworkConfig` object.
+ Creates and returns a new `SSHelpNetworkEngine` object.
  */
 + (instancetype)engine;
 
 /**
- Returns the default shared `SSHelpNetworkConfig` singleton object.
+ Returns the default shared `SSHelpNetworkEngine` singleton object.
  */
 + (instancetype)sharedEngine;
 

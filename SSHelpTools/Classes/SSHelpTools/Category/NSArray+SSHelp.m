@@ -16,8 +16,7 @@
  */
 - (nullable NSString *)ss_jsonStringEncoded
 {
-    if ([NSJSONSerialization isValidJSONObject:self])
-    {
+    if ([NSJSONSerialization isValidJSONObject:self]) {
         NSData *data = [NSJSONSerialization dataWithJSONObject:self
                                                        options:kNilOptions
                                                          error:NULL];

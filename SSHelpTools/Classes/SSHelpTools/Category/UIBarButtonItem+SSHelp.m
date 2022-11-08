@@ -8,22 +8,32 @@
 #import <objc/runtime.h>
 #import "UIBarButtonItem+SSHelp.h"
 #import "SSHelpBlockTarget.h"
-
-static char block_key;
+#ifdef DEBUG
+    #import "SSHelpDefines.h"
+#endif
 
 @implementation UIBarButtonItem (SSHelp)
 
-- (void (^)(id _Nonnull))gc_actionBlock
+- (void)dealloc
 {
-    SSHelpBlockTarget *target = objc_getAssociatedObject(self, &block_key);
+#ifdef DEBUG
+    //SSLifeCycleLog(@"%@ dealloc ... ", self);
+#endif
+}
+
+- (void (^)(id _Nonnull))ss_onClick
+{
+    SSHelpBlockTarget *target = objc_getAssociatedObject(self, _cmd);
     return target.block;
 }
 
-- (void)setGc_actionBlock:(void (^)(id _Nonnull))gc_actionBlock
+- (void)setSs_onClick:(void (^)(id _Nonnull))ss_onClick
 {
-    SSHelpBlockTarget *target = [[SSHelpBlockTarget  alloc] initWithBlock:gc_actionBlock];
-    objc_setAssociatedObject(self, &block_key, target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    SSHelpBlockTarget *target = [[SSHelpBlockTarget  alloc] initWithBlock:ss_onClick];
+    objc_setAssociatedObject(self, @selector(ss_onClick), target, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self setTarget:target];
     [self setAction:@selector(invoke:)];
 }
+
 @end
+

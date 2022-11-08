@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SSHelpTools'
-  s.version          = '0.1.3'
+  s.version          = '0.1.4'
   s.summary          = '常用工具'
 
 # This description is used to generate tags and improve search results.
@@ -40,7 +40,7 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     tools.dependency 'Masonry'
     tools.dependency 'SDWebImage'
     tools.dependency 'UICKeyChainStore'
-    tools.dependency 'SVProgressHUD'
+    tools.dependency 'MBProgressHUD'
   end
   
   # SSHelpWebView 库

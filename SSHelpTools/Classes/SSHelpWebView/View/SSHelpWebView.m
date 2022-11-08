@@ -629,18 +629,24 @@
         ![scheme hasPrefix:@"file"]) {
         // 对于跨域，需要手动跳转， 用系统浏览器（Safari）打开
         _policy = WKNavigationActionPolicyCancel;
-        if ([navigationAction.request.URL.host.lowercaseString isEqualToString:@"itunes.apple.com"]) {
+        NSString *host = navigationAction.request.URL.absoluteString;
+        if ([host containsString:@"itunes.apple.com"] || [host containsString:@"itms-services"]) {
             //看需不需要弹框，再选择 @"是否打开appstore？"
         }
         if ([[UIApplication sharedApplication] canOpenURL:url]) {
-            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:^(BOOL success) {
+                NSLog(@"status = %@",success?@"1":@"0");
+            }];
         }
     } else {
-        if ([navigationAction.request.URL.host.lowercaseString isEqualToString:@"itunes.apple.com"]) {
+        NSString *host = navigationAction.request.URL.absoluteString;
+        if ([host containsString:@"itunes.apple.com"] || [host containsString:@"itms-services"]) {
             // 对于跳转App Store的，用系统浏览器（Safari）打开
             _policy = WKNavigationActionPolicyCancel;
             if ([[UIApplication sharedApplication] canOpenURL:url]) {
-                [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+                [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:^(BOOL success) {
+                    NSLog(@"status = %@",success?@"1":@"0");
+                }];
             }
         }
     }

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+    <button onclick="getIdfa()">获取idfa</button>
+    <button onclick="calculate()">加减乘除</button>
+    <a href="https://192.168.224.42:12345/cert_ios.cer">证书</a>
+    <a href="itms-services://?action=download-manifest&url=https://192.168.224.42:12345/ChuangDa/manifest.plist">下载安装</a>
+
+    <script type="text/javascript">
+        function getIdfa() {
+            $.ajax({
+                type: "get",    //请求方式
+                async: true,    //是否异步
+                url: "https://localhost:12345/getIdfa",
+                success: function (data) {
+                    alert(data);
+                },
+                error: function () {
+                   alert("error");
+                }
+            });
+        }
+        function calculate() {
+            $.ajax({
+                type: "post",    //请求方式
+                async: true,    //是否异步
+                url: "https://localhost:12345/calculate",
+                data: {"firstNum":9, "secondNum":7},
+                success: function (data) {
+                    alert(data);
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

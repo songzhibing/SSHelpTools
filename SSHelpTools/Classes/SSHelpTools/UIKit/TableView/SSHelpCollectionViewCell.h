@@ -16,19 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSIndexPath *indexPath;
 
 /// 模型数据
-@property(nonatomic, strong) SSCollectionViewCellModel *dataModel;
+@property(nonatomic, strong) SSCollectionViewCellModel *cellModel;
 
 /// 复用重置
 - (void)prepareForReuse NS_REQUIRES_SUPER;
 
 /// 刷新
 - (void)refresh;
-
-/// 开始"摆动"动画
-- (void)startMovingShakeAnimation;
-
-/// 停止"摆动"动画
-- (void)stopMovingShakeAnimation;
 
 @end
 NS_ASSUME_NONNULL_END
