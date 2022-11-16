@@ -114,6 +114,17 @@ UICollectionViewDropDelegate>
     return 0;
 }
 
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(SSHelpCollectionViewLayout*)layout insetForSectionAtIndex:(NSInteger)section
+{
+    if (section<_data.count) {
+        SSCollectionViewSectionModel *sectionModel = _data[section];
+        if (sectionModel) {
+            return sectionModel.sectionInset;
+        }
+    }
+    return UIEdgeInsetsZero;
+}
+
 /// Return per section header view height.
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(SSHelpCollectionViewLayout*)layout referenceHeightForHeaderInSection:(NSInteger)section

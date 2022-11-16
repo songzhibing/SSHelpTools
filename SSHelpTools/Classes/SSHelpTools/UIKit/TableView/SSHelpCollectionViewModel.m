@@ -48,6 +48,7 @@
     self = [super init];
     if (self) {
         _columnCount = 1;
+        _sectionInset = UIEdgeInsetsZero;
     }
     return self;
 }

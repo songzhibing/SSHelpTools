@@ -65,6 +65,8 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 
 @property(nonatomic, assign) CGFloat minimumInteritemSpacing;
 
+@property(nonatomic, assign) UIEdgeInsets sectionInset;
+
 @end
 
 //******************************************************************************
