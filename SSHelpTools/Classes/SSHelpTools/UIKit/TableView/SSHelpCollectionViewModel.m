@@ -100,11 +100,11 @@
 {
     self = [super init];
     if (self) {
-        _cellHeght = 44;
+        _cellHeight = 44;
         _cellClass = [SSHelpCollectionViewCell class];
         _cellIdentifier = @"SSHelpTableViewCell";
 #ifdef DEBUG
-        _cellBackgrounColor = _kRandomColor;
+        _cellBackgroundColor = _kRandomColor;
 #endif
     }
     return self;

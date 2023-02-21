@@ -33,8 +33,8 @@
 /// 刷新
 - (void)refresh
 {
-    if (_cellModel.cellBackgrounColor) {
-        self.contentView.backgroundColor = _cellModel.cellBackgrounColor;
+    if (_cellModel.cellBackgroundColor) {
+        self.contentView.backgroundColor = _cellModel.cellBackgroundColor;
     }
 #ifdef DEBUG
     if (!_debugTitleLab) {

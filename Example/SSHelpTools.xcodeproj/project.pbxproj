@@ -14,7 +14,6 @@
 		6003F598195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F596195388D20070C39A /* InfoPlist.strings */; };
 		6003F59A195388D20070C39A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F599195388D20070C39A /* main.m */; };
 		6003F59E195388D20070C39A /* SSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F59D195388D20070C39A /* SSAppDelegate.m */; };
-		6003F5A7195388D20070C39A /* SSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5A6195388D20070C39A /* SSViewController.m */; };
 		6003F5A9195388D20070C39A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5A8195388D20070C39A /* Images.xcassets */; };
 		6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F5AF195388D20070C39A /* XCTest.framework */; };
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
@@ -25,7 +24,6 @@
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		A45B791E3C908FDFFCDB32B5 /* Pods_SSHelpTools_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 152399225BA0BCFFC819B21D /* Pods_SSHelpTools_Example.framework */; };
 		C025E9B427C36412003F1DDD /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = C025E9B327C36412003F1DDD /* ExampleApp.html */; };
-		C05A9D19277301BC00E26953 /* SSTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05A9D18277301BC00E26953 /* SSTestViewController.m */; };
 		C0A3D35827FEB30500B52510 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A3D35727FEB30500B52510 /* AVFoundation.framework */; };
 		C0B2A95127BB7A22006D5799 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0B2A95027BB7A22006D5799 /* CoreTelephony.framework */; };
 		C0F8F67B291217D800E34EDB /* SSTestProgressHudViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0F8F65F291217D800E34EDB /* SSTestProgressHudViewController.m */; };
@@ -50,7 +48,6 @@
 
 /* Begin PBXFileReference section */
 		152399225BA0BCFFC819B21D /* Pods_SSHelpTools_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SSHelpTools_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1DB2421006F9D94E00D486DA /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		2DE7380D07975F9679F39FBD /* SSHelpTools.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SSHelpTools.podspec; path = ../SSHelpTools.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4DAF1DD4FDE8AF002DC3008C /* Pods_SSHelpTools_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SSHelpTools_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58A195388D20070C39A /* SSHelpTools_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SSHelpTools_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,8 +60,6 @@
 		6003F59B195388D20070C39A /* SSHelpTools-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SSHelpTools-Prefix.pch"; sourceTree = "<group>"; };
 		6003F59C195388D20070C39A /* SSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSAppDelegate.h; sourceTree = "<group>"; };
 		6003F59D195388D20070C39A /* SSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSAppDelegate.m; sourceTree = "<group>"; };
-		6003F5A5195388D20070C39A /* SSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSViewController.h; sourceTree = "<group>"; };
-		6003F5A6195388D20070C39A /* SSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSViewController.m; sourceTree = "<group>"; };
 		6003F5A8195388D20070C39A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6003F5AE195388D20070C39A /* SSHelpTools_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SSHelpTools_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -77,8 +72,6 @@
 		953DB6FF6F7EFF468C0AE0CC /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		BE79FBEC50B2DDB0AC0489E5 /* Pods-SSHelpTools_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SSHelpTools_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SSHelpTools_Tests/Pods-SSHelpTools_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C025E9B327C36412003F1DDD /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ExampleApp.html; sourceTree = "<group>"; };
-		C05A9D17277301BC00E26953 /* SSTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSTestViewController.h; sourceTree = "<group>"; };
-		C05A9D18277301BC00E26953 /* SSTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSTestViewController.m; sourceTree = "<group>"; };
 		C0A3D35727FEB30500B52510 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C0B2A95027BB7A22006D5799 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		C0F8F65E291217D800E34EDB /* SSTestProgressHudViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSTestProgressHudViewController.h; sourceTree = "<group>"; };
@@ -173,13 +166,9 @@
 				6003F59C195388D20070C39A /* SSAppDelegate.h */,
 				6003F59D195388D20070C39A /* SSAppDelegate.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
-				6003F5A5195388D20070C39A /* SSViewController.h */,
-				6003F5A6195388D20070C39A /* SSViewController.m */,
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
-				C05A9D17277301BC00E26953 /* SSTestViewController.h */,
-				C05A9D18277301BC00E26953 /* SSTestViewController.m */,
 			);
 			name = "Example for SSHelpTools";
 			path = SSHelpTools;
@@ -220,7 +209,6 @@
 			children = (
 				2DE7380D07975F9679F39FBD /* SSHelpTools.podspec */,
 				953DB6FF6F7EFF468C0AE0CC /* README.md */,
-				1DB2421006F9D94E00D486DA /* LICENSE */,
 			);
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
@@ -445,6 +433,7 @@
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaHTTPServer/CocoaHTTPServer.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework",
+				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
@@ -461,6 +450,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaHTTPServer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaLumberjack.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
@@ -554,8 +544,6 @@
 				C0F8F686291217D800E34EDB /* SSTestPodsModel.m in Sources */,
 				C0F8F688291217D800E34EDB /* SSTestCollectionViewController.m in Sources */,
 				6003F59E195388D20070C39A /* SSAppDelegate.m in Sources */,
-				6003F5A7195388D20070C39A /* SSViewController.m in Sources */,
-				C05A9D19277301BC00E26953 /* SSTestViewController.m in Sources */,
 				C0F8F684291217D800E34EDB /* SSTestHttpsServerViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);

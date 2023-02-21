@@ -13,7 +13,7 @@
 - (void)moduleRegisterJsHandler
 {
     @weakify(self);
-    [self baseRegisterHandler:kWebApiTakePhoto handler:^(NSString * _Nonnull api, id  _Nonnull data, SSBridgeJsCallback  _Nonnull callback) {
+    [self baseRegisterHandler:kWebApiTakePhoto handler:^(NSString * _Nonnull api, id  _Nonnull data, SSBridgeCallback  _Nonnull callback) {
         [SSHelpPhotoManager toAccessCameraOrPhoto:^(UIImage * _Nullable image) {
             SSHelpWebObjcResponse *response = [[SSHelpWebObjcResponse alloc] init];
             if (image) {

@@ -37,7 +37,7 @@
 #import "SSHelpLocationManager.h"
 #import "SSHelpLocationRequest.h"
 #import "SSHelpTimer.h"
-#import "SSHelpTools.h"
+#import "SSHelpTextField.h"
 #import "SSHelpNavigationBar.h"
 #import "SSHelpNavigationBarModel.h"
 #import "SSHelpImagePickerController.h"

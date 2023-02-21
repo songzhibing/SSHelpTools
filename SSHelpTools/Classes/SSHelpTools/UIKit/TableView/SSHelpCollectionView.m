@@ -98,7 +98,7 @@ UICollectionViewDropDelegate>
     if (indexPath.section < _data.count) {
         if (indexPath.item < _data[indexPath.section].cellModels.count) {
             SSCollectionViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
-            return model.cellHeght;
+            return model.cellHeight;
         } else {
             // Tip: 在跨Section区域移动item时，需要预模拟排版目标Section所在的item样式，
             // 导致目标数据源+1，会crash溢出，在这种情况下默认高度返回0，如果是单区间同尺寸内移动，
@@ -107,13 +107,14 @@ UICollectionViewDropDelegate>
             // Tip: 这里返回最后一个item尺寸
             SSCollectionViewCellModel *model = _data[indexPath.section].cellModels.lastObject;
             if (model) {
-                return model.cellHeght;
+                return model.cellHeight;
             }
         }
     }
     return 0;
 }
 
+///
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(SSHelpCollectionViewLayout*)layout insetForSectionAtIndex:(NSInteger)section
 {
     if (section<_data.count) {

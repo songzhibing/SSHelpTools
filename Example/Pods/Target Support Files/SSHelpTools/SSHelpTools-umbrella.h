@@ -63,6 +63,7 @@
 #import "SSHelpButton.h"
 #import "SSHelpButtonModel.h"
 #import "SSHelpLabel.h"
+#import "SSHelpTextField.h"
 #import "SSHelpDropdownMenu.h"
 #import "SSHelpSlidePageView.h"
 #import "SSHelpView.h"
@@ -71,13 +72,12 @@
 #import "SSHelpViewController.h"
 #import "SSHelpWebViewController.h"
 #import "SSHelpWebObjcApi.h"
-#import "SSHelpWebObjcJsHandler.h"
+#import "SSHelpWebObjcHandler.h"
 #import "SSHelpWebObjcResponse.h"
 #import "SSHelpWebBaseModule.h"
 #import "SSHelpWebPhotoModule.h"
-#import "SSHelpWebTestJsBridgeModule.h"
+#import "SSHelpWebTestBridgeModule.h"
 #import "SSHelpWebView.h"
-#import "SSHelpWebViewDelegate.h"
 
 FOUNDATION_EXPORT double SSHelpToolsVersionNumber;
 FOUNDATION_EXPORT const unsigned char SSHelpToolsVersionString[];

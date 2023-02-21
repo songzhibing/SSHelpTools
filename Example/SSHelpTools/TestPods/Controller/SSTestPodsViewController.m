@@ -92,6 +92,15 @@
     [_testData addObject:webSoku];
     
     
+    SSTestPodsModel *webBaidu = [[SSTestPodsModel alloc] init];
+    webBaidu.title = @"Web Baidu";
+    webBaidu.push = ^{
+        SSHelpWebViewController *vc = [[SSHelpWebViewController alloc] init];
+        vc.indexString = @"https://www.baidu.com";
+        [self_weak_.navigationController pushViewController:vc animated:YES];
+    };
+    [_testData addObject:webBaidu];
+    
     //
     SSTestPodsModel *progressHUD = [[SSTestPodsModel alloc] init];
     progressHUD.title = @"ProgressHUD";

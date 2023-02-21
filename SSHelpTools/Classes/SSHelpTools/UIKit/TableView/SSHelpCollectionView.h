@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpCollectionView : UICollectionView
 
-+ (SSHelpCollectionView *)creatWithFrame:(CGRect)frame;
++ (__kindof SSHelpCollectionView *)creatWithFrame:(CGRect)frame;
 
 @property(nonatomic, strong) NSMutableArray <SSCollectionViewSectionModel *> *data;
 

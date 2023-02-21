@@ -1,6 +1,6 @@
 {
   "name": "SSHelpTools",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "summary": "常用工具",
   "description": "TODO: 代码逐渐完善中，欢迎提出问题.",
   "homepage": "https://github.com/songzhibing/SSHelpTools",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/songzhibing/SSHelpTools.git",
-    "tag": "0.1.3"
+    "tag": "0.1.4"
   },
   "platforms": {
     "ios": "11.0"
@@ -50,6 +50,9 @@
 
         ],
         "MBProgressHUD": [
+
+        ],
+        "FMDB": [
 
         ]
       }

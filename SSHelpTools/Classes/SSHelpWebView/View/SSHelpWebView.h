@@ -19,23 +19,30 @@ typedef void(^_Nullable SSWebViewConfigBlock)(WKWebViewConfiguration *_Nonnull c
 
 + (instancetype)defauleWebViewWithFrame:(CGRect)frame configuration:(SSWebViewConfigBlock)block;
 
+/// 日志输出
 @property(nonatomic, assign) BOOL logEnable;
 
 /// js接口功能模块代理
 @property(nonatomic, weak) id <SSWebModuleDelegate> moduleDelegate;
 
-/// 是否支持自定义长按手势识别:识别web中二维码、看图模式、.... ，默认no
+/// 长按手势识别
+/// @support 识别网页中二维码
+/// @support 看图模式
 @property(nonatomic, assign) BOOL supportLongPressGestureRecognizer;
 
-/// 非模块化接口注册
-/// @param handlerName 方法名称
+/// 注册js接口
+/// @param handlerName js方法名称
 /// @param handler 回调
-- (void)registerHandler:(NSString *)handlerName handler:(SSBridgeJsHandler)handler;
+- (void)registerHandler:(NSString *)handlerName handler:(SSBridgeHandler)handler;
 
-/// 模块化接口初始化
+/// 注册js接口模块类
 - (BOOL)registerJsHandlerImpClass:(Class)moduleClass;
 
-- (void)presentViewController:(UIViewController *)viewControllerToPresent animated: (BOOL)flag completion:(void (^ __nullable)(void))completion;
+/// 回调js接口
+- (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(SSBridgeCallback)responseCallback;
+
+/// 弹出视图控制器
+- (void)presentViewController:(UIViewController *)alert animated: (BOOL)flag completion:(SSBlockVoid)completion;
 
 @end
 

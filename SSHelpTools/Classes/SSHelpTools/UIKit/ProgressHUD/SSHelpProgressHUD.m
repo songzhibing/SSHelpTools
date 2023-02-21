@@ -218,6 +218,9 @@
     [self.lock lock];
     self.hudRetainCount += 1;
     [self _handler];
+#ifdef DEBUG
+    //SSLog(@"当前显示:%ld",self.hudRetainCount);
+#endif
     [self.lock unlock];
 }
 
@@ -228,6 +231,9 @@
         self.hudRetainCount -= 1;
         [self _handler];
     }
+#ifdef DEBUG
+    //SSLog(@"当前关闭:%ld",self.hudRetainCount);
+#endif
     [self.lock unlock];
 }
 

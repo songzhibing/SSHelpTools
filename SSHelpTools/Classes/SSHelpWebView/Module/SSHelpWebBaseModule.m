@@ -36,8 +36,8 @@
     return newApi?:api;
 }
 
-- (void)p_hookJsHandler:(SSHelpWebObjcJsHandler *)jsHandler
-          moduleHandler:(SSBridgeJsHandler)moduleHandler
+- (void)p_hookJsHandler:(SSHelpWebObjcHandler *)jsHandler
+          moduleHandler:(SSBridgeHandler)moduleHandler
 {
     if (_moduleDelegate && [_moduleDelegate respondsToSelector:@selector(webModule:hookJsHandler:moduleHandler:)]) {
         [_moduleDelegate webModule:self.identifier hookJsHandler:jsHandler moduleHandler:moduleHandler];
@@ -60,7 +60,7 @@
 /// 注册jshandle，支持自定义
 /// @param handlerName api
 /// @param handler 回调
-- (void)baseRegisterHandler:(NSString *)handlerName handler:(SSBridgeJsHandler)handler
+- (void)baseRegisterHandler:(NSString *)handlerName handler:(SSBridgeHandler)handler
 {
     @weakify(self);
     
@@ -88,8 +88,8 @@
             }
         };
         /// 转成OC对象
-        SSHelpWebObjcJsHandler *jshandler = nil;
-        jshandler = [SSHelpWebObjcJsHandler handlerWithData:data callBack:_nonullCallBack];
+        SSHelpWebObjcHandler *jshandler = nil;
+        jshandler = [SSHelpWebObjcHandler handlerWithData:data callBack:_nonullCallBack];
         jshandler.api = newApi;
         /// 是否被自定义
         [self_weak_ p_hookJsHandler:jshandler moduleHandler:handler];
@@ -100,11 +100,11 @@
 /// 本身完成不了jshandle，需要使用者完成
 - (void)baseInvokeJsHandler:(NSString *)api
                        data:(id)data
-                   callBack:(SSBridgeJsCallback)callBack
+                   callBack:(SSBridgeCallback)callBack
 {
     /// 转成OC对象
-    SSHelpWebObjcJsHandler *jshandler = nil;
-    jshandler = [SSHelpWebObjcJsHandler handlerWithData:data callBack:callBack];
+    SSHelpWebObjcHandler *jshandler = nil;
+    jshandler = [SSHelpWebObjcHandler handlerWithData:data callBack:callBack];
     jshandler.api = api;
     
     /// 代理

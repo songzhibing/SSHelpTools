@@ -14,10 +14,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^ _Nullable SSBlockVoid)(void);
-typedef void(^ _Nullable SSBlockInt )(int number);
+typedef void(^ _Nullable SSBlockId)(id _Nullable object);
+typedef void(^ _Nullable SSBlockInt)(int number);
 typedef void(^ _Nullable SSBlockBool)(BOOL success);
+typedef void(^ _Nullable SSBlockArray)(__kindof NSArray * _Nullable array);
 typedef void(^ _Nullable SSBlockDict)(__kindof NSDictionary * _Nullable dict);
 typedef void(^ _Nullable SSBlockString)(__kindof NSString * _Nullable string);
+
+//安全调用Block
+#define _kSafeBlock(blockName,...) ({(!blockName) ? nil : blockName(__VA_ARGS__);})
 
 /// 字符串读取
 /// @param dict 原始数据
@@ -37,7 +42,7 @@ FOUNDATION_EXTERN NSArray * _Nullable SSEncodeArrayFromDict(NSDictionary *dict, 
 /// 自定义数组读取
 /// @param dic 原始数据
 /// @param key 目标字段
-FOUNDATION_EXTERN NSArray * _Nullable SSEncodeArrayFromDictUsingBlock(NSDictionary *dic, NSString *key, id(^usingBlock)(NSDictionary *item));
+FOUNDATION_EXTERN NSMutableArray * _Nullable SSEncodeArrayFromDictUsingBlock(NSDictionary *dic, NSString *key, id(^usingBlock)(NSDictionary *item));
 
 /// 判断是空， 如：nil、Nil、NSNull、@""、@"<null>"、@[]、@{}、0Data
 FOUNDATION_EXTERN BOOL SSEqualToEmpty(id object);
@@ -73,13 +78,13 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 //设备
 
-#define _kDeviceIsiPad ([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
+#define _kDeviceIsiPad    ([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
 
-#define _kScreenWidth  (MIN([UIScreen mainScreen].bounds.size.width, \
-                            [UIScreen mainScreen].bounds.size.height)) //支持横竖屏
+#define _kScreenWidth     (MIN([UIScreen mainScreen].bounds.size.width, \
+                            [UIScreen mainScreen].bounds.size.height))
 
-#define _kScreenHeight (MAX([UIScreen mainScreen].bounds.size.width, \
-                            [UIScreen mainScreen].bounds.size.height)) //支持横竖屏
+#define _kScreenHeight    (MAX([UIScreen mainScreen].bounds.size.width, \
+                            [UIScreen mainScreen].bounds.size.height))
 
 #define _kStatusBarHeight (CGRectGetHeight([UIApplication sharedApplication].statusBarFrame))
 
@@ -111,12 +116,17 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 #define _kClearColor   [UIColor clearColor]
 
-//View.layer圆角
+//View圆角
 #define _kViewBorderRadius(View, Radius, Width, Color) \
                                         [View.layer setCornerRadius:(Radius)];\
                                         [View.layer setMasksToBounds:YES];\
                                         [View.layer setBorderWidth:(Width)];\
                                         [View.layer setBorderColor:[Color CGColor]]
+
+//属性快速声明（建议使用代码块）
+#define _kPropertyString(name)      @property(nonatomic, copy  ) NSString *name
+#define _kPropertyStrong(type,name) @property(nonatomic, strong) type *name
+#define _kPropertyAssign(name)      @property(nonatomic, assign) NSInteger name
 
 //GCD
 

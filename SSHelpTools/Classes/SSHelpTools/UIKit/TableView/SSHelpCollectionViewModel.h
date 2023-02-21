@@ -104,9 +104,9 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 
 @property(nonatomic, assign) Class cellClass;
 
-@property(nonatomic, assign) CGFloat cellHeght;
+@property(nonatomic, assign) CGFloat cellHeight;
 
-@property(nonatomic, strong) UIColor *cellBackgrounColor;
+@property(nonatomic, strong) UIColor *cellBackgroundColor;
 
 @property(nonatomic, strong) NSIndexPath *cellIndexPath;
 

@@ -7,7 +7,7 @@
 
 #import "SSHelpWebViewController.h"
 #import "SSHelpWebView.h"
-#import "SSHelpWebTestJsBridgeModule.h"
+#import "SSHelpWebTestBridgeModule.h"
 
 @interface SSHelpWebViewController ()
 
@@ -45,7 +45,6 @@
 - (void)adjustSubviewsDisplay
 {
     [super adjustSubviewsDisplay];
-    // 调整位置
     [self.webView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsMake(self.viewSafeAreaInsets.top, self.viewSafeAreaInsets.left, 0, self.viewSafeAreaInsets.right));
     }];
@@ -54,9 +53,6 @@
 - (void)goBack
 {
     if ([self.webView canGoBack]) {
-        [self.webView.backForwardList.backList enumerateObjectsUsingBlock:^(WKBackForwardListItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            SSLog(@"第%ld页：%@",idx,obj.URL);
-        }];
         [self.webView goBack];
     } else {
         if (self.navigationController && self.navigationController.viewControllers.count > 1) {
