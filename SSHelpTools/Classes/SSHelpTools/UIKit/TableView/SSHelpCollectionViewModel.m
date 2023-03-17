@@ -9,7 +9,7 @@
 #import "SSHelpCollectionViewHeader.h"
 #import "SSHelpCollectionViewCell.h"
 #import "SSHelpCollectionViewFooter.h"
-#import "SSHelpTools/SSHelpDefines.h"
+#import "SSHelpDefines.h"
 
 //******************************************************************************
 
@@ -49,6 +49,7 @@
     if (self) {
         _columnCount = 1;
         _sectionInset = UIEdgeInsetsZero;
+        _layoutStyle = SSSectionLayoutStyleNormal;
     }
     return self;
 }

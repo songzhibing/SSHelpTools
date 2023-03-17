@@ -6,6 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SSHelpCollectionViewLayout.h"
+
 @class
 SSCollectionViewSectionModel,
 SSCollectionViewHeaderModel,
@@ -54,7 +56,6 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 
 @property(nonatomic, strong) SSCollectionViewHeaderModel * _Nullable headerModel;
 
-/// 列数，默认1列
 @property(nonatomic, assign) NSInteger columnCount;
 
 @property(nonatomic, strong) NSMutableArray <SSCollectionViewCellModel *> *cellModels;
@@ -64,6 +65,8 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 @property(nonatomic, assign) CGFloat minimumLineSpacing;
 
 @property(nonatomic, assign) CGFloat minimumInteritemSpacing;
+
+@property(nonatomic, assign) SSSectionLayoutStyle layoutStyle;
 
 @property(nonatomic, assign) UIEdgeInsets sectionInset;
 
@@ -104,7 +107,11 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 
 @property(nonatomic, assign) Class cellClass;
 
+/// 高度, 常规布局需要
 @property(nonatomic, assign) CGFloat cellHeight;
+
+/// (宽度,高度), 横向限制布局需要
+@property(nonatomic, assign) CGSize cellSize;
 
 @property(nonatomic, strong) UIColor *cellBackgroundColor;
 

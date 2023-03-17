@@ -10,6 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, SSSectionLayoutStyle) {
+    SSSectionLayoutStyleNormal = 0,                 //常规布局
+    SSSectionLayoutStyleHorizontalFinite = 1,       //横向有限布局
+    //SSSectionLayoutStyleHorizontalInfinitely = 2, //横向无限布局
+};
+
 @class SSHelpCollectionViewLayout;
 
 @protocol SSHelpCollectionViewLayoutDataSource<NSObject>
@@ -21,11 +27,14 @@ NS_ASSUME_NONNULL_BEGIN
                      layout:(SSHelpCollectionViewLayout*)layout
     numberOfColumnInSection:(NSInteger)section;
 
-/// Return per item's height
+/// Return per item's height, 常规布局必须返回
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(SSHelpCollectionViewLayout*)layout itemWidth:(CGFloat)width
  heightForItemAtIndexPath:(NSIndexPath *)indexPath;
 
+/// Return per item's size，横向限制布局必须返回
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                   layout:(SSHelpCollectionViewLayout*)layout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
 @optional
 
 /// Column spacing between columns
@@ -42,6 +51,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// Return per section footer view height.
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(SSHelpCollectionViewLayout*)layout referenceHeightForFooterInSection:(NSInteger)section;
 
+/// 返回Section区域布局方式，默认常规布局
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(SSHelpCollectionViewLayout*)layout layoutStyle:(NSInteger)section;
+
 @end
 
 
@@ -54,6 +66,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// default 0.0
 @property(nonatomic, assign) CGFloat minimumInteritemSpacing;
+
+/// default 0
+@property(nonatomic, assign) SSSectionLayoutStyle layoutStyle;
 
 /// default NO
 @property(nonatomic, assign)  BOOL sectionHeadersPinToVisibleBounds;

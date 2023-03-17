@@ -114,6 +114,19 @@ UICollectionViewDropDelegate>
     return 0;
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(SSHelpCollectionViewLayout*)layout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section < _data.count) {
+        if (indexPath.item < _data[indexPath.section].cellModels.count) {
+            SSCollectionViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
+            return model.cellSize;
+        }
+    }
+    return CGSizeZero;
+}
+
 ///
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(SSHelpCollectionViewLayout*)layout insetForSectionAtIndex:(NSInteger)section
 {
@@ -172,6 +185,16 @@ UICollectionViewDropDelegate>
         return sectionModel.minimumInteritemSpacing;
     }
     return 0;
+}
+
+/// The section layout style
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(SSHelpCollectionViewLayout*)layout layoutStyle:(NSInteger)section
+{
+    if (section<_data.count) {
+        SSCollectionViewSectionModel *sectionModel = _data[section];
+        return sectionModel.layoutStyle;
+    }
+    return SSSectionLayoutStyleNormal;
 }
 
 #pragma mark - UICollectionViewDataSource Method
@@ -269,6 +292,20 @@ UICollectionViewDropDelegate>
     if (model.onClick) {
         __kindof UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
         model.onClick(collectionView, cell, indexPath, model.data);
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(8.0))
+{
+    if (_viewDelegate && [_viewDelegate respondsToSelector:@selector(collectionView:willDisplayCell:forItemAtIndexPath:)]) {
+        [_viewDelegate collectionView:collectionView willDisplayCell:cell forItemAtIndexPath:indexPath];
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (_viewDelegate && [_viewDelegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)]) {
+        [_viewDelegate collectionView:collectionView didEndDisplayingCell:cell forItemAtIndexPath:indexPath];
     }
 }
 

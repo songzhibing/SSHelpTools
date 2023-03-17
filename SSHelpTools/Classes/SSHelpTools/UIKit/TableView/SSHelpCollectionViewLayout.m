@@ -66,51 +66,106 @@
         
         // Per section header
         CGFloat headerHeight = 0.0;
-        if ([self.dataSource respondsToSelector:@selector(collectionView:layout:referenceHeightForHeaderInSection:)]) {
-            headerHeight = [self.dataSource collectionView:collectionView layout:self referenceHeightForHeaderInSection:section];
+        if ([self.dataSource respondsToSelector:@selector(collectionView:layout:
+                                                          referenceHeightForHeaderInSection:)])
+        {
+            headerHeight = [self.dataSource collectionView:collectionView
+                                                    layout:self
+                         referenceHeightForHeaderInSection:section];
         }
         UICollectionViewLayoutAttributes *headerLayoutAttribute = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader withIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
         headerLayoutAttribute.frame = CGRectMake(0.0, _contentHeight, contentWidth, headerHeight);
         [_headerLayoutAttributes addObject:headerLayoutAttribute];
         
-        // The current section's offset for per column.
-        CGFloat offsetOfColumns[columnOfSection];
-        for (NSInteger i=0; i<columnOfSection; i++) {
-            offsetOfColumns[i] = headerHeight + contentInsetOfSection.top;
+        CGFloat maxOffsetValue = 0;
+        SSSectionLayoutStyle sectionLayoutStyle = [self layoutStyleForSection:section];
+        if (SSSectionLayoutStyleHorizontalFinite == sectionLayoutStyle)
+        {
+            //横向有限布局
+            maxOffsetValue = headerHeight+contentInsetOfSection.top;
+            NSMutableArray *layoutAttributeOfSection = [NSMutableArray arrayWithCapacity:numberOfItems];
+            CGFloat originX = contentInsetOfSection.left+0;
+            CGFloat originY = headerHeight+contentInsetOfSection.top+0;
+            for (NSInteger item=0; item<numberOfItems; item++)
+            {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
+                CGSize itemSize = [self.dataSource collectionView:collectionView layout:self sizeForItemAtIndexPath:indexPath];
+                if (0==item)
+                {
+                    if (originX+itemSize.width>contentWidthOfSection)
+                    {
+                        //限制首个宽度
+                        itemSize.width = contentWidthOfSection;
+                    }
+                }
+                
+                if ((originX+itemSize.width+minimumInteritemSpacing*item)>contentWidthOfSection)
+                {
+                    //横向已经超出,换行
+                    originX = contentInsetOfSection.left+0;
+                    if (originX+itemSize.width>contentWidthOfSection)
+                    {
+                        //如果单独一行都超，则限制正好一行宽度
+                        itemSize.width = contentWidthOfSection;
+                    }
+                    originY += itemSize.height+minimumLineSpacing;
+                }
+                UICollectionViewLayoutAttributes *layoutAttbiture = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+                layoutAttbiture.frame = CGRectMake(originX, originY+_contentHeight, itemSize.width, itemSize.height);
+                [layoutAttributeOfSection addObject:layoutAttbiture];
+                
+                //next itemCell orginX
+                originX += itemSize.width+minimumInteritemSpacing;
+                
+                // Update y offset in current column
+                maxOffsetValue = originY+itemSize.height;
+            }
+            [_itemLayoutAttributes addObject:layoutAttributeOfSection];
+            maxOffsetValue += contentInsetOfSection.bottom;
+
         }
-        
-        NSMutableArray *layoutAttributeOfSection = [NSMutableArray arrayWithCapacity:numberOfItems];
-        for (NSInteger item=0; item<numberOfItems; item++) {
-            // Find minimum offset and fill to it.
-            NSInteger currentColumn = 0;
-            for (NSInteger i=1; i<columnOfSection; i++) {
-                if (offsetOfColumns[currentColumn] > offsetOfColumns[i]) {
-                    currentColumn = i;
+        else
+        {
+            // The current section's offset for per column.
+            CGFloat offsetOfColumns[columnOfSection];
+            for (NSInteger i=0; i<columnOfSection; i++) {
+                offsetOfColumns[i] = headerHeight + contentInsetOfSection.top;
+            }
+            
+            NSMutableArray *layoutAttributeOfSection = [NSMutableArray arrayWithCapacity:numberOfItems];
+            for (NSInteger item=0; item<numberOfItems; item++) {
+                // Find minimum offset and fill to it.
+                NSInteger currentColumn = 0;
+                for (NSInteger i=1; i<columnOfSection; i++) {
+                    if (offsetOfColumns[currentColumn] > offsetOfColumns[i]) {
+                        currentColumn = i;
+                    }
+                }
+                
+                NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
+                CGFloat itemHeight = [self.dataSource collectionView:collectionView layout:self itemWidth:itemWidth heightForItemAtIndexPath:indexPath];
+                CGFloat x = contentInsetOfSection.left + itemWidth*currentColumn + minimumInteritemSpacing*currentColumn;
+                CGFloat y = offsetOfColumns[currentColumn] + (item>=columnOfSection ? minimumLineSpacing : 0.0);
+                
+                UICollectionViewLayoutAttributes *layoutAttbiture = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+                layoutAttbiture.frame = CGRectMake(x, y+_contentHeight, itemWidth, itemHeight);
+                [layoutAttributeOfSection addObject:layoutAttbiture];
+                
+                // Update y offset in current column
+                offsetOfColumns[currentColumn] = (y + itemHeight);
+            }
+            [_itemLayoutAttributes addObject:layoutAttributeOfSection];
+            
+            // Get current section height from offset record.
+            maxOffsetValue = offsetOfColumns[0];
+            for (int i=1; i<columnOfSection; i++) {
+                if (offsetOfColumns[i] > maxOffsetValue) {
+                    maxOffsetValue = offsetOfColumns[i];
                 }
             }
-            
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
-            CGFloat itemHeight = [self.dataSource collectionView:collectionView layout:self itemWidth:itemWidth heightForItemAtIndexPath:indexPath];
-            CGFloat x = contentInsetOfSection.left + itemWidth*currentColumn + minimumInteritemSpacing*currentColumn;
-            CGFloat y = offsetOfColumns[currentColumn] + (item>=columnOfSection ? minimumLineSpacing : 0.0);
-            
-            UICollectionViewLayoutAttributes *layoutAttbiture = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
-            layoutAttbiture.frame = CGRectMake(x, y+_contentHeight, itemWidth, itemHeight);
-            [layoutAttributeOfSection addObject:layoutAttbiture];
-            
-            // Update y offset in current column
-            offsetOfColumns[currentColumn] = (y + itemHeight);
+            maxOffsetValue += contentInsetOfSection.bottom;
         }
-        [_itemLayoutAttributes addObject:layoutAttributeOfSection];
         
-        // Get current section height from offset record.
-        CGFloat maxOffsetValue = offsetOfColumns[0];
-        for (int i=1; i<columnOfSection; i++) {
-            if (offsetOfColumns[i] > maxOffsetValue) {
-                maxOffsetValue = offsetOfColumns[i];
-            }
-        }
-        maxOffsetValue += contentInsetOfSection.bottom;
         
         // Per section footer
         CGFloat footerHeader = 0.0;
@@ -232,6 +287,15 @@
         minimumInteritemSpacing = [self.dataSource collectionView:self.collectionView layout:self minimumInteritemSpacingForSectionAtIndex:section];
     }
     return minimumInteritemSpacing;
+}
+
+- (SSSectionLayoutStyle)layoutStyleForSection:(NSInteger)section
+{
+    SSSectionLayoutStyle layoutStyle = self.layoutStyle;
+    if ([self.dataSource respondsToSelector:@selector(collectionView:layout:layoutStyle:)]) {
+        layoutStyle = [self.dataSource collectionView:self.collectionView layout:self layoutStyle:section];
+    }
+    return layoutStyle;
 }
 
 @end

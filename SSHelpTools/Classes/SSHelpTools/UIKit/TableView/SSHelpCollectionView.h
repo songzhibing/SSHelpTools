@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (__kindof SSHelpCollectionView *)creatWithFrame:(CGRect)frame;
 
+@property(nonatomic, weak, nullable) id <UICollectionViewDelegate> viewDelegate;
+
 @property(nonatomic, strong) NSMutableArray <SSCollectionViewSectionModel *> *data;
 
 // 设置拖放策略
