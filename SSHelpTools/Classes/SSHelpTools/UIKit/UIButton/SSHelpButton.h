@@ -28,9 +28,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) UIColor *normalTitleColor;
 
-@property(nonatomic, strong) UIImage *normalImage;
+@property(nonatomic, copy  ) NSString *selectedTitle;
 
-@property(nonatomic, strong) UIImage *highlightedImage;
+@property(nonatomic, strong) UIColor *selectedTitleColor;
+
+@property(nonatomic, strong) UIImage *normalImage;
 
 @property(nonatomic, strong) UIImage *selectedImage;
 
@@ -38,11 +40,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) CGRect contentRect;
 
-@property(nonatomic, assign) CGRect contentImageRect;
+@property(nonatomic, assign) CGRect imageRect;
 
-@property(nonatomic, assign) CGRect titleContentRect;
+@property(nonatomic, assign) CGRect titleRect;
 
-/// 调整响应区域大小，负值扩大，正值缩小
 @property(nonatomic, assign) UIEdgeInsets outsideEdge;
 
 @property(nonatomic, strong) NSArray <NSDictionary *> *_Nullable childButtons;

@@ -115,6 +115,23 @@ NSNotificationName const SSTabBarAppearanceDidChangeNotification = @"ss.tabbar.a
     });
 }
 
+- (CGFloat)statusBarHeight
+{
+    static CGFloat statusBarHeight;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        @try {
+            NSSet *set = [UIApplication sharedApplication].connectedScenes;
+            UIWindowScene *windowScene = [set anyObject];
+            UIStatusBarManager *statusBarManager = windowScene.statusBarManager;
+            statusBarHeight = statusBarManager.statusBarFrame.size.height;
+        } @catch (NSException *exception) {
+        } @finally {
+        }
+    });
+    return statusBarHeight;
+}
+
 - (CGFloat)homeIndicatorHeight
 {
     if (self.window) {

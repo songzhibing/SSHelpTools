@@ -14,12 +14,6 @@
 
 @implementation SSHelpButton
 
-@synthesize normalTitle = _normalTitle;
-@synthesize normalTitleColor = _normalTitleColor;
-@synthesize normalImage = _normalImage;
-@synthesize highlightedImage = _highlightedImage;
-@synthesize selectedImage = _selectedImage;
-
 - (void)dealloc
 {
     //SSLifeCycleLog(@"%@ dealloc ... ",self);
@@ -34,7 +28,7 @@
         case SSButtonStyleBack:
         {
             _button.normalImage = [NSBundle ss_toolsBundleImage:@"SSNav_Back_Dark12x24"];
-            _button.contentImageRect = CGRectMake(8, (44-24)/2.0f, 12, 24);
+            _button.imageRect = CGRectMake(8, (44-24)/2.0f, 12, 24);
         }
             break;
         case SSButtonStyleLocation:
@@ -46,13 +40,13 @@
         case SSButtonStyleRightMore:
         {
             _button.normalImage = [NSBundle ss_toolsBundleImage:@"SSNav_Menu_More_Dark_Small43x28"];
-            _button.contentImageRect = CGRectMake(44-43, (44-28)/2.0f, 43, 28);
+            _button.imageRect = CGRectMake(44-43, (44-28)/2.0f, 43, 28);
         }
             break;
         case SSButtonStyleRightExit:
         {
             _button.normalImage = [NSBundle ss_toolsBundleImage:@"SSNav_Menu_Exit_Dark_Small43x28"];
-            _button.contentImageRect = CGRectMake(0, (44-28)/2.0f, 43, 28);
+            _button.imageRect = CGRectMake(0, (44-28)/2.0f, 43, 28);
         }
             break;
         default:
@@ -61,7 +55,7 @@
     return _button;
 }
 
-+ (instancetype)buttonWithModel:(SSHelpButtonModel*)model
++ (instancetype)buttonWithModel:(SSHelpButtonModel *)model
 {
     SSHelpButton *_button = [SSHelpButton buttonWithStyle:model.style];
     _button.identifier = model.identifier;
@@ -93,7 +87,6 @@
 
 - (void)setNormalTitle:(NSString *)normalTtile
 {
-    _normalTitle = normalTtile;
     [self setTitle:normalTtile forState:UIControlStateNormal];
 }
 
@@ -104,7 +97,6 @@
 
 - (void)setNormalTitleColor:(UIColor *)normalTitleColor
 {
-    _normalTitleColor = normalTitleColor;
     [self setTitleColor:normalTitleColor forState:UIControlStateNormal];
 }
 
@@ -115,7 +107,6 @@
 
 - (void)setNormalImage:(UIImage *)normalImage
 {
-    _normalImage = normalImage;
     [self setImage:normalImage forState:UIControlStateNormal];
 }
 
@@ -124,20 +115,28 @@
     return [self imageForState:UIControlStateNormal];
 }
 
-- (void)setHighlightedImage:(UIImage *)highlightedImage
+- (void)setSelectedTitle:(NSString *)selectedTitle
 {
-    _highlightedImage = highlightedImage;
-    [self setImage:highlightedImage forState:UIControlStateHighlighted];
+    [self setTitle:selectedTitle forState:UIControlStateSelected];
 }
 
-- (UIImage *)highlightedImage
+- (NSString *)selectedTitle
 {
-    return [self imageForState:UIControlStateHighlighted];
+    return [self titleForState:UIControlStateSelected];
+}
+
+- (void)setSelectedTitleColor:(UIColor *)selectedTitleColor
+{
+    [self setTitleColor:selectedTitleColor forState:UIControlStateSelected];
+}
+
+- (UIColor *)selectedTitleColor
+{
+    return [self  titleColorForState:UIControlStateSelected];
 }
 
 - (void)setSelectedImage:(UIImage *)selectedImage
 {
-    _selectedImage = selectedImage;
     [self setImage:selectedImage forState:UIControlStateSelected];
 }
 
@@ -175,18 +174,18 @@
 
 - (CGRect)titleRectForContentRect:(CGRect)contentRect
 {
-    if (CGRectIsEmpty(_titleContentRect)){
+    if (CGRectIsEmpty(_titleRect)){
         return contentRect;
     }
-    return _titleContentRect;
+    return _titleRect;
 }
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect
 {
-    if (CGRectIsEmpty(_contentImageRect)){
+    if (CGRectIsEmpty(_imageRect)){
         return contentRect;
     }
-    return _contentImageRect;
+    return _imageRect;
 }
 
 #pragma mark - Action

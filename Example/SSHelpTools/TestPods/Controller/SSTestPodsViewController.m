@@ -32,8 +32,11 @@
     [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.left.bottom.right.mas_equalTo(0);
     }];
-    
+    CGFloat sh = _kStatusBarHeight;
+    SSLog(@"%f",sh);
     [self loadTestData];
+    sh = _kStatusBarHeight;
+    SSLog(@"%f",sh);
 }
 
 #pragma mark -

@@ -34,6 +34,13 @@
     configuration.allowsInlineMediaPlayback = YES; // 允许在线播放
     configuration.allowsAirPlayForMediaPlayback = YES; //允许视频播放
     configuration.userContentController = [[WKUserContentController alloc] init];
+
+    @try {
+        //跨域问题
+        [configuration setValue:@YES forKey:@"allowUniversalAccessFromFileURLs"];
+    } @catch (NSException *exception) {
+    } @finally {
+    }
     
     BOOL injectPageshowJs = YES;
     BOOL injectWebkitUserSelectJs = YES;
@@ -269,7 +276,6 @@
     [self registerJsHandlerImpClass:[SSHelpWebTestBridgeModule class]];
     _moduleImpInstances = [NSMutableArray arrayWithCapacity:_moduleImpClasses.count];
     [_moduleImpClasses enumerateObjectsUsingBlock:^(NSString * _Nonnull className, NSUInteger idx, BOOL * _Nonnull stop) {
-        @Tstrongify(self);
         Class jsModuleClass = NSClassFromString(className);
         __kindof SSHelpWebBaseModule *jsModuleObj = [[jsModuleClass alloc] init];
         jsModuleObj.webView = self_weak_;
@@ -280,12 +286,11 @@
             //持有对象，防止提前释放，视图销毁时在释放
             [self_weak_.moduleImpInstances addObject:jsModuleObj];
         } else {
-            if (self.logEnable) {
+            if (self_weak_.logEnable) {
                 SSWebLog(@"%@ dosn't responds to selector 'moduleRegisterJsHandler'?",className);
             }
         }
     }];
-    
 }
 
 #pragma mark -

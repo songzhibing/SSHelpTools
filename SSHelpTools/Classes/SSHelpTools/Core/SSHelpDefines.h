@@ -86,7 +86,7 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 #define _kScreenHeight    (MAX([UIScreen mainScreen].bounds.size.width, \
                             [UIScreen mainScreen].bounds.size.height))
 
-#define _kStatusBarHeight (CGRectGetHeight([UIApplication sharedApplication].statusBarFrame))
+#define _kStatusBarHeight ([SSHelpToolsConfig sharedConfig].statusBarHeight)
 
 #define _kNavBarHeight    (44.f)
 

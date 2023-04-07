@@ -27,7 +27,7 @@ TODO: 代码逐渐完善中，欢迎提出问题.
   s.author           = { '宋直兵' => '569204317@qq.com' }
   s.source           = { :git => 'https://github.com/songzhibing/SSHelpTools.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-  s.ios.deployment_target = '11.0'
+  s.ios.deployment_target = '13.0'
   
   # SSHelpTools 常用工具库
   s.subspec 'SSHelpTools' do |tools|
