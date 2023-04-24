@@ -15,14 +15,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpCollectionView : UICollectionView
 
++ (instancetype)ss_new;
+
 + (__kindof SSHelpCollectionView *)creatWithFrame:(CGRect)frame;
 
 @property(nonatomic, weak, nullable) id <UICollectionViewDelegate> viewDelegate;
 
 @property(nonatomic, strong) NSMutableArray <SSCollectionViewSectionModel *> *data;
-
-// 设置拖放策略
-@property(nonatomic, strong, nullable) SSCollectionVieMoveRule *moveRule;
 
 @end
 

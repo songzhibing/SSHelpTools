@@ -145,6 +145,26 @@
     return [self imageForState:UIControlStateSelected];
 }
 
+- (void)setNormalBackImage:(UIImage *)normalBackImage
+{
+    [self setBackgroundImage:normalBackImage forState:UIControlStateNormal];
+}
+
+- (UIImage *)normalBackImage
+{
+    return [self backgroundImageForState:UIControlStateNormal];
+}
+
+- (void)setSelectedBackImage:(UIImage *)selectedBackImage
+{
+    [self setBackgroundImage:selectedBackImage forState:UIControlStateSelected];
+}
+
+- (UIImage *)selectedBackImage
+{
+    return [self backgroundImageForState:UIControlStateSelected];
+}
+
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event
 {
     CGRect bounds = CGRectMake(CGRectGetMinX(self.bounds) + _outsideEdge.left,

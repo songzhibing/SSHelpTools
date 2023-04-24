@@ -30,6 +30,8 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 
 @interface SSCollectionVieMoveRule : NSObject
 
++ (instancetype)ss_new;
+
 /// 是否支持移动、交换，默认NO
 @property(nonatomic, assign) BOOL canMove;
 
@@ -54,13 +56,15 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 
 @interface SSCollectionViewSectionModel : NSObject
 
-@property(nonatomic, strong) SSCollectionViewHeaderModel * _Nullable headerModel;
++ (instancetype)ss_new;
 
-@property(nonatomic, assign) NSInteger columnCount;
+@property(nonatomic, strong) SSCollectionViewHeaderModel * _Nullable headerModel;
 
 @property(nonatomic, strong) NSMutableArray <SSCollectionViewCellModel *> *cellModels;
 
 @property(nonatomic, strong) SSCollectionViewFooterModel * _Nullable footerModel;
+
+@property(nonatomic, assign) NSInteger columnCount;
 
 @property(nonatomic, assign) CGFloat minimumLineSpacing;
 
@@ -69,6 +73,8 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 @property(nonatomic, assign) SSSectionLayoutStyle layoutStyle;
 
 @property(nonatomic, assign) UIEdgeInsets sectionInset;
+
+@property(nonatomic, strong) void (^applyCallback) (UIView *backgroundView);
 
 @end
 
@@ -91,6 +97,8 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 
 @interface SSCollectionViewHeaderModel : SSCollectionReusableViewModel
 
++ (instancetype)ss_new;
+
 @property(nonatomic, assign) CGFloat headerHeight;
 
 @property(nonatomic, copy) NSString *headerIdentifier;
@@ -102,6 +110,8 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 //******************************************************************************
 
 @interface SSCollectionViewCellModel : SSCollectionReusableViewModel
+
++ (instancetype)ss_new;
 
 @property(nonatomic, copy  ) NSString *cellIdentifier;
 
@@ -122,6 +132,8 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 //******************************************************************************
 
 @interface SSCollectionViewFooterModel : SSCollectionReusableViewModel
+
++ (instancetype)ss_new;
 
 @property(nonatomic, assign) CGFloat footerHeight;
 

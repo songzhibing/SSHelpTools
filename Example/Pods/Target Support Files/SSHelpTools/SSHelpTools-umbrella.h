@@ -60,6 +60,7 @@
 #import "SSHelpCollectionViewHeader.h"
 #import "SSHelpCollectionViewLayout.h"
 #import "SSHelpCollectionViewModel.h"
+#import "SSHelpCollectionViewSection.h"
 #import "SSHelpButton.h"
 #import "SSHelpButtonModel.h"
 #import "SSHelpLabel.h"

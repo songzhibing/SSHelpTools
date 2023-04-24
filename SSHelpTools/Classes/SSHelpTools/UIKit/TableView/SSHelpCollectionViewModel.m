@@ -21,6 +21,12 @@
 
 @implementation SSCollectionVieMoveRule
 
++ (instancetype)ss_new
+{
+    SSCollectionVieMoveRule *model = [[SSCollectionVieMoveRule alloc] init];
+    return model;
+}
+
 - (void)dealloc
 {
     _endBlock = NULL;
@@ -42,6 +48,12 @@
 //******************************************************************************
 
 @implementation SSCollectionViewSectionModel
+
++ (instancetype)ss_new
+{
+    SSCollectionViewSectionModel *model = [[SSCollectionViewSectionModel alloc] init];
+    return model;
+}
 
 - (instancetype)init
 {
@@ -75,6 +87,12 @@
 
 @implementation SSCollectionViewHeaderModel
 
++ (instancetype)ss_new
+{
+    SSCollectionViewHeaderModel *model = [[SSCollectionViewHeaderModel alloc] init];
+    return model;
+}
+
 - (instancetype)init
 {
     self = [super init];
@@ -96,6 +114,12 @@
 //******************************************************************************
 
 @implementation SSCollectionViewCellModel
+
++ (instancetype)ss_new
+{
+    SSCollectionViewCellModel *model = [[SSCollectionViewCellModel alloc] init];
+    return model;
+}
 
 - (instancetype)init
 {
@@ -122,6 +146,12 @@
 //******************************************************************************
 
 @implementation SSCollectionViewFooterModel
+
++ (instancetype)ss_new
+{
+    SSCollectionViewFooterModel *model = [[SSCollectionViewFooterModel alloc] init];
+    return model;
+}
 
 - (instancetype)init
 {

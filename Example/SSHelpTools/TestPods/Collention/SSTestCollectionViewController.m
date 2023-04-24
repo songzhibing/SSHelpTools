@@ -17,7 +17,8 @@
 
 @implementation SSTestCollectionViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
@@ -58,8 +59,8 @@
 
         }
         
-//        section.headerModel = [[SSCollectionViewHeaderModel alloc] init];
-//        section.headerModel.headerHeight = 44;
+        section.headerModel = [[SSCollectionViewHeaderModel alloc] init];
+        section.headerModel.headerHeight = 44;
         
         section.footerModel = [[SSCollectionViewFooterModel alloc] init];
         //section.footerModel.footerHeight = 44;

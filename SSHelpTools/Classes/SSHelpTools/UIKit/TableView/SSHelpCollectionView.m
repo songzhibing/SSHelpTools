@@ -8,6 +8,7 @@
 #import "SSHelpCollectionView.h"
 #import "SSHelpCollectionViewLayout.h"
 #import "SSHelpDefines.h"
+#import "SSHelpCollectionViewModel.h"
 
 @interface SSHelpCollectionView ()<SSHelpCollectionViewLayoutDataSource,
 UICollectionViewDelegate,
@@ -19,9 +20,17 @@ UICollectionViewDropDelegate>
 
 @property(nonatomic, assign) BOOL debugLogEnable;
 
+// 设置拖放策略
+@property(nonatomic, strong, nullable) SSCollectionVieMoveRule *moveRule;
+
 @end
 
 @implementation SSHelpCollectionView
+
++ (instancetype)ss_new
+{
+    return [SSHelpCollectionView creatWithFrame:CGRectZero];
+}
 
 + (SSHelpCollectionView *)creatWithFrame:(CGRect)frame
 {
@@ -188,7 +197,7 @@ UICollectionViewDropDelegate>
 }
 
 /// The section layout style
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(SSHelpCollectionViewLayout*)layout layoutStyle:(NSInteger)section
+- (SSSectionLayoutStyle)collectionView:(UICollectionView *)collectionView layout:(SSHelpCollectionViewLayout*)layout layoutStyle:(NSInteger)section
 {
     if (section<_data.count) {
         SSCollectionViewSectionModel *sectionModel = _data[section];
@@ -198,6 +207,14 @@ UICollectionViewDropDelegate>
 }
 
 #pragma mark - UICollectionViewDataSource Method
+
+- (void)collectionView:(UICollectionView *)collectionView setionLayoutAttributes:(SSCollectionSectionLayoutAttributes *)attributes inSection:(NSInteger)section
+{
+    if (section<_data.count) {
+        SSCollectionViewSectionModel *sectionModel = _data[section];
+        attributes.applyCallback = sectionModel.applyCallback;
+    }
+}
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {

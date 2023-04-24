@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SSHelpCollectionViewSection.h"
+@class SSHelpCollectionViewLayout;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,8 +17,6 @@ typedef NS_ENUM(NSInteger, SSSectionLayoutStyle) {
     SSSectionLayoutStyleHorizontalFinite = 1,       //横向有限布局
     //SSSectionLayoutStyleHorizontalInfinitely = 2, //横向无限布局
 };
-
-@class SSHelpCollectionViewLayout;
 
 @protocol SSHelpCollectionViewLayoutDataSource<NSObject>
 
@@ -51,8 +51,11 @@ typedef NS_ENUM(NSInteger, SSSectionLayoutStyle) {
 /// Return per section footer view height.
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(SSHelpCollectionViewLayout*)layout referenceHeightForFooterInSection:(NSInteger)section;
 
-/// 返回Section区域布局方式，默认常规布局
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(SSHelpCollectionViewLayout*)layout layoutStyle:(NSInteger)section;
+/// Section区域布局方式
+- (SSSectionLayoutStyle)collectionView:(UICollectionView *)collectionView layout:(SSHelpCollectionViewLayout*)layout layoutStyle:(NSInteger)section;
+
+/// Section区域背景可自定义
+- (void)collectionView:(UICollectionView *)collectionView setionLayoutAttributes:(SSCollectionSectionLayoutAttributes *)attributes inSection:(NSInteger)section;
 
 @end
 

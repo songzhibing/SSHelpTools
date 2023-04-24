@@ -7,6 +7,7 @@
 
 #import "SSHelpCollectionViewLayout.h"
 #import "SSHelpDefines.h"
+#import "SSHelpCollectionViewSection.h"
 
 @interface SSHelpCollectionViewLayout()
 
@@ -15,6 +16,8 @@
 @property(nonatomic, strong) NSMutableArray <UICollectionViewLayoutAttributes *> *headerLayoutAttributes;
 
 @property(nonatomic, strong) NSMutableArray <UICollectionViewLayoutAttributes *> *footerLayoutAttributes;
+
+@property(nonatomic, strong) NSMutableArray <UICollectionViewLayoutAttributes *> *sectionLayoutAttributes;
 
 /// Per section heights.
 @property(nonatomic, strong) NSMutableArray<NSNumber *> *heightOfSections;
@@ -25,6 +28,15 @@
 @end
 
 @implementation SSHelpCollectionViewLayout
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self registerClass:[SSHelpCollectionViewSection class] forDecorationViewOfKind:_kSSHelpCollectionViewSection];
+    }
+    return self;
+}
 
 - (void)dealloc
 {
@@ -44,8 +56,9 @@
     _itemLayoutAttributes = [NSMutableArray array];
     _headerLayoutAttributes = [NSMutableArray array];
     _footerLayoutAttributes = [NSMutableArray array];
+    _sectionLayoutAttributes = [NSMutableArray array];
     _heightOfSections = [NSMutableArray array];
-    
+
     UICollectionView *collectionView = self.collectionView;
     NSInteger const numberOfSections = collectionView.numberOfSections;
     UIEdgeInsets const contentInset = collectionView.contentInset;
@@ -176,6 +189,17 @@
         footerLayoutAttribute.frame = CGRectMake(0.0, _contentHeight+maxOffsetValue, contentWidth, footerHeader);
         [_footerLayoutAttributes addObject:footerLayoutAttribute];
         
+        //获取属性
+        SSCollectionSectionLayoutAttributes *sectionAttribute = [SSCollectionSectionLayoutAttributes layoutAttributesForDecorationViewOfKind:_kSSHelpCollectionViewSection withIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
+        //设置frame
+        sectionAttribute.frame = CGRectMake(0, _contentHeight, contentWidth, maxOffsetValue + footerHeader);
+        //纵向坐标调整到底下
+        sectionAttribute.zIndex = -1;
+        if (self.dataSource && [self.dataSource respondsToSelector:@selector(collectionView:setionLayoutAttributes:inSection:)]) {
+            [self.dataSource collectionView:self.collectionView setionLayoutAttributes:sectionAttribute inSection:section];
+        }
+        [_sectionLayoutAttributes addObject:sectionAttribute];
+        
         /**
          Update UICollectionView content height.
          Section height contain from the top of the headerView to the bottom of the footerView.
@@ -216,6 +240,12 @@
         }
     }];
     
+    [_sectionLayoutAttributes enumerateObjectsUsingBlock:^(UICollectionViewLayoutAttributes *attribute, NSUInteger idx, BOOL *stop) {
+        if (attribute.frame.size.height && CGRectIntersectsRect(rect, attribute.frame)) {
+            [result addObject:attribute];
+        }
+    }];
+    
     // Header view hover.
     if (_sectionHeadersPinToVisibleBounds)
     {
@@ -247,10 +277,18 @@
 - (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath
 {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return _headerLayoutAttributes[indexPath.item];
+        return _headerLayoutAttributes[indexPath.section];
     }
     if ([elementKind isEqualToString:UICollectionElementKindSectionFooter]) {
-        return _footerLayoutAttributes[indexPath.item];
+        return _footerLayoutAttributes[indexPath.section];
+    }
+    return nil;
+}
+
+- (nullable UICollectionViewLayoutAttributes *)layoutAttributesForDecorationViewOfKind:(NSString*)elementKind atIndexPath:(NSIndexPath *)indexPath;
+{
+    if(indexPath.item<_sectionLayoutAttributes.count) {
+        return _sectionLayoutAttributes[indexPath.section];
     }
     return nil;
 }

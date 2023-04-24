@@ -36,6 +36,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) UIImage *selectedImage;
 
+@property(nonatomic, strong) UIImage *normalBackImage;
+
+@property(nonatomic, strong) UIImage *selectedBackImage;
+
 @property(nonatomic, assign) CGRect backgroundRect;
 
 @property(nonatomic, assign) CGRect contentRect;

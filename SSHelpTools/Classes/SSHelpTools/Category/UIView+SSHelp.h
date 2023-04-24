@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign, readonly ) CGFloat ss_frameRight;
 
+@property(nonatomic, assign, readwrite ) CGFloat ss_cornerRadius;
+
 @end
 
 NS_ASSUME_NONNULL_END
