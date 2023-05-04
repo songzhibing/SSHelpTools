@@ -8,6 +8,7 @@
 #import "SSTestCollectionViewController.h"
 #import "SSTestPodsModel.h"
 #import "SSTestPodsCell.h"
+#import <SSHelpTools/SSHelpCycleCollectionView.h>
 
 @interface SSTestCollectionViewController ()
 
@@ -22,19 +23,24 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.tableView = [SSHelpCollectionView creatWithFrame:self.contentView.bounds];
-    //self.tableView.contentInset = UIEdgeInsetsMake(8, 8, 8, 8);
-    [self.contentView addSubview:self.tableView];
-    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.bottom.right.mas_equalTo(0);
-    }];
+//    self.tableView = [SSHelpCollectionView creatWithFrame:self.contentView.bounds];
+//    //self.tableView.contentInset = UIEdgeInsetsMake(8, 8, 8, 8);
+//    [self.contentView addSubview:self.tableView];
+//    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//        make.top.left.bottom.right.mas_equalTo(0);
+//    }];
+//
+////    SSCollectionVieMoveRule *dragDrop = [[SSCollectionVieMoveRule alloc] init];
+////    dragDrop.canMove = YES;
+////    dragDrop.canMoveTransSectionArea = YES;
+////    self.tableView.moveRule = dragDrop;
+//
+//    [self loadTestData];
     
-//    SSCollectionVieMoveRule *dragDrop = [[SSCollectionVieMoveRule alloc] init];
-//    dragDrop.canMove = YES;
-//    dragDrop.canMoveTransSectionArea = YES;
-//    self.tableView.moveRule = dragDrop;
-    
-    [self loadTestData];
+    SSHelpCycleCollectionView *View = [[SSHelpCycleCollectionView alloc] initWithFrame:CGRectMake(20, 100, self.view.ss_width-40, 100)];
+    View.imagePaths = @[@"https://www.bing.com/th?id=OHR.AdelieWPD_ZH-CN8434233391_1920x1080.jpg"];
+    View.backgroundColor = _kRandomColor;
+    [self.view addSubview:View];
 }
 
 #pragma mark -

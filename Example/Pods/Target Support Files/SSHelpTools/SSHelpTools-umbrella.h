@@ -49,6 +49,8 @@
 #import "SSHelpLocationRequest.h"
 #import "SSHelpTimer.h"
 #import "SSHelpTools.h"
+#import "SSHelpCycleCollectionView.h"
+#import "SSHelpCycleCollectionViewCell.h"
 #import "SSHelpNavigationBar.h"
 #import "SSHelpNavigationBarModel.h"
 #import "SSHelpImagePickerController.h"
