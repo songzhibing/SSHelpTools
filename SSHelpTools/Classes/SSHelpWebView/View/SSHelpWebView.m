@@ -105,18 +105,14 @@
 
 + (instancetype)defauleWebView
 {
-    return  [SSHelpWebView defauleWebViewWithFrame:[UIScreen mainScreen].bounds configuration:nil];
+    return [[self class] defauleWebViewWithFrame:UIScreen.mainScreen.bounds configuration:nil];
 }
 
 + (instancetype)defauleWebViewWithFrame:(CGRect)frame configuration:(SSWebViewConfigBlock)block
 {
     __block WKWebViewConfiguration *configuration = [SSHelpWebView defaultConfiguration];
     _kSafeBlock(block,configuration);
-    SSHelpWebView *webView = [[SSHelpWebView alloc] initWithFrame:frame configuration:configuration];
-#ifdef DEBUG
-    webView.supportLongPressGestureRecognizer = YES;
-    webView.logEnable = YES;
-#endif
+    __kindof SSHelpWebView *webView = [[[self class] alloc] initWithFrame:frame configuration:configuration];
     return webView;
 }
 
