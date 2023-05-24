@@ -8,10 +8,14 @@
 #import "SSHelpViewController.h"
 #import "UIView+SSHelp.h"
 #import "SSHelpDefines.h"
+#import "SSHelpLabel.h"
 
 @interface SSHelpViewController ()
 
+@property(nonatomic, strong, nullable) SSHelpLabel *debugBackView;
+
 @end
+
 
 @implementation SSHelpViewController
 
@@ -24,74 +28,38 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = SSHELPTOOLSCONFIG.backgroundColor;
-    _viewSafeAreaInsets = UIEdgeInsetsZero;
-}
-
-- (void)loadViewIfNeeded
-{
-    [super loadViewIfNeeded];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
-- (void)viewLayoutMarginsDidChange
-{
-    [super viewLayoutMarginsDidChange];
+    
+    #ifdef DEBUG
+    self.debugBackView.alpha = 0.5f;
+    #endif
 }
 
 - (void)viewSafeAreaInsetsDidChange
 {
     [super viewSafeAreaInsetsDidChange];
-    [self adjustSubviewsDisplay];
+    [self adjustUI];
 }
 
-- (void)viewWillLayoutSubviews
+- (BOOL)shouldAutorotate
 {
-    [super viewWillLayoutSubviews];
+    return YES;
 }
 
-- (void)viewDidLayoutSubviews
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
-    [super viewDidLayoutSubviews];
+    return UIInterfaceOrientationMaskAll;
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
+    return UIInterfaceOrientationPortrait;
 }
 
 #pragma mark -
 #pragma mark - Private Method
 
-- (void)tryGoBack
-{
-    if (self.presentingViewController) {
-        [self dismissViewControllerAnimated:YES completion:nil];
-    } else {
-        BOOL pop = self.navigationController &&
-        self.navigationController.viewControllers.count>=2 &&
-        self.navigationController.topViewController == self;
-        if (pop) {
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-    }
-}
-
 /// 调整子视图位置
-- (void)adjustSubviewsDisplay
+- (void)adjustUI
 {
     CGFloat statusBarHeight     = 0;
     CGRect  navigationBarFrame  = CGRectZero;
@@ -128,27 +96,33 @@
                                      self.view.ss_width-(safeAreaInsets.left+safeAreaInsets.right),
                                      self.view.ss_height-(safeAreaInsets.top+safeAreaInsets.bottom));
     // 重新赋值
-    _viewSafeAreaInsets = safeAreaInsets;
-    if (_contentView) {
-        _contentView.frame = contentFrame;
+    if (_debugBackView) {
+        _debugBackView.frame = contentFrame;
+    }
+    if (_containerView) {
+        _containerView.frame = contentFrame;
+    }
+    if (_collectionView) {
+        _collectionView.frame = contentFrame;
     }
 }
 
-#pragma mark - Device Orientation
+#pragma mark -
+#pragma mark - Public Method
 
-- (BOOL)shouldAutorotate
+/// 返回
+- (void)tryGoBack
 {
-    return YES;
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationMaskAll;
-}
-
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
-{
-    return UIInterfaceOrientationPortrait; 
+    if (self.presentingViewController) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        BOOL pop = self.navigationController &&
+        self.navigationController.viewControllers.count>=2 &&
+        self.navigationController.topViewController == self;
+        if (pop) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
 }
 
 /// 设置屏幕方向
@@ -174,23 +148,8 @@
      */
 }
 
-#pragma mark - CustomNavigationBar
-
-- (SSHelpNavigationBar *)customNavigationBar
-{
-    if (!_customNavigationBar) {
-        CGRect rect = CGRectMake(0, 0, self.view.ss_width, _kStatusBarHeight+_kNavBarHeight);
-        _customNavigationBar = [[SSHelpNavigationBar alloc] initWithFrame:rect style:[self customNavigationBarStyle]];
-        _customNavigationBar.delegate = self;
-        [self.view addSubview:_customNavigationBar];
-    }
-    return _customNavigationBar;
-}
-
-- (SSHelpNavigationBarStyle)customNavigationBarStyle
-{
-    return SSNavigationBarWithLeftBack;
-}
+#pragma mark -
+#pragma mark - SSHelpNavigationBarDelegate Method
 
 - (void)navigationBar:(SSHelpNavigationBar *)navigationBar didLeftButton:(SSHelpButton *)button
 {
@@ -208,18 +167,52 @@
     }
 }
 
-#pragma mark - ContentView
+#pragma mark -
+#pragma mark - Lazy Loading Method
 
-- (SSHelpView *)contentView
+/// 自定义导航栏
+- (SSHelpNavigationBar *)customNavigationBar
 {
-    if (!_contentView) {
-        CGFloat navbarHeight = _kNavBarHeight+_kStatusBarHeight;
-        CGRect rect = CGRectMake(0, navbarHeight, self.view.ss_width, self.view.ss_height-navbarHeight);
-        _contentView = [[SSHelpView alloc] initWithFrame:rect];
-        _contentView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0];
-        [self.view addSubview:_contentView];
+    if (!_customNavigationBar) {
+        CGRect rect = CGRectMake(0, 0, self.view.ss_width, _kStatusBarHeight+_kNavBarHeight);
+        _customNavigationBar = [[SSHelpNavigationBar alloc] initWithFrame:rect style:SSNavigationBarWithLeftBack];
+        _customNavigationBar.delegate = self;
+        [self.view addSubview:_customNavigationBar];
     }
-    return _contentView;
+    return _customNavigationBar;
+}
+
+- (SSHelpCollectionView *)collectionView
+{
+    if (!_collectionView) {
+        _collectionView = [SSHelpCollectionView creatWithFrame:self.view.bounds];
+        [self.view addSubview:_collectionView];
+    }
+    return _collectionView;
+}
+
+- (SSHelpView *)containerView
+{
+    if (!_containerView) {
+        _containerView = [[SSHelpView alloc] initWithFrame:self.view.bounds];
+        [self.view addSubview:_containerView];
+    }
+    return _containerView;
+}
+
+- (SSHelpLabel *)debugBackView
+{
+    if (!_debugBackView) {
+        _debugBackView = [[SSHelpLabel alloc] initWithFrame:self.view.bounds];
+        _debugBackView.backgroundColor = [UIColor.orangeColor colorWithAlphaComponent:0.5f];
+        _debugBackView.layer.borderWidth = 2;
+        _debugBackView.layer.borderColor = [UIColor.greenColor CGColor];
+        _debugBackView.numberOfLines = 0;
+        _debugBackView.textAlignment = NSTextAlignmentCenter;
+        _debugBackView.text = [NSString stringWithFormat:@"%@",self];
+        [self.view addSubview:_debugBackView];
+    }
+    return _debugBackView;
 }
 
 /*

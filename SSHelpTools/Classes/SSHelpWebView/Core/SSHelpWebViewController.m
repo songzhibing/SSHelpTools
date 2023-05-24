@@ -42,24 +42,26 @@
     }
 }
 
-- (void)adjustSubviewsDisplay
+- (void)viewSafeAreaInsetsDidChange
 {
-    [super adjustSubviewsDisplay];
-    [self.webView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(self.viewSafeAreaInsets.top, self.viewSafeAreaInsets.left, 0, self.viewSafeAreaInsets.right));
-    }];
+    [super viewSafeAreaInsetsDidChange];
+    CGRect layoutFrame = self.view.safeAreaLayoutGuide.layoutFrame;
+    if (_webView && _webView.superview) {
+        [_webView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(layoutFrame.origin.y);
+            make.left.mas_offset(layoutFrame.origin.x);
+            make.size.mas_equalTo(layoutFrame.size);
+        }];
+    }
 }
+
 
 - (void)goBack
 {
     if ([self.webView canGoBack]) {
         [self.webView goBack];
     } else {
-        if (self.navigationController && self.navigationController.viewControllers.count > 1) {
-            [self.navigationController popViewControllerAnimated:YES];
-        } else {
-            [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-        }
+        [self tryGoBack];
     }
 }
 

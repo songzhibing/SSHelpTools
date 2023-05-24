@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SSHelpDefines.h"
 #import "SSHelpCollectionViewLayout.h"
 
 @class
@@ -82,8 +83,11 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 
 @interface SSCollectionReusableViewModel: NSObject
 
-/// 点击事件传递参数
+/// 点击事件传递，携带参数
 @property(nonatomic, copy, nullable) SSCollectionReusableViewOnClick onClick;
+
+/// 点击事件传递，不携带参数
+@property(nonatomic, copy) SSBlockVoid didSelect;
 
 /// 推荐存储字典数据
 @property(nonatomic, strong, nullable) __kindof NSDictionary *data;
@@ -126,6 +130,8 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 @property(nonatomic, strong) UIColor *cellBackgroundColor;
 
 @property(nonatomic, strong) NSIndexPath *cellIndexPath;
+
+@property(nonatomic, weak  ) id delegate;
 
 @end
 

@@ -57,10 +57,8 @@
 #import "SSHelpLabel.h"
 #import "SSHelpTextField.h"
 #import "SSHelpDropdownMenu.h"
-#import "SSHelpSlidePageView.h"
 #import "SSHelpView.h"
 #import "SSHelpNavigationController.h"
-#import "SSHelpTableViewController.h"
 #import "SSHelpViewController.h"
 
 #endif /* SSHelpTools_h */

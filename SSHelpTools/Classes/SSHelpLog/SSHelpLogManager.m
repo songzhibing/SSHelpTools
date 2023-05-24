@@ -115,8 +115,8 @@ static NSString *logCurrentTime(void)
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _logger = [[SSHelpLogManager alloc] init];
-        [_logger addXcodeLogger];
-        [_logger addFileLogger];
+        //[_logger addXcodeLogger];
+        //[_logger addFileLogger];
         #ifdef DEBUG
             DDLogDebug(@"日志路径:%@",_logger.fileLogger.logFileManager.logsDirectory);
             DDLogDebug(@"日志文件:%@",_logger.fileLogger.logFileManager.sortedLogFileNames);

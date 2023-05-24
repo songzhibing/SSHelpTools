@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)ss_new;
 
-+ (__kindof SSHelpCollectionView *)creatWithFrame:(CGRect)frame;
++ (instancetype)creatWithFrame:(CGRect)frame;
 
 @property(nonatomic, weak, nullable) id <UICollectionViewDelegate> viewDelegate;
 

@@ -29,13 +29,13 @@ UICollectionViewDropDelegate>
 
 + (instancetype)ss_new
 {
-    return [SSHelpCollectionView creatWithFrame:CGRectZero];
+    return [[self class] creatWithFrame:CGRectZero];
 }
 
-+ (SSHelpCollectionView *)creatWithFrame:(CGRect)frame
++ (instancetype)creatWithFrame:(CGRect)frame
 {
     SSHelpCollectionViewLayout *layout = [[SSHelpCollectionViewLayout alloc] init];
-    SSHelpCollectionView *collectionView = [[SSHelpCollectionView alloc] initWithFrame:frame collectionViewLayout:layout];
+    __kindof UICollectionView *collectionView = [[[self class] alloc] initWithFrame:frame collectionViewLayout:layout];
     layout.dataSource = collectionView;
     return collectionView;
 }
@@ -48,11 +48,10 @@ UICollectionViewDropDelegate>
         self.dataSource = self;
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
+        self.alwaysBounceVertical = YES;
         self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        if (@available(iOS 13.0, *)) {
-            self.automaticallyAdjustsScrollIndicatorInsets = NO;
-        }
-        self.backgroundColor = SSHELPTOOLSCONFIG.groupedBackgroundColor;
+        self.automaticallyAdjustsScrollIndicatorInsets = NO;
+        self.backgroundColor = UIColor.systemBackgroundColor;
 #ifdef DEBUG
         self.debugLogEnable = YES;
 #endif
@@ -305,10 +304,18 @@ UICollectionViewDropDelegate>
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    SSCollectionViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
-    if (model.onClick) {
-        __kindof UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-        model.onClick(collectionView, cell, indexPath, model.data);
+    if (indexPath.section < _data.count) {
+        if (indexPath.item < _data[indexPath.section].cellModels.count) {
+            SSLog(@"DidSelectedItem (%ld,%ld)",indexPath.section,indexPath.item);
+            SSCollectionViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
+            if (model.onClick) {
+                __kindof UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+                model.onClick(collectionView, cell, indexPath, model.data);
+            }
+            if (model.didSelect) {
+                model.didSelect();
+            }
+        }
     }
 }
 
