@@ -42,8 +42,7 @@
     section.footerModel = [[SSCollectionViewFooterModel alloc] init];
     section.footerModel.footerHeight = 10;
     [sectionModels addObject:section];
-    self.tableView.data = sectionModels;
-
+    self.collectionView.data = @[sectionModels].mutableCopy;
 }
 
 /*

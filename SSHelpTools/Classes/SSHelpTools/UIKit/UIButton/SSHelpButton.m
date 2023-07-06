@@ -84,6 +84,10 @@
     return _button;
 }
 
+- (void)setTextAlignment:(NSTextAlignment)textAlignment
+{
+    self.titleLabel.textAlignment = textAlignment;
+}
 
 - (void)setNormalTitle:(NSString *)normalTtile
 {

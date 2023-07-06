@@ -60,6 +60,7 @@
     self = [super init];
     if (self) {
         _columnCount = 1;
+        _cellModels = NSMutableArray.array;
         _sectionInset = UIEdgeInsetsZero;
         _layoutStyle = SSSectionLayoutStyleNormal;
     }

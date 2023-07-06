@@ -42,8 +42,8 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     tools.dependency 'UICKeyChainStore'
     tools.dependency 'MBProgressHUD'
     tools.dependency 'FMDB'
-    tools.dependency 'YYKit'
-    tools.dependency 'ReactiveObjC'
+    #tools.dependency 'YYKit'
+    #tools.dependency 'ReactiveObjC'
   end
   
   # SSHelpWebView 库

@@ -44,6 +44,7 @@ UICollectionViewDropDelegate>
 {
     self = [super initWithFrame:frame collectionViewLayout:layout];
     if (self) {
+        _data = NSMutableArray.array;
         self.delegate = self;
         self.dataSource = self;
         self.showsHorizontalScrollIndicator = NO;
@@ -51,7 +52,7 @@ UICollectionViewDropDelegate>
         self.alwaysBounceVertical = YES;
         self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         self.automaticallyAdjustsScrollIndicatorInsets = NO;
-        self.backgroundColor = UIColor.systemBackgroundColor;
+        self.backgroundColor = SSHELPTOOLSCONFIG.groupedBackgroundColor;
 #ifdef DEBUG
         self.debugLogEnable = YES;
 #endif
@@ -207,11 +208,11 @@ UICollectionViewDropDelegate>
 
 #pragma mark - UICollectionViewDataSource Method
 
-- (void)collectionView:(UICollectionView *)collectionView setionLayoutAttributes:(SSCollectionSectionLayoutAttributes *)attributes inSection:(NSInteger)section
+- (void)collectionView:(UICollectionView *)collectionView sectionLayoutAttributes:(SSCollectionSectionLayoutAttributes *)attributes inSection:(NSInteger)section
 {
     if (section<_data.count) {
         SSCollectionViewSectionModel *sectionModel = _data[section];
-        attributes.applyCallback = sectionModel.applyCallback;
+        attributes.applyCallback = sectionModel.applyLayoutCallback;
     }
 }
 
@@ -306,12 +307,14 @@ UICollectionViewDropDelegate>
 {
     if (indexPath.section < _data.count) {
         if (indexPath.item < _data[indexPath.section].cellModels.count) {
-            SSLog(@"DidSelectedItem (%ld,%ld)",indexPath.section,indexPath.item);
+            //SSLog(@"DidSelectedItem (%ld,%ld)",indexPath.section,indexPath.item);
+            
             SSCollectionViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
             if (model.onClick) {
                 __kindof UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
                 model.onClick(collectionView, cell, indexPath, model.data);
             }
+            
             if (model.didSelect) {
                 model.didSelect();
             }

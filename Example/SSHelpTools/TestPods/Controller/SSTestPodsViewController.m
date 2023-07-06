@@ -15,8 +15,6 @@
 
 @interface SSTestPodsViewController ()
 
-@property(nonatomic, strong) SSHelpCollectionView *tableView;
-
 @end
 
 
@@ -25,18 +23,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    self.tableView = [SSHelpCollectionView creatWithFrame:self.contentView.bounds];
-    self.tableView.contentInset = UIEdgeInsetsMake(8, 8, 8, 8);
-    [self.contentView addSubview:self.tableView];
-    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.bottom.right.mas_equalTo(0);
-    }];
-    CGFloat sh = _kStatusBarHeight;
-    SSLog(@"%f",sh);
+    self.collectionView.contentInset = UIEdgeInsetsMake(8, 8, 8, 8);
     [self loadTestData];
-    sh = _kStatusBarHeight;
-    SSLog(@"%f",sh);
 }
 
 #pragma mark -
@@ -131,8 +119,8 @@
         [section.cellModels addObject:cellModel];
     }];
 
-    self.tableView.data = @[section].mutableCopy;
-    [self.tableView reloadData];
+    self.collectionView.data = @[section].mutableCopy;
+    [self.collectionView reloadData];
 }
 
 /*

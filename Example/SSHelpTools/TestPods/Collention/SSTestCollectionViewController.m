@@ -12,8 +12,6 @@
 
 @interface SSTestCollectionViewController ()
 
-@property(nonatomic, strong) SSHelpCollectionView *tableView;
-
 @end
 
 @implementation SSTestCollectionViewController
@@ -21,26 +19,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+
+    [self loadTestData];
     
-//    self.tableView = [SSHelpCollectionView creatWithFrame:self.contentView.bounds];
-//    //self.tableView.contentInset = UIEdgeInsetsMake(8, 8, 8, 8);
-//    [self.contentView addSubview:self.tableView];
-//    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//        make.top.left.bottom.right.mas_equalTo(0);
-//    }];
-//
-////    SSCollectionVieMoveRule *dragDrop = [[SSCollectionVieMoveRule alloc] init];
-////    dragDrop.canMove = YES;
-////    dragDrop.canMoveTransSectionArea = YES;
-////    self.tableView.moveRule = dragDrop;
-//
-//    [self loadTestData];
-    
-    SSHelpCycleCollectionView *View = [[SSHelpCycleCollectionView alloc] initWithFrame:CGRectMake(20, 100, self.view.ss_width-40, 100)];
-    View.imagePaths = @[@"https://www.bing.com/th?id=OHR.AdelieWPD_ZH-CN8434233391_1920x1080.jpg"];
-    View.backgroundColor = _kRandomColor;
-    [self.view addSubview:View];
+//    SSHelpCycleCollectionView *View = [[SSHelpCycleCollectionView alloc] initWithFrame:CGRectMake(20, 100, self.view.ss_width-40, 100)];
+//    View.imagePaths = @[@"https://www.bing.com/th?id=OHR.AdelieWPD_ZH-CN8434233391_1920x1080.jpg"];
+//    View.backgroundColor = _kRandomColor;
+//    [self.view addSubview:View];
 }
 
 #pragma mark -
@@ -56,10 +41,13 @@
 //        section.minimumLineSpacing = 10;
         section.minimumInteritemSpacing =4;
         section.columnCount = 3;
+        section.applyLayoutCallback = ^(UIView * _Nonnull backgroundView) {
+            backgroundView.backgroundColor = _kRandomColor;
+        };
         
         if (sc%2==0) {
             section.layoutStyle = 1;
-            section.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
+            section.sectionInset = UIEdgeInsetsMake(0, 10, 10, 10);
         } else {
             section.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
 
@@ -88,8 +76,8 @@
     }
 
 
-    self.tableView.data = _testData;
-    [self.tableView reloadData];
+    self.collectionView.data = _testData;
+    [self.collectionView reloadData];
 }
 
 

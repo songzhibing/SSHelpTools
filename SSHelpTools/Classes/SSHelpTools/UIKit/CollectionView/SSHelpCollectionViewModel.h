@@ -23,8 +23,6 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 
 @interface SSHelpCollectionViewModel : NSObject
 
-@property(nonatomic, strong) NSMutableArray <SSCollectionViewSectionModel *> *sectionModels;
-
 @end
 
 //******************************************************************************
@@ -75,7 +73,8 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 
 @property(nonatomic, assign) UIEdgeInsets sectionInset;
 
-@property(nonatomic, strong) void (^applyCallback) (UIView *backgroundView);
+/// Section背景
+@property(nonatomic, strong) void (^applyLayoutCallback) (UIView *backgroundView);
 
 @end
 

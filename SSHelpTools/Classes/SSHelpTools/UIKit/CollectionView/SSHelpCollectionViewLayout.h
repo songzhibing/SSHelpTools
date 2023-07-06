@@ -55,7 +55,7 @@ typedef NS_ENUM(NSInteger, SSSectionLayoutStyle) {
 - (SSSectionLayoutStyle)collectionView:(UICollectionView *)collectionView layout:(SSHelpCollectionViewLayout*)layout layoutStyle:(NSInteger)section;
 
 /// Section区域背景可自定义
-- (void)collectionView:(UICollectionView *)collectionView setionLayoutAttributes:(SSCollectionSectionLayoutAttributes *)attributes inSection:(NSInteger)section;
+- (void)collectionView:(UICollectionView *)collectionView sectionLayoutAttributes:(SSCollectionSectionLayoutAttributes *)attributes inSection:(NSInteger)section;
 
 @end
 

@@ -6,6 +6,7 @@
 //
 
 #import "SSHelpCollectionViewSection.h"
+#import <Masonry/Masonry.h>
 
 NSString *const _kSSHelpCollectionViewSection = @"SSHelpCollectionViewSection";
 
@@ -38,6 +39,9 @@ NSString *const _kSSHelpCollectionViewSection = @"SSHelpCollectionViewSection";
             if (!self.backgroundView) {
                 self.backgroundView = [[UIView alloc] initWithFrame:self.bounds];
                 [self addSubview:self.backgroundView];
+                [self.backgroundView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.edges.mas_equalTo(UIEdgeInsetsZero);
+                }];
             }
             
             attributes.applyCallback(self.backgroundView);

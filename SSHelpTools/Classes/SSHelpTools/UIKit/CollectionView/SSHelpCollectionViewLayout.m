@@ -195,8 +195,8 @@
         sectionAttribute.frame = CGRectMake(0, _contentHeight, contentWidth, maxOffsetValue + footerHeader);
         //纵向坐标调整到底下
         sectionAttribute.zIndex = -1;
-        if (self.dataSource && [self.dataSource respondsToSelector:@selector(collectionView:setionLayoutAttributes:inSection:)]) {
-            [self.dataSource collectionView:self.collectionView setionLayoutAttributes:sectionAttribute inSection:section];
+        if (self.dataSource && [self.dataSource respondsToSelector:@selector(collectionView:sectionLayoutAttributes:inSection:)]) {
+            [self.dataSource collectionView:self.collectionView sectionLayoutAttributes:sectionAttribute inSection:section];
         }
         [_sectionLayoutAttributes addObject:sectionAttribute];
         

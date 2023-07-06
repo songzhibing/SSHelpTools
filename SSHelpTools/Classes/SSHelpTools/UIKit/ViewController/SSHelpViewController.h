@@ -25,6 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 自定义collectionView
 @property(nonatomic, strong, nullable) SSHelpCollectionView *collectionView;
 
+/// 调整自定义视图位置
+- (void)adjustUI;
+
 /// 设置屏幕方向
 - (void)resetDeviceOrientation:(UIDeviceOrientation)orientation;
 
