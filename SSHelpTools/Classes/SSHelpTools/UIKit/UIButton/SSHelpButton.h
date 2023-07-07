@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, copy  ) NSString *identifier;
 
+@property(nonatomic, strong) UIFont *textFont;
+
 @property(nonatomic, assign) NSTextAlignment textAlignment;
 
 @property(nonatomic, copy  ) NSString *normalTitle;

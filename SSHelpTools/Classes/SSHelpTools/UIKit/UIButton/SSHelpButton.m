@@ -84,6 +84,16 @@
     return _button;
 }
 
+- (void)setTextFont:(UIFont *)textFont
+{
+    self.titleLabel.font = textFont;
+}
+
+- (UIFont *)textFont
+{
+    return self.titleLabel.font;
+}
+
 - (void)setTextAlignment:(NSTextAlignment)textAlignment
 {
     self.titleLabel.textAlignment = textAlignment;
