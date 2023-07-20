@@ -7,7 +7,6 @@
 #import "SSHelpCollectionView.h"
 #import "SSHelpButton.h"
 #import "NSBundle+SSHelp.h"
-#import <ReactiveObjC/ReactiveObjC.h>
 
 @interface SSDropdownMenuItem ()
 
