@@ -36,7 +36,7 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     tools.resource_bundles = {
       'SSHelpTools'=> ['SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.bundle','SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.xcassets']
     }
-    tools.frameworks = 'UIKit','Foundation','CoreLocation','AVFoundation','PhotosUI','CoreTelephony','NetworkExtension','SystemConfiguration'
+    tools.frameworks = 'UIKit','Foundation','CoreLocation','AVFoundation','PhotosUI','CoreTelephony','NetworkExtension','SystemConfiguration','QuickLook','MobileCoreServices'
     tools.dependency 'Masonry'
     tools.dependency 'SDWebImage'
     tools.dependency 'UICKeyChainStore'

@@ -37,7 +37,9 @@
         "PhotosUI",
         "CoreTelephony",
         "NetworkExtension",
-        "SystemConfiguration"
+        "SystemConfiguration",
+        "QuickLook",
+        "MobileCoreServices"
       ],
       "dependencies": {
         "Masonry": [

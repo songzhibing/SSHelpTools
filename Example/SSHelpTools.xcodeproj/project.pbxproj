@@ -24,6 +24,8 @@
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		A45B791E3C908FDFFCDB32B5 /* Pods_SSHelpTools_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 152399225BA0BCFFC819B21D /* Pods_SSHelpTools_Example.framework */; };
 		C025E9B427C36412003F1DDD /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = C025E9B327C36412003F1DDD /* ExampleApp.html */; };
+		C06D1C302A6E20F60030A16E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C06D1C2F2A6E20F60030A16E /* MobileCoreServices.framework */; };
+		C06D30F32A692B520022D709 /* SSTestDocViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06D30F22A692B520022D709 /* SSTestDocViewController.m */; };
 		C0A3D35827FEB30500B52510 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A3D35727FEB30500B52510 /* AVFoundation.framework */; };
 		C0B2A95127BB7A22006D5799 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0B2A95027BB7A22006D5799 /* CoreTelephony.framework */; };
 		C0F8F67B291217D800E34EDB /* SSTestProgressHudViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0F8F65F291217D800E34EDB /* SSTestProgressHudViewController.m */; };
@@ -72,6 +74,9 @@
 		953DB6FF6F7EFF468C0AE0CC /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		BE79FBEC50B2DDB0AC0489E5 /* Pods-SSHelpTools_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SSHelpTools_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SSHelpTools_Tests/Pods-SSHelpTools_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C025E9B327C36412003F1DDD /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ExampleApp.html; sourceTree = "<group>"; };
+		C06D1C2F2A6E20F60030A16E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		C06D30F12A692B520022D709 /* SSTestDocViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSTestDocViewController.h; sourceTree = "<group>"; };
+		C06D30F22A692B520022D709 /* SSTestDocViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSTestDocViewController.m; sourceTree = "<group>"; };
 		C0A3D35727FEB30500B52510 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C0B2A95027BB7A22006D5799 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		C0F8F65E291217D800E34EDB /* SSTestProgressHudViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSTestProgressHudViewController.h; sourceTree = "<group>"; };
@@ -99,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C06D1C302A6E20F60030A16E /* MobileCoreServices.framework in Frameworks */,
 				C0A3D35827FEB30500B52510 /* AVFoundation.framework in Frameworks */,
 				C0B2A95127BB7A22006D5799 /* CoreTelephony.framework in Frameworks */,
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
@@ -146,6 +152,7 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C06D1C2F2A6E20F60030A16E /* MobileCoreServices.framework */,
 				C0A3D35727FEB30500B52510 /* AVFoundation.framework */,
 				C0B2A95027BB7A22006D5799 /* CoreTelephony.framework */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
@@ -213,9 +220,19 @@
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
 		};
+		C06D30F02A692B350022D709 /* Doc */ = {
+			isa = PBXGroup;
+			children = (
+				C06D30F12A692B520022D709 /* SSTestDocViewController.h */,
+				C06D30F22A692B520022D709 /* SSTestDocViewController.m */,
+			);
+			path = Doc;
+			sourceTree = "<group>";
+		};
 		C0F8F65C291217D800E34EDB /* TestPods */ = {
 			isa = PBXGroup;
 			children = (
+				C06D30F02A692B350022D709 /* Doc */,
 				C0F8F678291217D800E34EDB /* Collention */,
 				C0F8F66F291217D800E34EDB /* Controller */,
 				C0F8F663291217D800E34EDB /* HttpsServer */,
@@ -509,6 +526,7 @@
 				C0F8F67B291217D800E34EDB /* SSTestProgressHudViewController.m in Sources */,
 				C0F8F67C291217D800E34EDB /* SSTestNetworkViewController.m in Sources */,
 				C0F8F686291217D800E34EDB /* SSTestPodsModel.m in Sources */,
+				C06D30F32A692B520022D709 /* SSTestDocViewController.m in Sources */,
 				C0F8F688291217D800E34EDB /* SSTestCollectionViewController.m in Sources */,
 				6003F59E195388D20070C39A /* SSAppDelegate.m in Sources */,
 				C0F8F684291217D800E34EDB /* SSTestHttpsServerViewController.m in Sources */,

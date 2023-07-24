@@ -9,6 +9,7 @@
 #import "SSTestNetworkViewController.h"
 #import "SSTestProgressHudViewController.h"
 #import "SSTestCollectionViewController.h"
+#import "SSTestDocViewController.h"
 #import "SSTestPodsModel.h"
 #import "SSTestPodsCell.h"
 
@@ -100,6 +101,14 @@
         [self_weak_.navigationController pushViewController:vc animated:YES];
     };
     [_testData addObject:progressHUD];
+    
+    SSTestPodsModel *docModel = [[SSTestPodsModel alloc] init];
+    docModel.title = @"Document";
+    docModel.push = ^{
+        SSTestDocViewController *vc = [[SSTestDocViewController alloc] init];
+        [self_weak_.navigationController pushViewController:vc animated:YES];
+    };
+    [_testData addObject:docModel];
     
     
     
