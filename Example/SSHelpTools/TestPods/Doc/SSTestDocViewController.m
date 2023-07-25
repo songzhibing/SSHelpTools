@@ -35,12 +35,13 @@
     [btn setOnClick:^(SSHelpButton * _Nonnull sender) {
         SSHelpDocumentPickerViewController *vc = SSHelpDocumentPickerViewController.ss_new;
         vc.callback = ^(__kindof NSArray * _Nullable array) {
-            //SSLog(@"%@",array);
-            SSHelpQLPreviewController *preVC = SSHelpQLPreviewController.ss_new;
-            preVC.fileURL = array.firstObject;
-            [self_weak_ presentViewController:preVC animated:YES completion:nil];
+            if (array.firstObject) {
+                SSHelpQLPreviewController *preVC = SSHelpQLPreviewController.ss_new;
+                preVC.fileURL = array.firstObject;
+                [self_weak_ presentViewController:preVC animated:YES completion:nil];
+            }
         };
-        [self_weak_.navigationController presentViewController:vc animated:YES completion:nil];
+        [self_weak_ presentViewController:vc animated:YES completion:nil];
     }];
 }
 

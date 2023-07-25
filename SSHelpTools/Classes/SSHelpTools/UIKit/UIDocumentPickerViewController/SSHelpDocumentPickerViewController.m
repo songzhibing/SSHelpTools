@@ -12,6 +12,11 @@
 
 @interface SSHelpDocumentPickerViewController ()<UIDocumentPickerDelegate>
 
+/* Configure the behavior of adjustedContentInset.
+ Default is UIScrollViewContentInsetAdjustmentAutomatic.
+ */
+@property(nonatomic) UIScrollViewContentInsetAdjustmentBehavior contentInsetAdjustmentBehavior API_AVAILABLE(ios(11.0),tvos(11.0));
+
 @end
 
 @implementation SSHelpDocumentPickerViewController
@@ -29,13 +34,17 @@
         public.item：项目文件，例如 Keynote、Pages、Numbers 等。
         public.presentation：演示文稿文件，例如 Keynote、PowerPoint 等。
         public.spreadsheet：电子表格文件，例如 Pages、Numbers 等。
-     
-     
+
+
         UIDocumentPickerModeImport：导入模式，允许用户选择要导入的文档文件，并将其复制到应用程序的沙箱中。
         UIDocumentPickerModeExport：导出模式，允许用户选择要导出的文档文件，并将其从应用程序的沙箱中复制到其他位置。
         UIDocumentPickerModeMoveToTrash：移动到垃圾箱模式，允许用户选择要删除的文档文件，并将其移动到系统的垃圾箱中。
-
-     */
+    */
+    
+    /*
+        官方参考地址
+        https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/UTIRef/Articles/System-DeclaredUniformTypeIdentifiers.html#//apple_ref/doc/uid/TP40009259
+    */
     NSArray *types = @[
         @"public.data",
         @"public.image",
@@ -73,11 +82,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //调试发现，如果UICollectionView布局不设置成自动调整内边距，是UIScrollViewContentInsetAdjustmentNever时，会存在顶部重叠问题
+    self.contentInsetAdjustmentBehavior = UICollectionView.appearance.contentInsetAdjustmentBehavior;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [[UICollectionView appearance] setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentAutomatic];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -85,14 +97,10 @@
     [super viewDidAppear:animated];
 }
 
-- (void)viewLayoutMarginsDidChange
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewLayoutMarginsDidChange];
-}
-
-- (void)viewSafeAreaInsetsDidChange
-{
-    [super viewSafeAreaInsetsDidChange];
+    [super viewWillDisappear:animated];
+    [[UICollectionView appearance] setContentInsetAdjustmentBehavior:self.contentInsetAdjustmentBehavior];
 }
 
 #pragma mark -
@@ -115,6 +123,21 @@
             if (error) {
             }
             [obj stopAccessingSecurityScopedResource];
+        } else {
+            //提权失败，尝试直接复制文件到沙盒缓存目录里进行操作
+            NSString *toPath = [_kTempPath stringByAppendingPathComponent:obj.lastPathComponent];
+            NSURL *toURL = [NSURL fileURLWithPath:toPath];
+            if ([NSFileManager.defaultManager fileExistsAtPath:toPath]) {
+                [NSFileManager.defaultManager removeItemAtPath:toPath error:nil];
+            }
+            NSError *error = nil;
+            BOOL success = [NSFileManager.defaultManager copyItemAtURL:obj toURL:toURL error:&error];
+            if (error) {
+                SSLog(@"拷贝文件失败：%@",error);
+            }
+            if (success) {
+                [response addObject:toURL];
+            }
         }
     }];
     

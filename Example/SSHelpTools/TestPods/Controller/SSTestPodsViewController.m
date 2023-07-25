@@ -13,6 +13,7 @@
 #import "SSTestPodsModel.h"
 #import "SSTestPodsCell.h"
 
+#import <FLEX/FLEX.h>
 
 @interface SSTestPodsViewController ()
 
@@ -26,6 +27,15 @@
     [super viewDidLoad];
     self.collectionView.contentInset = UIEdgeInsetsMake(8, 8, 8, 8);
     [self loadTestData];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [[FLEXManager sharedManager] showExplorer];
+    });
 }
 
 #pragma mark -

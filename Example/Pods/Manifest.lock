@@ -26,6 +26,7 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
+  - FLEX (5.22.10)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -67,6 +68,7 @@ PODS:
 DEPENDENCIES:
   - CocoaHTTPServer
   - FBSnapshotTestCase
+  - FLEX
   - ReactiveObjC
   - SDWebImage
   - SSHelpTools (from `../`)
@@ -79,6 +81,7 @@ SPEC REPOS:
     - CocoaHTTPServer
     - CocoaLumberjack
     - FBSnapshotTestCase
+    - FLEX
     - FMDB
     - GCDWebServer
     - Masonry
@@ -99,6 +102,7 @@ SPEC CHECKSUMS:
   CocoaHTTPServer: 5624681fc3473d43b18202f635f9b3abb013b530
   CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  FLEX: f21ee4f498eed3f8a1eded66b21939fd3b7a22ce
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
@@ -110,6 +114,6 @@ SPEC CHECKSUMS:
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: 38da53cc9078f6de9b736f9b8ea7aa6f276352aa
+PODFILE CHECKSUM: 9031dbf2b7fc4132534e46ed86ca37cd751162a2
 
 COCOAPODS: 1.11.2

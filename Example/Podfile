@@ -10,6 +10,7 @@ target 'SSHelpTools_Example' do
   pod 'YYKit'
   pod 'CocoaHTTPServer'
   pod 'ReactiveObjC'
+  pod 'FLEX', :configurations => ['Debug'] #调试工具
   pod 'SSHelpTools', :path => '../'
 
   target 'SSHelpTools_Tests' do

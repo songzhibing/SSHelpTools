@@ -21,6 +21,11 @@
     return vc;
 }
 
+- (void)dealloc
+{
+    
+}
+
 #pragma mark -
 #pragma mark - QLPreviewControllerDataSource Method
 
