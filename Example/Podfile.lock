@@ -26,6 +26,10 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
+  - FLEX (5.22.10)
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
   - GCDWebServer (3.5.4):
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
@@ -47,6 +51,7 @@ PODS:
     - AFNetworking
     - ReactiveObjC
   - SSHelpTools/SSHelpTools (0.1.4):
+    - FMDB
     - Masonry
     - MBProgressHUD
     - SDWebImage
@@ -63,6 +68,7 @@ PODS:
 DEPENDENCIES:
   - CocoaHTTPServer
   - FBSnapshotTestCase
+  - FLEX
   - ReactiveObjC
   - SDWebImage
   - SSHelpTools (from `../`)
@@ -75,6 +81,8 @@ SPEC REPOS:
     - CocoaHTTPServer
     - CocoaLumberjack
     - FBSnapshotTestCase
+    - FLEX
+    - FMDB
     - GCDWebServer
     - Masonry
     - MBProgressHUD
@@ -89,21 +97,23 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CocoaHTTPServer: 5624681fc3473d43b18202f635f9b3abb013b530
   CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  FLEX: f21ee4f498eed3f8a1eded66b21939fd3b7a22ce
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
-  SSHelpTools: de150b4ae9a7ce3e37bb05ec66e480dc5f0b3989
+  SSHelpTools: 73513877bd4544e81064806a248aa4a88fdc04b8
   UICKeyChainStore: ba3bff2c762b12db1e516f395c837dd25298b05e
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: d7df947b33ac63ee8815a615a6f4ac344868807c
+PODFILE CHECKSUM: 9031dbf2b7fc4132534e46ed86ca37cd751162a2
 
 COCOAPODS: 1.11.2

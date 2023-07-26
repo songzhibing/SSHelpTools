@@ -9,13 +9,13 @@
 #import "SSTestNetworkViewController.h"
 #import "SSTestProgressHudViewController.h"
 #import "SSTestCollectionViewController.h"
+#import "SSTestDocViewController.h"
 #import "SSTestPodsModel.h"
 #import "SSTestPodsCell.h"
 
+#import <FLEX/FLEX.h>
 
 @interface SSTestPodsViewController ()
-
-@property(nonatomic, strong) SSHelpCollectionView *tableView;
 
 @end
 
@@ -25,15 +25,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    self.tableView = [SSHelpCollectionView creatWithFrame:self.contentView.bounds];
-    self.tableView.contentInset = UIEdgeInsetsMake(8, 8, 8, 8);
-    [self.contentView addSubview:self.tableView];
-    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.bottom.right.mas_equalTo(0);
-    }];
-    
+    self.collectionView.contentInset = UIEdgeInsetsMake(8, 8, 8, 8);
     [self loadTestData];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [[FLEXManager sharedManager] showExplorer];
+    });
 }
 
 #pragma mark -
@@ -92,6 +94,15 @@
     [_testData addObject:webSoku];
     
     
+    SSTestPodsModel *webBaidu = [[SSTestPodsModel alloc] init];
+    webBaidu.title = @"Web Baidu";
+    webBaidu.push = ^{
+        SSHelpWebViewController *vc = [[SSHelpWebViewController alloc] init];
+        vc.indexString = @"https://www.baidu.com";
+        [self_weak_.navigationController pushViewController:vc animated:YES];
+    };
+    [_testData addObject:webBaidu];
+    
     //
     SSTestPodsModel *progressHUD = [[SSTestPodsModel alloc] init];
     progressHUD.title = @"ProgressHUD";
@@ -100,6 +111,14 @@
         [self_weak_.navigationController pushViewController:vc animated:YES];
     };
     [_testData addObject:progressHUD];
+    
+    SSTestPodsModel *docModel = [[SSTestPodsModel alloc] init];
+    docModel.title = @"Document";
+    docModel.push = ^{
+        SSTestDocViewController *vc = [[SSTestDocViewController alloc] init];
+        [self_weak_.navigationController pushViewController:vc animated:YES];
+    };
+    [_testData addObject:docModel];
     
     
     
@@ -119,8 +138,8 @@
         [section.cellModels addObject:cellModel];
     }];
 
-    self.tableView.data = @[section].mutableCopy;
-    [self.tableView reloadData];
+    self.collectionView.data = @[section].mutableCopy;
+    [self.collectionView reloadData];
 }
 
 /*

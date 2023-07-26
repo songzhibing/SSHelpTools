@@ -85,7 +85,7 @@
         [dict setValue:_error forKey:@"error"];
     }
     
-    if (_data && [_data isKindOfClass:[NSDictionary class]]) {
+    if (_data && ([_data isKindOfClass:[NSDictionary class]] || [_data isKindOfClass:[NSArray class]])) {
         [dict setValue:_data forKey:@"data"];
     }
     

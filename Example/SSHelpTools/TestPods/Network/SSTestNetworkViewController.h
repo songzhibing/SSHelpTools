@@ -5,11 +5,11 @@
 //  Created by 宋直兵 on 2022/5/11.
 //
 
-#import <SSHelpTools/SSHelpTableViewController.h>
+#import <SSHelpTools/SSHelpViewController.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SSTestNetworkViewController : SSHelpTableViewController
+@interface SSTestNetworkViewController : SSHelpViewController
 
 @end
 

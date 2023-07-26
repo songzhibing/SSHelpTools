@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,7 +14,6 @@
 		6003F598195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F596195388D20070C39A /* InfoPlist.strings */; };
 		6003F59A195388D20070C39A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F599195388D20070C39A /* main.m */; };
 		6003F59E195388D20070C39A /* SSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F59D195388D20070C39A /* SSAppDelegate.m */; };
-		6003F5A7195388D20070C39A /* SSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5A6195388D20070C39A /* SSViewController.m */; };
 		6003F5A9195388D20070C39A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5A8195388D20070C39A /* Images.xcassets */; };
 		6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F5AF195388D20070C39A /* XCTest.framework */; };
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
@@ -25,7 +24,8 @@
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		A45B791E3C908FDFFCDB32B5 /* Pods_SSHelpTools_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 152399225BA0BCFFC819B21D /* Pods_SSHelpTools_Example.framework */; };
 		C025E9B427C36412003F1DDD /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = C025E9B327C36412003F1DDD /* ExampleApp.html */; };
-		C05A9D19277301BC00E26953 /* SSTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05A9D18277301BC00E26953 /* SSTestViewController.m */; };
+		C06D1C302A6E20F60030A16E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C06D1C2F2A6E20F60030A16E /* MobileCoreServices.framework */; };
+		C06D30F32A692B520022D709 /* SSTestDocViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06D30F22A692B520022D709 /* SSTestDocViewController.m */; };
 		C0A3D35827FEB30500B52510 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A3D35727FEB30500B52510 /* AVFoundation.framework */; };
 		C0B2A95127BB7A22006D5799 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0B2A95027BB7A22006D5799 /* CoreTelephony.framework */; };
 		C0F8F67B291217D800E34EDB /* SSTestProgressHudViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0F8F65F291217D800E34EDB /* SSTestProgressHudViewController.m */; };
@@ -50,7 +50,6 @@
 
 /* Begin PBXFileReference section */
 		152399225BA0BCFFC819B21D /* Pods_SSHelpTools_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SSHelpTools_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1DB2421006F9D94E00D486DA /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		2DE7380D07975F9679F39FBD /* SSHelpTools.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SSHelpTools.podspec; path = ../SSHelpTools.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4DAF1DD4FDE8AF002DC3008C /* Pods_SSHelpTools_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SSHelpTools_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58A195388D20070C39A /* SSHelpTools_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SSHelpTools_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,8 +62,6 @@
 		6003F59B195388D20070C39A /* SSHelpTools-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SSHelpTools-Prefix.pch"; sourceTree = "<group>"; };
 		6003F59C195388D20070C39A /* SSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSAppDelegate.h; sourceTree = "<group>"; };
 		6003F59D195388D20070C39A /* SSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSAppDelegate.m; sourceTree = "<group>"; };
-		6003F5A5195388D20070C39A /* SSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSViewController.h; sourceTree = "<group>"; };
-		6003F5A6195388D20070C39A /* SSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSViewController.m; sourceTree = "<group>"; };
 		6003F5A8195388D20070C39A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6003F5AE195388D20070C39A /* SSHelpTools_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SSHelpTools_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -77,8 +74,9 @@
 		953DB6FF6F7EFF468C0AE0CC /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		BE79FBEC50B2DDB0AC0489E5 /* Pods-SSHelpTools_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SSHelpTools_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SSHelpTools_Tests/Pods-SSHelpTools_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C025E9B327C36412003F1DDD /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ExampleApp.html; sourceTree = "<group>"; };
-		C05A9D17277301BC00E26953 /* SSTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSTestViewController.h; sourceTree = "<group>"; };
-		C05A9D18277301BC00E26953 /* SSTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSTestViewController.m; sourceTree = "<group>"; };
+		C06D1C2F2A6E20F60030A16E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		C06D30F12A692B520022D709 /* SSTestDocViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSTestDocViewController.h; sourceTree = "<group>"; };
+		C06D30F22A692B520022D709 /* SSTestDocViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSTestDocViewController.m; sourceTree = "<group>"; };
 		C0A3D35727FEB30500B52510 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C0B2A95027BB7A22006D5799 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		C0F8F65E291217D800E34EDB /* SSTestProgressHudViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSTestProgressHudViewController.h; sourceTree = "<group>"; };
@@ -106,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C06D1C302A6E20F60030A16E /* MobileCoreServices.framework in Frameworks */,
 				C0A3D35827FEB30500B52510 /* AVFoundation.framework in Frameworks */,
 				C0B2A95127BB7A22006D5799 /* CoreTelephony.framework in Frameworks */,
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
@@ -153,6 +152,7 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C06D1C2F2A6E20F60030A16E /* MobileCoreServices.framework */,
 				C0A3D35727FEB30500B52510 /* AVFoundation.framework */,
 				C0B2A95027BB7A22006D5799 /* CoreTelephony.framework */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
@@ -173,13 +173,9 @@
 				6003F59C195388D20070C39A /* SSAppDelegate.h */,
 				6003F59D195388D20070C39A /* SSAppDelegate.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
-				6003F5A5195388D20070C39A /* SSViewController.h */,
-				6003F5A6195388D20070C39A /* SSViewController.m */,
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
-				C05A9D17277301BC00E26953 /* SSTestViewController.h */,
-				C05A9D18277301BC00E26953 /* SSTestViewController.m */,
 			);
 			name = "Example for SSHelpTools";
 			path = SSHelpTools;
@@ -220,14 +216,23 @@
 			children = (
 				2DE7380D07975F9679F39FBD /* SSHelpTools.podspec */,
 				953DB6FF6F7EFF468C0AE0CC /* README.md */,
-				1DB2421006F9D94E00D486DA /* LICENSE */,
 			);
 			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
+		C06D30F02A692B350022D709 /* Doc */ = {
+			isa = PBXGroup;
+			children = (
+				C06D30F12A692B520022D709 /* SSTestDocViewController.h */,
+				C06D30F22A692B520022D709 /* SSTestDocViewController.m */,
+			);
+			path = Doc;
 			sourceTree = "<group>";
 		};
 		C0F8F65C291217D800E34EDB /* TestPods */ = {
 			isa = PBXGroup;
 			children = (
+				C06D30F02A692B350022D709 /* Doc */,
 				C0F8F678291217D800E34EDB /* Collention */,
 				C0F8F66F291217D800E34EDB /* Controller */,
 				C0F8F663291217D800E34EDB /* HttpsServer */,
@@ -382,16 +387,13 @@
 				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = "宋直兵";
 				TargetAttributes = {
-					6003F589195388D20070C39A = {
-						DevelopmentTeam = GPZQYKKX8G;
-					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
 				};
 			};
 			buildConfigurationList = 6003F585195388D10070C39A /* Build configuration list for PBXProject "SSHelpTools" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -439,37 +441,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SSHelpTools_Example/Pods-SSHelpTools_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
-				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
-				"${BUILT_PRODUCTS_DIR}/CocoaHTTPServer/CocoaHTTPServer.framework",
-				"${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework",
-				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
-				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
-				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
-				"${BUILT_PRODUCTS_DIR}/ReactiveObjC/ReactiveObjC.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/SSHelpTools/SSHelpTools.framework",
-				"${BUILT_PRODUCTS_DIR}/UICKeyChainStore/UICKeyChainStore.framework",
-				"${BUILT_PRODUCTS_DIR}/WebViewJavascriptBridge/WebViewJavascriptBridge.framework",
-				"${BUILT_PRODUCTS_DIR}/YYKit/YYKit.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SSHelpTools_Example/Pods-SSHelpTools_Example-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaHTTPServer.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaLumberjack.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveObjC.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSHelpTools.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UICKeyChainStore.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebViewJavascriptBridge.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYKit.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SSHelpTools_Example/Pods-SSHelpTools_Example-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -503,15 +480,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SSHelpTools_Tests/Pods-SSHelpTools_Tests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SSHelpTools_Tests/Pods-SSHelpTools_Tests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSnapshotTestCase.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SSHelpTools_Tests/Pods-SSHelpTools_Tests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -552,10 +526,9 @@
 				C0F8F67B291217D800E34EDB /* SSTestProgressHudViewController.m in Sources */,
 				C0F8F67C291217D800E34EDB /* SSTestNetworkViewController.m in Sources */,
 				C0F8F686291217D800E34EDB /* SSTestPodsModel.m in Sources */,
+				C06D30F32A692B520022D709 /* SSTestDocViewController.m in Sources */,
 				C0F8F688291217D800E34EDB /* SSTestCollectionViewController.m in Sources */,
 				6003F59E195388D20070C39A /* SSAppDelegate.m in Sources */,
-				6003F5A7195388D20070C39A /* SSViewController.m in Sources */,
-				C05A9D19277301BC00E26953 /* SSTestViewController.m in Sources */,
 				C0F8F684291217D800E34EDB /* SSTestHttpsServerViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);
@@ -654,7 +627,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -701,7 +674,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -718,8 +691,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SSHelpTools/SSHelpTools-Prefix.pch";
 				INFOPLIST_FILE = "SSHelpTools/SSHelpTools-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.songzhibing.sshelptools;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				WRAPPER_EXTENSION = app;
@@ -736,8 +710,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SSHelpTools/SSHelpTools-Prefix.pch";
 				INFOPLIST_FILE = "SSHelpTools/SSHelpTools-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.songzhibing.sshelptools;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				WRAPPER_EXTENSION = app;
@@ -749,6 +724,7 @@
 			baseConfigurationReference = BE79FBEC50B2DDB0AC0489E5 /* Pods-SSHelpTools_Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = GPZQYKKX8G;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -761,7 +737,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.songzhibing.sshelptools;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SSHelpTools_Example.app/SSHelpTools_Example";
@@ -774,6 +750,7 @@
 			baseConfigurationReference = D2AE72DAA1F4F1F4AA51B2FD /* Pods-SSHelpTools_Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = GPZQYKKX8G;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -782,7 +759,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tests/Tests-Prefix.pch";
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.songzhibing.sshelptools;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SSHelpTools_Example.app/SSHelpTools_Example";

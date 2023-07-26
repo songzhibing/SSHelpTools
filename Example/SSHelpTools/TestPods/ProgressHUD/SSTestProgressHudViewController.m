@@ -14,8 +14,6 @@
 
 @interface SSTestProgressHudViewController ()
 
-@property(nonatomic, strong) SSHelpCollectionView *tableView;
-
 @end
 
 @implementation SSTestProgressHudViewController
@@ -23,14 +21,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.tableView = [SSHelpCollectionView creatWithFrame:self.contentView.bounds];
-    self.tableView.contentInset = UIEdgeInsetsMake(8, 8, 8, 8);
-    [self.contentView addSubview:self.tableView];
-    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.bottom.right.mas_equalTo(0);
-    }];
-    
+    self.collectionView.contentInset = UIEdgeInsetsMake(8, 8, 8, 8);
     [self loadTestData];
 }
 
@@ -165,8 +156,8 @@
         [section.cellModels addObject:cellModel];
     }];
 
-    self.tableView.data = @[section].mutableCopy;
-    [self.tableView reloadData];
+    self.collectionView.data = @[section].mutableCopy;
+    [self.collectionView reloadData];
 }
 
 /*

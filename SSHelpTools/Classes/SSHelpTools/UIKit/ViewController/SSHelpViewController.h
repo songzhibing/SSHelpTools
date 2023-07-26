@@ -8,28 +8,25 @@
 
 #import <UIKit/UIKit.h>
 #import <Masonry/Masonry.h>
-
 #import "SSHelpDefines.h"
 #import "SSHelpNavigationBar.h"
+#import "SSHelpCollectionView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpViewController : UIViewController <SSHelpNavigationBarDelegate>
 
 /// 自定义导航栏
-@property(nonatomic, strong) SSHelpNavigationBar *customNavigationBar;
+@property(nonatomic, strong, nullable) SSHelpNavigationBar *customNavigationBar;
 
-/// 控制自定义导航栏默认样式
-- (SSHelpNavigationBarStyle)customNavigationBarStyle;
+/// 自定义view
+@property(nonatomic, strong, nullable) SSHelpView *containerView;
 
-/// 自定义内容视图
-@property(nonatomic, strong) SSHelpView *contentView;
+/// 自定义collectionView
+@property(nonatomic, strong, nullable) SSHelpCollectionView *collectionView;
 
-/// 内容视图安全间距
-@property(nonatomic, readonly) UIEdgeInsets viewSafeAreaInsets;
-
-/// 调整子视图位置
-- (void)adjustSubviewsDisplay NS_REQUIRES_SUPER;
+/// 调整自定义视图位置
+- (void)adjustUI;
 
 /// 设置屏幕方向
 - (void)resetDeviceOrientation:(UIDeviceOrientation)orientation;

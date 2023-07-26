@@ -9,9 +9,12 @@
 
 #import <Foundation/Foundation.h>
 #import <MBProgressHUD/MBProgressHUD.h>
-@class SSProgressHUD;
 
 NS_ASSUME_NONNULL_BEGIN
+
+@interface SSProgressHUD : MBProgressHUD
+@end
+
 
 @interface SSHelpProgressHUD : NSObject
 
@@ -32,7 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (SSProgressHUD *_Nullable)showActivityMessage:(NSString *)message toView:(UIView *)view;
 + (SSProgressHUD *_Nullable)showProgressBarToView:(UIView *)view;
 
-
 #pragma mark 在[UIApplication sharedApplication].delegate.window上显示hud
 
 + (void)showMessage:(NSString *)message;
@@ -47,12 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)hideHUDForView:(UIView *)view;
 + (void)hideHUD;
-
-@end
-
-
-
-@interface SSProgressHUD : MBProgressHUD
 
 @end
 

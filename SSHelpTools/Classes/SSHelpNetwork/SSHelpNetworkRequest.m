@@ -148,12 +148,13 @@
     BOOL isFinished = NO;
     [_lock lock];
     NSUInteger index = [_requestArray indexOfObject:request];
-    if (responseObject) {
-        [_responseArray replaceObjectAtIndex:index withObject:responseObject];
-    } else {
+    //有时成功responseObject等于0x00
+    if (error) {
         _anyRequestFailed = YES;
-        if (error) {
-            [_responseArray replaceObjectAtIndex:index withObject:error];
+        [_responseArray replaceObjectAtIndex:index withObject:error];
+    } else {
+        if (responseObject) {
+            [_responseArray replaceObjectAtIndex:index withObject:responseObject];
         }
     }
     _finishedCount++;
@@ -218,8 +219,19 @@
 - (BOOL)handleFinishedRequest:(SSHelpNetworkRequest *)request response:(nullable id)responseObject error:(NSError * _Nullable)error
 {
     BOOL isFinished = NO;
-    if (responseObject) {
-        [_responseArray replaceObjectAtIndex:_chainIndex withObject:responseObject];
+    //有时成功responseObject等于0x00
+    if (error) {
+        [_responseArray replaceObjectAtIndex:_chainIndex withObject:error];
+        if (_chainFinishedBlock) {
+            _chainFinishedBlock(_responseArray);
+        }
+        [self cleanCallbackBlocks];
+        isFinished = YES;
+    } else {
+        if (responseObject) {
+            //有可能等于 0x00
+            [_responseArray replaceObjectAtIndex:_chainIndex withObject:responseObject];
+        }
         if (_chainIndex < _nextBlockArray.count) {
             _runningRequest = [SSHelpNetworkRequest request];
             SSNetNextBlock nextBlock = _nextBlockArray[_chainIndex];
@@ -241,15 +253,6 @@
             [self cleanCallbackBlocks];
             isFinished = YES;
         }
-    } else {
-        if (error) {
-            [_responseArray replaceObjectAtIndex:_chainIndex withObject:error];
-        }
-        if (_chainFinishedBlock) {
-            _chainFinishedBlock(_responseArray);
-        }
-        [self cleanCallbackBlocks];
-        isFinished = YES;
     }
     _chainIndex++;
     return isFinished;

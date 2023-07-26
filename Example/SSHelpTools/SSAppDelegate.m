@@ -12,13 +12,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
-    [SSHelpLogHttpServer startServer];
-    
+    //[SSHelpLogHttpServer startServer];
     [SSHelpToolsConfig sharedConfig].enableLog = YES;
     [SSHelpToolsConfig sharedConfig].enableLifeCycleLog = YES;
 
-    // Override point for customization after application launch.
-    SSLogDebug(@"应用程序初始化完成。");
     return YES;
 }
 

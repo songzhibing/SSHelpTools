@@ -16,7 +16,7 @@
     "tag": "0.1.4"
   },
   "platforms": {
-    "ios": "11.0"
+    "ios": "13.0"
   },
   "subspecs": [
     {
@@ -37,7 +37,9 @@
         "PhotosUI",
         "CoreTelephony",
         "NetworkExtension",
-        "SystemConfiguration"
+        "SystemConfiguration",
+        "QuickLook",
+        "MobileCoreServices"
       ],
       "dependencies": {
         "Masonry": [
@@ -50,6 +52,9 @@
 
         ],
         "MBProgressHUD": [
+
+        ],
+        "FMDB": [
 
         ]
       }

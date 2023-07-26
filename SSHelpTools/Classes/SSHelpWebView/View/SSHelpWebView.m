@@ -6,7 +6,7 @@
 //
 
 #import "SSHelpWebView.h"
-#import "SSHelpWebTestJsBridgeModule.h"
+#import "SSHelpWebTestBridgeModule.h"
 #import <SSHelpTools/UIImage+SSHelp.h>
 #import <SSHelpTools/SSHelpPhotoManager.h>
 
@@ -14,7 +14,7 @@
 
 @property(nonatomic, strong) WKWebViewJavascriptBridge *bridge;
 
-@property(nonatomic, strong) NSMutableDictionary <NSString *, SSBridgeJsHandler> *messageHandlers;
+@property(nonatomic, strong) NSMutableDictionary <NSString *, SSBridgeHandler> *messageHandlers;
 
 @property(nonatomic, strong) NSMutableArray <NSString *> *moduleImpClasses;
 
@@ -34,14 +34,21 @@
     configuration.allowsInlineMediaPlayback = YES; // 允许在线播放
     configuration.allowsAirPlayForMediaPlayback = YES; //允许视频播放
     configuration.userContentController = [[WKUserContentController alloc] init];
+
+    @try {
+        //跨域问题
+        [configuration setValue:@YES forKey:@"allowUniversalAccessFromFileURLs"];
+    } @catch (NSException *exception) {
+    } @finally {
+    }
     
     BOOL injectPageshowJs = YES;
     BOOL injectWebkitUserSelectJs = YES;
     BOOL injectWebkitTouchCalloutJs = YES;
     
     if (injectWebkitTouchCalloutJs) {
-        WKUserScript *touchClloutScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitTouchCallout='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
-        [configuration.userContentController addUserScript:touchClloutScript];
+        WKUserScript *touchCalloutScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitTouchCallout='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
+        [configuration.userContentController addUserScript:touchCalloutScript];
     }
     
     if (injectWebkitUserSelectJs) {
@@ -52,7 +59,6 @@
         WKUserScript *reloadScript = [[WKUserScript alloc] initWithSource:@"window.addEventListener('pageshow', function(event){if(event.persisted || window.performance && window.performance.navigation.type == 2){location.reload();}});" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
         [configuration.userContentController addUserScript:reloadScript];
     }
-    
     //共享进程池,同一进程池中的webview才可以互相通讯
     static WKProcessPool *processPool;
     static dispatch_once_t poolOnceToken;
@@ -99,18 +105,14 @@
 
 + (instancetype)defauleWebView
 {
-    return  [SSHelpWebView defauleWebViewWithFrame:[UIScreen mainScreen].bounds configuration:nil];
+    return [[self class] defauleWebViewWithFrame:UIScreen.mainScreen.bounds configuration:nil];
 }
 
 + (instancetype)defauleWebViewWithFrame:(CGRect)frame configuration:(SSWebViewConfigBlock)block
 {
     __block WKWebViewConfiguration *configuration = [SSHelpWebView defaultConfiguration];
-    block?block(configuration):NULL;
-    SSHelpWebView *webView = [[SSHelpWebView alloc] initWithFrame:frame configuration:configuration];
-#ifdef DEBUG
-    webView.supportLongPressGestureRecognizer = YES;
-    webView.logEnable = YES;
-#endif
+    _kSafeBlock(block,configuration);
+    __kindof SSHelpWebView *webView = [[[self class] alloc] initWithFrame:frame configuration:configuration];
     return webView;
 }
 
@@ -211,7 +213,7 @@
 /// 注册"js handler"功能方法
 /// @param handlerName 方法名称
 /// @param handler 回调
-- (void)registerHandler:(NSString *)handlerName handler:(SSBridgeJsHandler)handler
+- (void)registerHandler:(NSString *)handlerName handler:(SSBridgeHandler)handler
 {
     if (handlerName && handler) {
         if (!_messageHandlers) {
@@ -236,9 +238,23 @@
     }
 }
 
+/// 回调js接口
+- (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(SSBridgeCallback)responseCallback;
+{
+    if (_bridge) {
+        [_bridge callHandler:handlerName data:data responseCallback:^(id responseData) {
+            if (responseCallback) {
+                responseCallback(responseData);
+            }
+        }];
+    }
+}
+
 - (void)setupJavescriptBridge
 {
-    if (_bridge) return;
+    if (_bridge) {
+        return;
+    }
     
     @Tweakify(self);
     
@@ -246,14 +262,14 @@
     [self.bridge setWebViewDelegate:self];
 
     //非模块化接口注册
-    [_messageHandlers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, SSBridgeJsHandler  _Nonnull callBack, BOOL * _Nonnull stop) {
+    [_messageHandlers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, SSBridgeHandler  _Nonnull callBack, BOOL * _Nonnull stop) {
         [self_weak_.bridge registerHandler:key handler:^(id data, WVJBResponseCallback responseCallback) {
             callBack(key,data,responseCallback);
         }];
     }];
     
     //模块化接口初始化
-    [self registerJsHandlerImpClass:[SSHelpWebTestJsBridgeModule class]];
+    [self registerJsHandlerImpClass:[SSHelpWebTestBridgeModule class]];
     _moduleImpInstances = [NSMutableArray arrayWithCapacity:_moduleImpClasses.count];
     [_moduleImpClasses enumerateObjectsUsingBlock:^(NSString * _Nonnull className, NSUInteger idx, BOOL * _Nonnull stop) {
         Class jsModuleClass = NSClassFromString(className);
@@ -266,7 +282,7 @@
             //持有对象，防止提前释放，视图销毁时在释放
             [self_weak_.moduleImpInstances addObject:jsModuleObj];
         } else {
-            if (self.logEnable) {
+            if (self_weak_.logEnable) {
                 SSWebLog(@"%@ dosn't responds to selector 'moduleRegisterJsHandler'?",className);
             }
         }
@@ -286,11 +302,12 @@
     [self presentViewController:alert animated:YES completion:NULL];
 }
 
-- (void)presentViewController:(UIViewController *)viewControllerToPresent animated: (BOOL)flag completion:(void (^ __nullable)(void))completion
+/// 弹出视图控制器
+- (void)presentViewController:(UIViewController *)alert animated: (BOOL)flag completion:(SSBlockVoid)completion;
 {
     if (self.ss_viewController) {
         dispatch_main_async_safe(^{
-            [self.ss_viewController presentViewController:viewControllerToPresent animated:flag completion:completion];
+            [self.ss_viewController presentViewController:alert animated:flag completion:completion];
         });
     }
 }
@@ -310,6 +327,7 @@
     } else {
         if (_longPressGesture) {
             [self removeGestureRecognizer:_longPressGesture];
+            _longPressGesture = nil;
         }
     }
 }
@@ -564,7 +582,6 @@
     return nil;
 }
 
-/// 弹框1
 - (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:message?:@"" preferredStyle:UIAlertControllerStyleAlert];
@@ -574,7 +591,6 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-// 弹框2
 - (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completionHandler
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:message?:@"" preferredStyle:UIAlertControllerStyleAlert];
@@ -588,7 +604,6 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-/// 输入弹框
 - (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString * _Nullable))completionHandler
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:prompt preferredStyle:UIAlertControllerStyleAlert];
@@ -619,61 +634,37 @@
 /// 决定是否允许或取消加载
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    WKNavigationActionPolicy _policy = WKNavigationActionPolicyAllow;
-
     NSURL *url = navigationAction.request.URL;
-    NSString *scheme = url.scheme.lowercaseString;
-
-    if (![scheme hasPrefix:@"http"] && //http https
-        ![scheme hasPrefix:@"about"] &&
-        ![scheme hasPrefix:@"file"]) {
-        // 对于跨域，需要手动跳转， 用系统浏览器（Safari）打开
-        _policy = WKNavigationActionPolicyCancel;
-        NSString *host = navigationAction.request.URL.absoluteString;
-        if ([host containsString:@"itunes.apple.com"] || [host containsString:@"itms-services"]) {
-            //看需不需要弹框，再选择 @"是否打开appstore？"
-        }
+    if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
+        //跳转别的应用如系统浏览器
         if ([[UIApplication sharedApplication] canOpenURL:url]) {
-            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:^(BOOL success) {
-                NSLog(@"status = %@",success?@"1":@"0");
-            }];
+            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
         }
+        decisionHandler(WKNavigationActionPolicyCancel);
     } else {
-        NSString *host = navigationAction.request.URL.absoluteString;
-        if ([host containsString:@"itunes.apple.com"] || [host containsString:@"itms-services"]) {
-            // 对于跳转App Store的，用系统浏览器（Safari）打开
-            _policy = WKNavigationActionPolicyCancel;
-            if ([[UIApplication sharedApplication] canOpenURL:url]) {
-                [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:^(BOOL success) {
-                    NSLog(@"status = %@",success?@"1":@"0");
-                }];
-            }
-        }
+        //应用的web内跳转
+        decisionHandler (WKNavigationActionPolicyAllow);
     }
-    if (_policy==WKNavigationActionPolicyCancel) {
-        if (self.logEnable) {
-            SSLog(@"加载拒绝:%@",url);
-        }
-    }
-    decisionHandler(_policy);
 }
 
 /// 得到响应后决定是否允许跳转
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 {
-    NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
-    if (response && [response isKindOfClass:[NSHTTPURLResponse class]]) {
-        NSDictionary *allHeaderFields = [response allHeaderFields];
-        NSURL *URL = [response URL];
-        if (allHeaderFields && URL) {
-            NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:allHeaderFields forURL:URL];
-            if (cookies && cookies.count>0) {
-                if (@available(iOS 11.0, *)) {
-                    //浏览器自动存储cookie, 这里就不用再处理了
+    /*
+        NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
+        if (response && [response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSDictionary *allHeaderFields = [response allHeaderFields];
+            NSURL *URL = [response URL];
+            if (allHeaderFields && URL) {
+                NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:allHeaderFields forURL:URL];
+                if (cookies && cookies.count>0) {
+                    if (@available(iOS 11.0, *)) {
+                        //浏览器自动存储cookie, 这里就不用再处理了
+                    }
                 }
             }
         }
-    }
+     */
     
     //允许跳转
     decisionHandler(WKNavigationResponsePolicyAllow);
@@ -720,18 +711,15 @@
 {
     if (self.logEnable) {
         [webView evaluateJavaScript:@"window.location.href" completionHandler:^(id _Nullable urlStr, NSError * _Nullable error) {
-            if (self.logEnable) {
-                SSLog(@"加载完成:%@",urlStr);
-            }
+            SSLog(@"加载完成:%@",urlStr);
+        }];
+        
+        //webView 高度自适应
+        [webView evaluateJavaScript:@"document.body.scrollHeight" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+            // 获取页面高度，并重置 webview 的 frame
+            SSLog(@"html.body的高度：%@", result);
         }];
     }
-    /*
-    //webView 高度自适应
-    [webView evaluateJavaScript:@"document.body.scrollHeight" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-        // 获取页面高度，并重置 webview 的 frame
-        GCLogDebug(@"html 的高度：%@", result);
-    }];
-     */
 }
 
 /// 失败

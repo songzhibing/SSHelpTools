@@ -4,12 +4,13 @@ source 'https://cdn.cocoapods.org/'
 
 use_frameworks!
 
-platform :ios, '11.0'
+platform :ios, '13.0'
 
 target 'SSHelpTools_Example' do
   pod 'YYKit'
   pod 'CocoaHTTPServer'
   pod 'ReactiveObjC'
+  pod 'FLEX', :configurations => ['Debug'] #调试工具
   pod 'SSHelpTools', :path => '../'
 
   target 'SSHelpTools_Tests' do
@@ -22,11 +23,26 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
+      
+#        config.build_settings["DEVELOPMENT_TEAM"] = "Z8H6NCX89E"
+    end
+    target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+        
+        config.build_settings['EXPANDED_CODE_SIGN_IDENTITY'] = ""
+        config.build_settings['CODE_SIGNING_REQUIRED'] = "NO"
+        config.build_settings['CODE_SIGNING_ALLOWED'] = "NO"
+    end
+    
+    target.build_configurations.each do |config|
       #在intel机型上，模拟器是以x86方式运行的，排除 arm64毫无影响。
       #但是在 M1 机型上，模拟器是以 arm64 方式运行的，排除了 arm64 反而能跑 wht？？？，，因为当在 M1 机型上，排除了模拟器的 arm64 架构后，模拟器还是会以 arm64 的方式运行，但是模拟器中的app是以 x86 的方式运行的
       #project 里面同时要配置Build Settings -> Excluded Architectures 选项，添加Any iOS Simulator SDK选项，并设置值为arm64
       config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+      
     end
+    
+
     
     if target.name == "CocoaHTTPServer"
         target.build_configurations.each do |config|

@@ -17,11 +17,12 @@
 
 - (void)refresh
 {
-    //[super refresh];
-    self.contentView.backgroundColor = SSHELPTOOLSCONFIG.secondaryGroupedBackgroundColor;
+//    [super refresh];
+    self.contentView.backgroundColor = [UIColor.blueColor colorWithAlphaComponent:0.5];
     
     if (!_titleLab) {
         _titleLab = [[UILabel alloc] init];
+        _titleLab.backgroundColor = [UIColor lightGrayColor];
         [self.contentView addSubview:_titleLab];
         [_titleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(UIEdgeInsetsMake(2, 2, 2, 2));

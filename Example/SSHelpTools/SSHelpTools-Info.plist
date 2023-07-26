@@ -6,6 +6,10 @@
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict/>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
@@ -37,6 +41,8 @@
 	<string>Location Usage Description</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>访问位置</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>相册</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -64,7 +70,5 @@
 	<array>
 		<string>spi</string>
 	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>相册</string>
 </dict>
 </plist>

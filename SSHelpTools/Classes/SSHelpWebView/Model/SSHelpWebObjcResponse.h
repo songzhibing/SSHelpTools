@@ -46,7 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *error;
 
 /// Json串中data字段对应的值. eg. \"data\":{\"imbData\":\"imDaBa64Str\",...}}
-@property(nonatomic, strong, nullable) NSDictionary *data;
+/// NSDictionary或者NSArray
+@property(nonatomic, strong, nullable) id data;
 
 /// 格式化后的json字符串, eg. "{\"code\":1,\"state\":\"success\",\"data\":{\"imbData\":\"imDaBa64Str\",...}}"
 - (NSString *)toJsonString;

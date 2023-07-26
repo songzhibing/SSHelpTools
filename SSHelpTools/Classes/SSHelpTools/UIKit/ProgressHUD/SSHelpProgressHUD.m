@@ -12,8 +12,9 @@
 #define kApplicationWindow [UIApplication sharedApplication].delegate.window
 
 @interface SSProgressHUD()
-
 @end
+
+
 
 @implementation SSProgressHUD
 
@@ -25,14 +26,12 @@
 @end
 
 
-
 @interface SSHelpProgressHUD()
 + (instancetype)sharedInstance;
 @property(nonatomic, assign) NSInteger hudRetainCount;
 @property(nonatomic, strong) NSTimer *delayShowTimer;
 @property(nonatomic, strong) NSTimer *delayDismissTimer;
 @property(nonatomic, strong) NSLock *lock;
-@property(nonatomic, assign) BOOL alreadyShow;
 @property(nonatomic, strong) SSProgressHUD *sharedHUD;
 @end
 
@@ -205,7 +204,6 @@
 {
     self = [super init];
     if (self) {
-        self.alreadyShow = NO;
         self.hudRetainCount = 0;
         self.lock = [[NSLock alloc] init];
         self.lock.name = @"SSHelpProgressHUD.timer.lock";
@@ -235,34 +233,20 @@
 {
     @Tweakify(self);
     if (self.hudRetainCount==0) {
-        if (_delayShowTimer && [_delayShowTimer isValid]) {
-            [_delayShowTimer invalidate];
-            _delayShowTimer = nil;
+        if (self.delayShowTimer && [self.delayShowTimer isValid]) {
+            [self.delayShowTimer invalidate];
+            self.delayShowTimer = nil;
         } else {
-            if (!_alreadyShow) {
-                return;
+            if (self.sharedHUD) {
+                [self.sharedHUD hideAnimated:YES];
+                self.sharedHUD = nil;
             }
-            _delayDismissTimer = nil;
-            _delayDismissTimer = [NSTimer scheduledTimerWithTimeInterval:0.25f repeats:NO block:^(NSTimer * _Nonnull timer) {
-                self_weak_.alreadyShow = NO;
-                if (self_weak_.sharedHUD) {
-                    [self_weak_.sharedHUD hideAnimated:YES];
-                    self_weak_.sharedHUD = nil;
-                }
-            }];
         }
-    } else if (self.hudRetainCount==1){
-        if (_delayDismissTimer && [_delayDismissTimer isValid]) {
-            [_delayDismissTimer invalidate];
-            _delayDismissTimer = nil;
-        } else {
-            if (_alreadyShow) {
-                return;
-            }
-            _delayShowTimer = nil;
-            _delayShowTimer = [NSTimer scheduledTimerWithTimeInterval:0.25f repeats:NO block:^(NSTimer * _Nonnull timer) {
-                self_weak_.alreadyShow = YES;
+    } else if (self.hudRetainCount>=1){
+        if (!self.delayShowTimer && !self.sharedHUD) {
+            self.delayShowTimer = [NSTimer scheduledTimerWithTimeInterval:0.25f repeats:NO block:^(NSTimer * _Nonnull timer) {
                 self_weak_.sharedHUD = [SSHelpProgressHUD showActivityMessage:@""];
+                self_weak_.delayShowTimer = nil;
             }];
         }
     }

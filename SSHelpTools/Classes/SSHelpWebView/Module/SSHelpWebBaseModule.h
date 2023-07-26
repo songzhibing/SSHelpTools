@@ -10,7 +10,7 @@
 #import <WebViewJavascriptBridge/WKWebViewJavascriptBridge.h>
 
 #import "SSHelpWebObjcApi.h"
-#import "SSHelpWebObjcJsHandler.h"
+#import "SSHelpWebObjcHandler.h"
 #import "SSHelpWebObjcResponse.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -37,12 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param identifier 模块标识符
 /// @param jsHandler 参数实例
 /// @param moduleHandler 模块回调
-- (void)webModule:(NSString *)identifier hookJsHandler:(SSHelpWebObjcJsHandler *)jsHandler moduleHandler:(SSBridgeJsHandler)moduleHandler;
+- (void)webModule:(NSString *)identifier hookJsHandler:(SSHelpWebObjcHandler *)jsHandler moduleHandler:(SSBridgeHandler)moduleHandler;
 
-/// 功能模块实现不了，需要调用者实现
+/// 需要使用者完成相关实现
 /// @param identifier 模块标识符
 /// @param jsHandler 参数实例
-- (void)webModule:(NSString *)identifier invokeJsHandler:(SSHelpWebObjcJsHandler *)jsHandler;
+- (void)webModule:(NSString *)identifier invokeJsHandler:(SSHelpWebObjcHandler *)jsHandler;
 
 @end
 
@@ -61,19 +61,17 @@ NS_ASSUME_NONNULL_BEGIN
 /// WKWebVeiw
 @property(nonatomic, weak) WKWebView *webView;
 
-/// 注册jshandle，支持自定义
+/// 注册JsBridgeHandle
 /// @param handlerName api
 /// @param handler 回调
-- (void)baseRegisterHandler:(NSString *)handlerName handler:(SSBridgeJsHandler)handler;
+- (void)baseRegisterHandler:(NSString *)handlerName handler:(SSBridgeHandler)handler;
 
-/// 本身完成不了jshandle，需要使用者完成
-- (void)baseInvokeJsHandler:(NSString *)api data:(id)data callBack:(SSBridgeJsCallback)callBack;
+/// 需要使用者完成相关实现
+- (void)baseInvokeJsHandler:(NSString *)api data:(id)data callBack:(SSBridgeCallback)callback;
 
 - (void)basePushViewController:(UIViewController *)viewController animated:(BOOL)animated;
 
-- (void)basePresentViewController:(UIViewController *)viewControllerToPresent
-                         animated:(BOOL)flag
-                       completion:(SSBlockVoid)completion;
+- (void)basePresentViewController:(UIViewController *)viewController animated:(BOOL)flag completion:(SSBlockVoid)completion;
 
 @end
 

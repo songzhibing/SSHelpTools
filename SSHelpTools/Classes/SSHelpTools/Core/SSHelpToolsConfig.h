@@ -34,6 +34,8 @@ typedef SSHelpTabBarApparance *_Nonnull(^SSUpdateTabBarAppearance)(void);
 /// 返回[UIApplication sharedApplication].delegate.window
 @property(nonatomic, strong, readwrite, nullable) UIWindow *window;
 
+@property(nonatomic, assign) CGFloat statusBarHeight;
+
 @property(nonatomic, assign) CGFloat homeIndicatorHeight;
 
 @property(nonatomic, strong) UIColor *backgroundColor;

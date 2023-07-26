@@ -53,4 +53,15 @@
     return self.ss_originX+self.ss_width;
 }
 
+- (void)setSs_cornerRadius:(CGFloat)ss_cornerRadius
+{
+    self.layer.cornerRadius = ss_cornerRadius;
+    self.layer.masksToBounds = YES;
+}
+
+- (CGFloat)ss_cornerRadius
+{
+    return  self.layer.cornerRadius;
+}
+
 @end
