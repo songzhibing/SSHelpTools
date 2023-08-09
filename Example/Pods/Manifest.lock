@@ -39,24 +39,24 @@ PODS:
   - SDWebImage (5.13.2):
     - SDWebImage/Core (= 5.13.2)
   - SDWebImage/Core (5.13.2)
-  - SSHelpTools (0.1.4):
-    - SSHelpTools/SSHelpLog (= 0.1.4)
-    - SSHelpTools/SSHelpNetwork (= 0.1.4)
-    - SSHelpTools/SSHelpTools (= 0.1.4)
-    - SSHelpTools/SSHelpWebView (= 0.1.4)
-  - SSHelpTools/SSHelpLog (0.1.4):
+  - SSHelpTools (0.2.0):
+    - SSHelpTools/SSHelpLog (= 0.2.0)
+    - SSHelpTools/SSHelpNetwork (= 0.2.0)
+    - SSHelpTools/SSHelpTools (= 0.2.0)
+    - SSHelpTools/SSHelpWebView (= 0.2.0)
+  - SSHelpTools/SSHelpLog (0.2.0):
     - CocoaLumberjack
     - GCDWebServer
-  - SSHelpTools/SSHelpNetwork (0.1.4):
+  - SSHelpTools/SSHelpNetwork (0.2.0):
     - AFNetworking
     - ReactiveObjC
-  - SSHelpTools/SSHelpTools (0.1.4):
+  - SSHelpTools/SSHelpTools (0.2.0):
     - FMDB
     - Masonry
     - MBProgressHUD
     - SDWebImage
     - UICKeyChainStore
-  - SSHelpTools/SSHelpWebView (0.1.4):
+  - SSHelpTools/SSHelpWebView (0.2.0):
     - SSHelpTools/SSHelpTools
     - WebViewJavascriptBridge
   - UICKeyChainStore (2.2.1)
@@ -109,7 +109,7 @@ SPEC CHECKSUMS:
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
-  SSHelpTools: 73513877bd4544e81064806a248aa4a88fdc04b8
+  SSHelpTools: 774e42d0b80b71afcfab819fdc15065aae27d735
   UICKeyChainStore: ba3bff2c762b12db1e516f395c837dd25298b05e
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7

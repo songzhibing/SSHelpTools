@@ -10,6 +10,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol SSHelpWebViewDelegate <NSObject>
+
+@optional
+
+- (void)ss_webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
+
+- (void)ss_webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler;
+
+- (void)ss_webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler;
+
+@end
+
 typedef void(^_Nullable SSWebViewConfigBlock)(WKWebViewConfiguration *_Nonnull configuration);
 
 
@@ -21,6 +33,9 @@ typedef void(^_Nullable SSWebViewConfigBlock)(WKWebViewConfiguration *_Nonnull c
 
 /// 日志输出
 @property(nonatomic, assign) BOOL logEnable;
+
+/// 代理
+@property(nonatomic, weak) id <SSHelpWebViewDelegate> delegate;
 
 /// js接口功能模块代理
 @property(nonatomic, weak) id <SSWebModuleDelegate> moduleDelegate;

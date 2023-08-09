@@ -230,6 +230,9 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 #define _kRandSixValue [NSString stringWithFormat:@"%06d",arc4random() % 100000]
 
+// API废弃、不建议使用说明
+#define _kApiDeprecatedWarning(warning) __attribute__((deprecated(#warning)))
+
 @interface SSHelpDefines : NSObject
 
 @end

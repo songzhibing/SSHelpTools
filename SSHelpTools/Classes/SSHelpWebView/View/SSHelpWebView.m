@@ -143,73 +143,6 @@
     }
 }
 
-/*
-///// @abstract Navigates to a requested URL.
-/// @param request The request specifying the URL to which to navigate.
-- (void)loadRequest:(NSMutableURLRequest *)request;
-{
-    NSMutableURLRequest *mutableRequest = request.mutableCopy;
-    NSArray <NSHTTPCookie *> *_cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:mutableRequest.URL];
-
-    // Tip1: 在request header中设置Cookie,解决首个请求Cookie丢失问题,页面PHP等动态语言能够获取到（js获取不到）
-    if (_cookies) {
-        NSDictionary *cookieDict =  [NSHTTPCookie requestHeaderFieldsWithCookies:_cookies]; // @{Cookie = "dotcom_user=xxx; logged_in=yes; __Host-user_session_same_site=xxx; user_session=xxx; _octo=GH1.1.xx.xx; _device_id=xx"; }
-        NSString *cookieString = [cookieDict objectForKey:@"Cookie"];
-        [mutableRequest addValue:cookieString forHTTPHeaderField:@"Cookie"];
-    }
-
-    // Tip2: 页面js可获取Cookie（PHP等动态语言获取不到）
-    if (_cookies) {
-        __block NSMutableString *jsCookiesString = @"".mutableCopy;
-        [_cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * _Nonnull cookie, NSUInteger idx, BOOL * _Nonnull stop) {
-            [jsCookiesString appendString:[NSString stringWithFormat:@"document.cookie = '%@=%@';", cookie.name, cookie.value]];
-        }];
-        if (jsCookiesString.length) {
-            WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:jsCookiesString injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
-            [self.customUserScripts addObject:cookieScript];
-        }
-    }
-    
-    @weakify(self);
-    void (^__startLoadingRequest)(void) = ^(void){
-        dispatch_main_async_safe(^{
-#ifdef DEBUG
-            if (@available(iOS 11.0, *)) {
-                [self_weak_.configuration.websiteDataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull data) {
-                    //SSWebLog(@"Sync Cookie After:%@",data);
-                }];
-            }
-#endif
-            [self_weak_ loadRequest:mutableRequest];
-            SSWebLog(@"SSHelpWebView loadRequest %@ %@ ... ",[NSThread currentThread],mutableRequest);
-        });
-    };
-
-    // Tip3: NSHTTPCookieStorage-->同步到-->WKHTTPCookieStore
-    if (@available(iOS 11.0, *)) {
-        NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
-        if (cookies.count) {
-#ifdef DEBUG
-            [self.configuration.websiteDataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull data) {
-                //SSWebLog(@"Sync Cookie Before:%@",data);
-            }];
-#endif
-            dispatch_group_t group = dispatch_group_create();
-            for (NSInteger index=0; index<cookies.count; index++) {
-                dispatch_group_enter(group);
-                NSHTTPCookie * _Nonnull cookie = cookies[index];
-                [self.configuration.websiteDataStore.httpCookieStore setCookie:cookie completionHandler:^{
-                    dispatch_group_leave(group);
-                }];
-            }
-            dispatch_group_notify(group, dispatch_get_main_queue(), __startLoadingRequest);
-            return;
-        }
-    }
-    __startLoadingRequest();
-}
-*/
-
 /// 注册"js handler"功能方法
 /// @param handlerName 方法名称
 /// @param handler 回调
@@ -634,16 +567,20 @@
 /// 决定是否允许或取消加载
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    NSURL *url = navigationAction.request.URL;
-    if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
-        //跳转别的应用如系统浏览器
-        if ([[UIApplication sharedApplication] canOpenURL:url]) {
-            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-        }
-        decisionHandler(WKNavigationActionPolicyCancel);
+    if (_delegate &&  [_delegate respondsToSelector:@selector(ss_webView:decidePolicyForNavigationAction:decisionHandler:)]) {
+        [_delegate ss_webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
     } else {
-        //应用的web内跳转
-        decisionHandler (WKNavigationActionPolicyAllow);
+        NSURL *url = navigationAction.request.URL;
+        if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
+            //跳转别的应用如系统浏览器
+            if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+            }
+            decisionHandler(WKNavigationActionPolicyCancel);
+        } else {
+            //应用的web内跳转
+            decisionHandler (WKNavigationActionPolicyAllow);
+        }
     }
 }
 
@@ -665,23 +602,34 @@
             }
         }
      */
-    
-    //允许跳转
-    decisionHandler(WKNavigationResponsePolicyAllow);
+    if (_delegate && [_delegate respondsToSelector:@selector(ss_webView:decidePolicyForNavigationResponse:decisionHandler:)]) {
+        [_delegate ss_webView:webView decidePolicyForNavigationResponse:navigationResponse decisionHandler:decisionHandler];
+    } else {
+        //允许跳转
+        decisionHandler(WKNavigationResponsePolicyAllow);
+    }
 }
 
 /// 当web视图需要响应身份验证时调用
 - (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
 {
-    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        NSURLCredential *card = [[NSURLCredential alloc] initWithTrust:challenge.protectionSpace.serverTrust];
-        completionHandler(NSURLSessionAuthChallengeUseCredential,card);
+    if (_delegate && [_delegate respondsToSelector:@selector(ss_webView:didReceiveAuthenticationChallenge:completionHandler:)]) {
+        [_delegate ss_webView:webView didReceiveAuthenticationChallenge:challenge completionHandler:completionHandler];
     } else {
-        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling ,nil);
+        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+            NSURLCredential *card = [[NSURLCredential alloc] initWithTrust:challenge.protectionSpace.serverTrust];
+            completionHandler(NSURLSessionAuthChallengeUseCredential,card);
+        } else {
+            completionHandler(NSURLSessionAuthChallengePerformDefaultHandling ,nil);
+        }
     }
 }
 
-/// 开始加载
+/*! @abstract Invoked when a main frame navigation starts.
+ @param webView The web view invoking the delegate method.
+ @param navigation The navigation.
+ 开始加载
+ */
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation
 {
 

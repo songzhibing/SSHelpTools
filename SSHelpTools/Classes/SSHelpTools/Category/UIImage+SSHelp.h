@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SSHelpDefines.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,12 +23,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// 添加水印
 + (UIImage *)ss_addWatermarkInImage:(UIImage *)image atPonit:(CGPoint)point withText:(NSString *)text;
 
+/// 生成居中带logo的图像
++ (UIImage *)ss_generateImageWithLogo:(UIImage *)logo backgroundColor:(UIColor *)backgroundColor size:(CGSize)size;
+
 /// 截屏
 + (UIImage * _Nullable)ss_takeScreenShot;
 
 /// 识别二维码
-+ (void)ss_featuresInImage:(UIImage *)image
-                  callback:(void(^_Nonnull)(NSString *_Nullable result))callback;
++ (void)ss_featuresInImage:(UIImage *)image callback:(SSBlockString)callback;
 
 @end
 

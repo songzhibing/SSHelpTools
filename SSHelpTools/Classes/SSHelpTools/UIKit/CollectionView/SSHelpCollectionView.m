@@ -305,18 +305,23 @@ UICollectionViewDropDelegate>
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section < _data.count) {
-        if (indexPath.item < _data[indexPath.section].cellModels.count) {
-            //SSLog(@"DidSelectedItem (%ld,%ld)",indexPath.section,indexPath.item);
-            
-            SSCollectionViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
-            if (model.onClick) {
-                __kindof UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-                model.onClick(collectionView, cell, indexPath, model.data);
-            }
-            
-            if (model.didSelect) {
-                model.didSelect();
+    if (_viewDelegate && [_viewDelegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)]) {
+        [_viewDelegate collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+    } else {
+        if (indexPath.section < _data.count) {
+            if (indexPath.item < _data[indexPath.section].cellModels.count) {
+                SSCollectionViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
+                if (model.onClick) {
+                    __kindof UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+                    model.onClick(collectionView, cell, indexPath, model.data);
+                }
+                if (model.didSelect) {
+                    model.didSelect();
+                }
+                //pod.version > 0.2.0
+                if (model.callback) {
+                    model.callback(nil);
+                }
             }
         }
     }

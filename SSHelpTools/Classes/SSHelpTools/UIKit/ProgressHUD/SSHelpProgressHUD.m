@@ -5,15 +5,32 @@
 //  Created by 宋直兵 on 2022/10/13.
 //
 
+#import <Masonry/Masonry.h>
 #import "SSHelpProgressHUD.h"
 #import "SSHelpDefines.h"
 #import "NSBundle+SSHelp.h"
+#import "SSHelpButton.h"
+#import "UIView+SSHelp.h"
+#import "UIImage+SSHelp.h"
 
-#define kApplicationWindow [UIApplication sharedApplication].delegate.window
+#define __kApplicationWindow [UIApplication sharedApplication].delegate.window
 
-@interface SSProgressHUD()
+@protocol SSProgressHUDDelegate <NSObject>
+
+- (void)progress:(SSProgressHUD *)hud clickCancelButton:(id)sender;
+
 @end
 
+
+@interface SSProgressHUD()
+
+@property(nonatomic, weak) id <SSProgressHUDDelegate> hudDelegate;
+
+@property(nonatomic, strong) SSHelpButton *cancelBtn;
+
+@property (nonatomic, assign) BOOL useAnimation;
+
+@end
 
 
 @implementation SSProgressHUD
@@ -23,17 +40,100 @@
     SSLifeCycleLog(@"%@ dealloc ... ",self);
 }
 
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        switch (SSHelpProgressHUD.sharedInstance.style) {
+            case SSProgressHUDBackgroundStyleBlack:
+            {
+                self.bezelView.color = UIColor.blackColor;
+                self.contentColor = UIColor.whiteColor;
+                self.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+            }
+                break;
+            case SSProgressHUDBackgroundStyleLight:
+            {
+                self.bezelView.color = UIColor.whiteColor;
+                self.contentColor = UIColor.blackColor;
+                self.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+            }
+                break;
+            default:
+                break;
+        }
+    }
+    return self;
+}
+
+- (void)hideAnimated:(BOOL)animated
+{
+    if (self.cancelBtn) {
+        [self.cancelBtn removeFromSuperview];
+        self.cancelBtn = nil;
+    }
+    [super hideAnimated:animated];
+}
+
+- (void)addCancelButton
+{
+    if (SSHelpProgressHUD.sharedInstance.showCancelButton) {
+        
+        CGRect frame = CGRectMake((self.ss_width-60)/2.0f, self.ss_height-30-88, 60, 30);
+        self.cancelBtn = [SSHelpButton buttonWithType:UIButtonTypeCustom];
+        self.cancelBtn.frame = frame;
+        self.cancelBtn.textAlignment = NSTextAlignmentCenter;
+        self.cancelBtn.normalTitle = @"取消";
+        self.cancelBtn.normalTitleColor = self.contentColor;
+        self.cancelBtn.textFont = [UIFont boldSystemFontOfSize:14.0];//MBDefaultLabelFontSize
+        self.cancelBtn.ss_cornerRadius = 6;
+        self.cancelBtn.layer.borderWidth = 0.5f;
+        self.cancelBtn.layer.borderColor = self.contentColor.CGColor;
+        [self addSubview:self.cancelBtn];
+        
+        // 设置
+        [self.cancelBtn addTarget:self action:@selector(onClickCancelButton:) forControlEvents:UIControlEventTouchUpInside];
+        switch (SSHelpProgressHUD.sharedInstance.style) {
+            case SSProgressHUDBackgroundStyleDefault:
+                self.cancelBtn.normalBackImage = [UIImage ss_imageWithcolor:UIColor.systemBackgroundColor];
+                break;
+            default:
+                self.cancelBtn.normalBackImage = [UIImage ss_imageWithcolor:self.bezelView.color];
+                break;
+        }
+        
+        // 动画
+        self.cancelBtn.alpha = 0;
+        if (self.useAnimation) {
+            [UIView animateWithDuration:0.3 delay:0. usingSpringWithDamping:1.f initialSpringVelocity:0.f options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                self.cancelBtn.alpha = 1;
+            } completion:nil];
+        } else {
+            self.cancelBtn.alpha = 1;
+        }
+    }
+}
+
+- (void)onClickCancelButton:(SSHelpButton *)button
+{
+    if (_hudDelegate && [_hudDelegate respondsToSelector:@selector(progress:clickCancelButton:)]) {
+        [_hudDelegate progress:self clickCancelButton:button];
+    } else {
+        [self hideAnimated:YES];
+    }
+}
+
 @end
 
 
-@interface SSHelpProgressHUD()
-+ (instancetype)sharedInstance;
+
+@interface SSHelpProgressHUD () <SSProgressHUDDelegate>
 @property(nonatomic, assign) NSInteger hudRetainCount;
 @property(nonatomic, strong) NSTimer *delayShowTimer;
-@property(nonatomic, strong) NSTimer *delayDismissTimer;
 @property(nonatomic, strong) NSLock *lock;
 @property(nonatomic, strong) SSProgressHUD *sharedHUD;
 @end
+
 
 @implementation SSHelpProgressHUD
 
@@ -42,27 +142,27 @@
 
 + (void)showMessage:(NSString *)message
 {
-    [self showMessage:message toView:kApplicationWindow];
+    [self showMessage:message toView:__kApplicationWindow];
 }
 
 + (void)showSuccess:(NSString *)success
 {
-    [self showSuccess:success toView:kApplicationWindow];
+    [self showSuccess:success toView:__kApplicationWindow];
 }
 
 + (void)showError:(NSString *)error
 {
-    [self showError:error toView:kApplicationWindow];
+    [self showError:error toView:__kApplicationWindow];
 }
 
 + (void)showWarning:(NSString *)Warning
 {
-    [self showWarning:Warning toView:kApplicationWindow];
+    [self showWarning:Warning toView:__kApplicationWindow];
 }
 
 + (void)showMessageWithImage:(UIImage *_Nullable)image message:(NSString *)message;
 {
-    [self showMessageWithImage:image message:message toView:kApplicationWindow];
+    [self showMessageWithImage:image message:message toView:__kApplicationWindow];
 }
 
 
@@ -128,7 +228,7 @@
 
 + (MBProgressHUD *_Nullable)showActivityMessage:(NSString*)message
 {
-    return [self showActivityMessage:message toView:kApplicationWindow];
+    return [self showActivityMessage:message toView:__kApplicationWindow];
 }
 
 + (SSProgressHUD *_Nullable)showActivityMessage:(NSString*)message toView:(UIView *)view
@@ -148,12 +248,15 @@
     // 隐藏时候从父控件中移除
     hud.removeFromSuperViewOnHide = YES;
 
+    // 添加一个取消按钮
+    [hud addCancelButton];
+    
     return hud;
 }
 
 + (SSProgressHUD *_Nullable)showProgressBar
 {
-    return [self showProgressBarToView:kApplicationWindow];
+    return [self showProgressBarToView:__kApplicationWindow];
 }
 
 + (SSProgressHUD *_Nullable)showProgressBarToView:(UIView *)view
@@ -170,7 +273,7 @@
 
 + (void)hideHUD
 {
-    [self hideHUDForView:kApplicationWindow];
+    [self hideHUDForView:__kApplicationWindow];
 }
 
 + (void)hideHUDForView:(UIView *)view
@@ -204,6 +307,8 @@
 {
     self = [super init];
     if (self) {
+        self.style = SSProgressHUDBackgroundStyleDefault;
+        self.showCancelButton = YES;
         self.hudRetainCount = 0;
         self.lock = [[NSLock alloc] init];
         self.lock.name = @"SSHelpProgressHUD.timer.lock";
@@ -235,21 +340,32 @@
     if (self.hudRetainCount==0) {
         if (self.delayShowTimer && [self.delayShowTimer isValid]) {
             [self.delayShowTimer invalidate];
-            self.delayShowTimer = nil;
-        } else {
-            if (self.sharedHUD) {
-                [self.sharedHUD hideAnimated:YES];
-                self.sharedHUD = nil;
-            }
         }
+        self.delayShowTimer = nil;
+        if (self.sharedHUD) {
+            [self.sharedHUD hideAnimated:YES];
+        }
+        self.sharedHUD = nil;
     } else if (self.hudRetainCount>=1){
         if (!self.delayShowTimer && !self.sharedHUD) {
             self.delayShowTimer = [NSTimer scheduledTimerWithTimeInterval:0.25f repeats:NO block:^(NSTimer * _Nonnull timer) {
                 self_weak_.sharedHUD = [SSHelpProgressHUD showActivityMessage:@""];
+                self_weak_.sharedHUD.hudDelegate = self_weak_;
                 self_weak_.delayShowTimer = nil;
             }];
         }
     }
+}
+
+#pragma mark -
+#pragma mark - SSProgressHUDDelegate Method
+
+- (void)progress:(SSProgressHUD *)hud clickCancelButton:(id)sender
+{
+    [self.lock lock];
+    self.hudRetainCount = 0;
+    [self _handler];
+    [self.lock unlock];
 }
 
 //#pragma clang diagnostic pop

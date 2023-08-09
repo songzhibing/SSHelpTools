@@ -13,7 +13,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
     //[SSHelpLogHttpServer startServer];
-    [SSHelpToolsConfig sharedConfig].enableLog = YES;
+    [SSHelpToolsConfig sharedConfig].enableLog = NO;
     [SSHelpToolsConfig sharedConfig].enableLifeCycleLog = YES;
 
     return YES;

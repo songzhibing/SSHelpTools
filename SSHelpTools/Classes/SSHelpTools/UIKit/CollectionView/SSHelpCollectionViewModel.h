@@ -82,11 +82,14 @@ typedef void (^SSCollectionReusableViewOnClick)(__kindof UICollectionView * _Nul
 
 @interface SSCollectionReusableViewModel: NSObject
 
+/// 点击事件传递，携带一个字符串参数
+@property(nonatomic, copy) SSBlockString callback;
+
 /// 点击事件传递，携带参数
 @property(nonatomic, copy, nullable) SSCollectionReusableViewOnClick onClick;
 
 /// 点击事件传递，不携带参数
-@property(nonatomic, copy) SSBlockVoid didSelect;
+@property(nonatomic, copy) SSBlockVoid didSelect _kApiDeprecatedWarning("pod.version > 0.2.0 后不建议使用，请使用 callback");
 
 /// 推荐存储字典数据
 @property(nonatomic, strong, nullable) __kindof NSDictionary *data;
