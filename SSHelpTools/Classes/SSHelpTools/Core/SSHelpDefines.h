@@ -6,6 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <objc/message.h>
+
 #import "SSHelpMetamacros.h"
 #import "SSHelpToolsConfig.h"
 #import "UIColor+SSHelp.h"
@@ -20,6 +22,12 @@ typedef void(^ _Nullable SSBlockBool)(BOOL success);
 typedef void(^ _Nullable SSBlockArray)(__kindof NSArray * _Nullable array);
 typedef void(^ _Nullable SSBlockDict)(__kindof NSDictionary * _Nullable dict);
 typedef void(^ _Nullable SSBlockString)(__kindof NSString * _Nullable string);
+typedef void(^ _Nullable SSBlockData)(__kindof NSData * _Nullable data);
+typedef void(^ _Nullable SSBlockCallback)(id _Nullable response, NSError * _Nullable error);
+
+static void (*void_objc_msgSend_id)(id, SEL, id, ...) = (void (*)(id, SEL, id, ...)) objc_msgSend;
+static void (*void_objc_msgSend_id_id)(id, SEL, id, id, ...)  = (void (*)(id, SEL, id, id, ...)) objc_msgSend;
+static void (*void_objc_msgSend_id_id_id)(id, SEL, id, id, id, ...) = (void (*)(id, SEL, id, id, id, ...)) objc_msgSend;
 
 //安全调用Block
 #define _kSafeBlock(blockName,...) ({(!blockName) ? nil : blockName(__VA_ARGS__);})
@@ -75,6 +83,8 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 #define _kUserDefaults         [NSUserDefaults standardUserDefaults]
 
 #define _kNotificationCenter   [NSNotificationCenter defaultCenter]
+
+#define _kAppBundleIdentifier  NSBundle.mainBundle.bundleIdentifier
 
 //设备
 

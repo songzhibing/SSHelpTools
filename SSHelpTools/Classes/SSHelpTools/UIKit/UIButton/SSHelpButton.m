@@ -11,6 +11,7 @@
 #import "SSHelpButton.h"
 #import "SSHelpDefines.h"
 #import "NSBundle+SSHelp.h"
+#import "UIView+SSHelp.h"
 
 @implementation SSHelpButton
 
@@ -220,6 +221,18 @@
         return contentRect;
     }
     return _imageRect;
+}
+
+- (void)setImageSizeAtCenter:(CGSize)imageSizeAtCenter
+{
+    _imageSizeAtCenter = imageSizeAtCenter;
+    if (!CGRectIsNull(self.bounds)) {
+        CGFloat width = imageSizeAtCenter.width;
+        CGFloat height = imageSizeAtCenter.height;
+        CGFloat x = (self.ss_width-width)/2.0f;
+        CGFloat y = (self.ss_height-height)/2.0f;
+        self.imageRect = CGRectMake(x, y,width, height);
+    }
 }
 
 #pragma mark - Action

@@ -50,6 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) CGRect imageRect;
 
+@property(nonatomic, assign) CGSize imageSizeAtCenter;
+
 @property(nonatomic, assign) CGRect titleRect;
 
 @property(nonatomic, assign) UIEdgeInsets outsideEdge;

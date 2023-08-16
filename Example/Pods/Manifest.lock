@@ -27,9 +27,6 @@ PODS:
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
   - FLEX (5.22.10)
-  - FMDB (2.7.5):
-    - FMDB/standard (= 2.7.5)
-  - FMDB/standard (2.7.5)
   - GCDWebServer (3.5.4):
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
@@ -51,9 +48,9 @@ PODS:
     - AFNetworking
     - ReactiveObjC
   - SSHelpTools/SSHelpTools (0.2.0):
-    - FMDB
     - Masonry
     - MBProgressHUD
+    - ReactiveObjC
     - SDWebImage
     - UICKeyChainStore
   - SSHelpTools/SSHelpWebView (0.2.0):
@@ -82,7 +79,6 @@ SPEC REPOS:
     - CocoaLumberjack
     - FBSnapshotTestCase
     - FLEX
-    - FMDB
     - GCDWebServer
     - Masonry
     - MBProgressHUD
@@ -103,13 +99,12 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   FLEX: f21ee4f498eed3f8a1eded66b21939fd3b7a22ce
-  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
-  SSHelpTools: 774e42d0b80b71afcfab819fdc15065aae27d735
+  SSHelpTools: 701c45bbdf3e7b23c82ad15048efab528a888aaa
   UICKeyChainStore: ba3bff2c762b12db1e516f395c837dd25298b05e
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7

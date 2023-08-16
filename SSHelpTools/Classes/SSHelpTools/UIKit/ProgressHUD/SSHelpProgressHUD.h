@@ -14,8 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_OPTIONS(NSInteger, SSProgressHUDBackgroundStyle ) {
     SSProgressHUDBackgroundStyleDefault = 0, //默认
-    SSProgressHUDBackgroundStyleBlack,  //深色
-    SSProgressHUDBackgroundStyleLight,  //浅色
+    SSProgressHUDBackgroundStyleBlack,       //深色
+    SSProgressHUDBackgroundStyleLight,       //浅色
 };
 
 

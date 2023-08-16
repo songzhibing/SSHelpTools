@@ -126,6 +126,9 @@
         self.navigationDelegate = self;
         // 日志
         self.logEnable = NO;
+#ifdef DEBUG
+        self.logEnable = YES;
+#endif
     }
     return self;
 }
@@ -224,7 +227,6 @@
 
 #pragma mark -
 #pragma mark - PresentViewController Methtod
-
 
 - (void)presentAlertViewControllerWithMessage:(NSString *)message
 {
@@ -567,8 +569,9 @@
 /// 决定是否允许或取消加载
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    if (_delegate &&  [_delegate respondsToSelector:@selector(ss_webView:decidePolicyForNavigationAction:decisionHandler:)]) {
-        [_delegate ss_webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
+    SEL sel = @selector(webView:decidePolicyForNavigationAction:decisionHandler:);
+    if (_ss_delegate &&  [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, navigationAction, decisionHandler);
     } else {
         NSURL *url = navigationAction.request.URL;
         if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
@@ -587,23 +590,9 @@
 /// 得到响应后决定是否允许跳转
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 {
-    /*
-        NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
-        if (response && [response isKindOfClass:[NSHTTPURLResponse class]]) {
-            NSDictionary *allHeaderFields = [response allHeaderFields];
-            NSURL *URL = [response URL];
-            if (allHeaderFields && URL) {
-                NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:allHeaderFields forURL:URL];
-                if (cookies && cookies.count>0) {
-                    if (@available(iOS 11.0, *)) {
-                        //浏览器自动存储cookie, 这里就不用再处理了
-                    }
-                }
-            }
-        }
-     */
-    if (_delegate && [_delegate respondsToSelector:@selector(ss_webView:decidePolicyForNavigationResponse:decisionHandler:)]) {
-        [_delegate ss_webView:webView decidePolicyForNavigationResponse:navigationResponse decisionHandler:decisionHandler];
+    SEL sel = @selector(webView:decidePolicyForNavigationResponse:decisionHandler:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, navigationResponse, decisionHandler);
     } else {
         //允许跳转
         decisionHandler(WKNavigationResponsePolicyAllow);
@@ -613,15 +602,18 @@
 /// 当web视图需要响应身份验证时调用
 - (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
 {
-    if (_delegate && [_delegate respondsToSelector:@selector(ss_webView:didReceiveAuthenticationChallenge:completionHandler:)]) {
-        [_delegate ss_webView:webView didReceiveAuthenticationChallenge:challenge completionHandler:completionHandler];
+    SEL sel = @selector(webView:didReceiveAuthenticationChallenge:completionHandler:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, challenge, completionHandler);
     } else {
-        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-            NSURLCredential *card = [[NSURLCredential alloc] initWithTrust:challenge.protectionSpace.serverTrust];
-            completionHandler(NSURLSessionAuthChallengeUseCredential,card);
-        } else {
-            completionHandler(NSURLSessionAuthChallengePerformDefaultHandling ,nil);
-        }
+        dispatch_global_queue_safe(^{
+            if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+                NSURLCredential *card = [[NSURLCredential alloc] initWithTrust:challenge.protectionSpace.serverTrust];
+                completionHandler(NSURLSessionAuthChallengeUseCredential,card);
+            } else {
+                completionHandler(NSURLSessionAuthChallengePerformDefaultHandling ,nil);
+            }
+        });
     }
 }
 
@@ -632,59 +624,92 @@
  */
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation
 {
-
+    SEL sel = @selector(webView:didStartProvisionalNavigation:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    } else {
+        if (self.logEnable) {
+            SSLog(@"开始加载页面：....");
+        }
+    }
 }
 
 /// 重定向
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(null_unspecified WKNavigation *)navigation
 {
-
+    SEL sel = @selector(webView:didReceiveServerRedirectForProvisionalNavigation:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    }
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    if (self.logEnable) {
-        SSLog(@"加载失败:%@",error);
+    SEL sel = @selector(webView:didFailProvisionalNavigation:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    } else {
+        if (self.logEnable) {
+            SSLog(@"加载失败:%@",error);
+        }
     }
 }
 
 ///开始接收Web内容
 - (void)webView:(WKWebView *)webView didCommitNavigation:(null_unspecified WKNavigation *)navigation
 {
-
+    SEL sel = @selector(webView:didCommitNavigation:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    }
 }
 
 /// 加载完成
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
-    if (self.logEnable) {
-        [webView evaluateJavaScript:@"window.location.href" completionHandler:^(id _Nullable urlStr, NSError * _Nullable error) {
-            SSLog(@"加载完成:%@",urlStr);
-        }];
-        
-        //webView 高度自适应
-        [webView evaluateJavaScript:@"document.body.scrollHeight" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-            // 获取页面高度，并重置 webview 的 frame
-            SSLog(@"html.body的高度：%@", result);
-        }];
+    SEL sel = @selector(webView:didFinishNavigation:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    } else {
+        if (self.logEnable) {
+            [webView evaluateJavaScript:@"window.location.href" completionHandler:^(id _Nullable urlStr, NSError * _Nullable error) {
+                SSLog(@"加载完成:%@",urlStr);
+            }];
+            
+            //webView 高度自适应
+            [webView evaluateJavaScript:@"document.body.scrollHeight" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+                // 获取页面高度，并重置 webview 的 frame
+                SSLog(@"html.body的高度：%@", result);
+            }];
+        }
     }
 }
 
 /// 失败
 - (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
 {
-    if (self.logEnable) {
-        SSLog(@"加载失败:%@",error);
+    SEL sel = @selector(webView:didFailNavigation:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, navigation, error);
+    } else {
+        if (self.logEnable) {
+            SSLog(@"加载失败:%@",error);
+        }
     }
 }
 
 /// web内容进程终止时调用
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
 {
-    if (self.logEnable) {
-        SSLog(@"进程终止...");
+    SEL sel = @selector(webViewWebContentProcessDidTerminate:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id(_ss_delegate, sel, webView);
+    } else {
+        if (self.logEnable) {
+            SSLog(@"进程终止...");
+        }
+        [webView reload];
     }
-    [webView reload];
 }
 
 @end

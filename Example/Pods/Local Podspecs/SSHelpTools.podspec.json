@@ -54,8 +54,13 @@
         "MBProgressHUD": [
 
         ],
-        "FMDB": [
+        "ReactiveObjC": [
 
+        ]
+      },
+      "configuration_pod_whitelist": {
+        "ReactiveObjC": [
+          "debug"
         ]
       }
     },

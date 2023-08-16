@@ -13,13 +13,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol SSHelpCollectionViewDelegate <UICollectionViewDelegate>
+
+@end
+
+
 @interface SSHelpCollectionView : UICollectionView
 
 + (instancetype)ss_new;
 
 + (instancetype)creatWithFrame:(CGRect)frame;
 
-@property(nonatomic, weak, nullable) id <UICollectionViewDelegate> viewDelegate;
+@property(nonatomic, weak, nullable) id <SSHelpCollectionViewDelegate> ss_delegate;
 
 @property(nonatomic, strong) NSMutableArray <SSCollectionViewSectionModel *> *data;
 
