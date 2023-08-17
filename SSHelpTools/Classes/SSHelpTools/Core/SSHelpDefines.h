@@ -168,10 +168,6 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
     #define SSLog(...) @{};
 #endif
 
-#define SSToolsLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"\n[SSTOOLSLOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
-
-// WKWebView日志
-#define SSWebLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"\n[SSWEBLOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
 
 #define SSLifeCycleLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLifeCycleLog)?((void)fprintf(stderr,"\n[SSLIFELOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
 
