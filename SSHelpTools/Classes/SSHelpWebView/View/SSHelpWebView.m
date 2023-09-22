@@ -124,8 +124,10 @@
         self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         self.UIDelegate = self;
         self.navigationDelegate = self;
+        #ifdef DEBUG
         // 日志
-        self.logEnable = NO;
+        self.logEnable = YES;
+        #endif
     }
     return self;
 }
@@ -142,73 +144,6 @@
         [_moduleImpInstances removeAllObjects];
     }
 }
-
-/*
-///// @abstract Navigates to a requested URL.
-/// @param request The request specifying the URL to which to navigate.
-- (void)loadRequest:(NSMutableURLRequest *)request;
-{
-    NSMutableURLRequest *mutableRequest = request.mutableCopy;
-    NSArray <NSHTTPCookie *> *_cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:mutableRequest.URL];
-
-    // Tip1: 在request header中设置Cookie,解决首个请求Cookie丢失问题,页面PHP等动态语言能够获取到（js获取不到）
-    if (_cookies) {
-        NSDictionary *cookieDict =  [NSHTTPCookie requestHeaderFieldsWithCookies:_cookies]; // @{Cookie = "dotcom_user=xxx; logged_in=yes; __Host-user_session_same_site=xxx; user_session=xxx; _octo=GH1.1.xx.xx; _device_id=xx"; }
-        NSString *cookieString = [cookieDict objectForKey:@"Cookie"];
-        [mutableRequest addValue:cookieString forHTTPHeaderField:@"Cookie"];
-    }
-
-    // Tip2: 页面js可获取Cookie（PHP等动态语言获取不到）
-    if (_cookies) {
-        __block NSMutableString *jsCookiesString = @"".mutableCopy;
-        [_cookies enumerateObjectsUsingBlock:^(NSHTTPCookie * _Nonnull cookie, NSUInteger idx, BOOL * _Nonnull stop) {
-            [jsCookiesString appendString:[NSString stringWithFormat:@"document.cookie = '%@=%@';", cookie.name, cookie.value]];
-        }];
-        if (jsCookiesString.length) {
-            WKUserScript *cookieScript = [[WKUserScript alloc] initWithSource:jsCookiesString injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
-            [self.customUserScripts addObject:cookieScript];
-        }
-    }
-    
-    @weakify(self);
-    void (^__startLoadingRequest)(void) = ^(void){
-        dispatch_main_async_safe(^{
-#ifdef DEBUG
-            if (@available(iOS 11.0, *)) {
-                [self_weak_.configuration.websiteDataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull data) {
-                    //SSWebLog(@"Sync Cookie After:%@",data);
-                }];
-            }
-#endif
-            [self_weak_ loadRequest:mutableRequest];
-            SSWebLog(@"SSHelpWebView loadRequest %@ %@ ... ",[NSThread currentThread],mutableRequest);
-        });
-    };
-
-    // Tip3: NSHTTPCookieStorage-->同步到-->WKHTTPCookieStore
-    if (@available(iOS 11.0, *)) {
-        NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
-        if (cookies.count) {
-#ifdef DEBUG
-            [self.configuration.websiteDataStore.httpCookieStore getAllCookies:^(NSArray<NSHTTPCookie *> * _Nonnull data) {
-                //SSWebLog(@"Sync Cookie Before:%@",data);
-            }];
-#endif
-            dispatch_group_t group = dispatch_group_create();
-            for (NSInteger index=0; index<cookies.count; index++) {
-                dispatch_group_enter(group);
-                NSHTTPCookie * _Nonnull cookie = cookies[index];
-                [self.configuration.websiteDataStore.httpCookieStore setCookie:cookie completionHandler:^{
-                    dispatch_group_leave(group);
-                }];
-            }
-            dispatch_group_notify(group, dispatch_get_main_queue(), __startLoadingRequest);
-            return;
-        }
-    }
-    __startLoadingRequest();
-}
-*/
 
 /// 注册"js handler"功能方法
 /// @param handlerName 方法名称
@@ -283,7 +218,7 @@
             [self_weak_.moduleImpInstances addObject:jsModuleObj];
         } else {
             if (self_weak_.logEnable) {
-                SSWebLog(@"%@ dosn't responds to selector 'moduleRegisterJsHandler'?",className);
+                SSLog(@"%@ dosn't responds to selector 'moduleRegisterJsHandler'?",className);
             }
         }
     }];
@@ -291,7 +226,6 @@
 
 #pragma mark -
 #pragma mark - PresentViewController Methtod
-
 
 - (void)presentAlertViewControllerWithMessage:(NSString *)message
 {
@@ -430,7 +364,7 @@
                             @strongify(self);
                             [self evaluateJavaScript:@"tmpDynamicSearchAllImage()" completionHandler:^(id _Nullable array, NSError * _Nullable error){
                                 if (self_weak_.logEnable) {
-                                    SSWebLog(@"所有图片：%@",array);
+                                    SSLog(@"所有图片：%@",array);
                                 }
                                 dispatch_group_leave(group);
                             }];
@@ -445,7 +379,7 @@
                     NSString *javaScript = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).innerText",point.x, point.y];
                     [self evaluateJavaScript:javaScript completionHandler:^(NSString *_Nullable text, NSError * _Nullable error) {
                         if (self_weak_.logEnable) {
-                            SSWebLog(@"获取文字信息：%@ 错误信息:%@",text,error.localizedDescription);
+                            SSLog(@"获取文字信息：%@ 错误信息:%@",text,error.localizedDescription);
                         }
                         if (text && text.length) {
                             UIAlertAction *action = [UIAlertAction actionWithTitle:toCopyLinkText style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -470,7 +404,7 @@
                     [self evaluateJavaScript:javaScript completionHandler:^(id _Nullable result, NSError * _Nullable error) {
                         if (error) {
                             if (self_weak_.logEnable) {
-                                SSWebLog(@"注入获取链接JavaScript失败:%@",error.localizedDescription);
+                                SSLog(@"注入获取链接JavaScript失败:%@",error.localizedDescription);
                             }
                             dispatch_group_leave(group);
                         } else {
@@ -478,7 +412,7 @@
                             NSString *javaScript = [NSString stringWithFormat:@"tmpDynamicJavaScriptSearchHref(%f,%f);",point.x,point.y];
                             [self evaluateJavaScript:javaScript completionHandler:^(NSString *_Nullable href, NSError * _Nullable error){
                                 if (self_weak_.logEnable) {
-                                    SSWebLog(@"获取链接信息：%@ 错误信息:%@",result,error.localizedDescription);
+                                    SSLog(@"获取链接信息：%@ 错误信息:%@",result,error.localizedDescription);
                                 }
                                 if (href && href.length) {
                                     UIAlertAction *action = [UIAlertAction actionWithTitle:toCopyHref style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -634,91 +568,141 @@
 /// 决定是否允许或取消加载
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    NSURL *url = navigationAction.request.URL;
-    if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
-        //跳转别的应用如系统浏览器
-        if ([[UIApplication sharedApplication] canOpenURL:url]) {
-            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-        }
-        decisionHandler(WKNavigationActionPolicyCancel);
+    if (self.logEnable) {
+        SSLog(@"决定是否允许或取消加载: %@ ... ",navigationAction.request.URL);
+    }
+    
+    SEL sel = @selector(webView:decidePolicyForNavigationAction:decisionHandler:);
+    if (_ss_delegate &&  [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, navigationAction, decisionHandler);
     } else {
-        //应用的web内跳转
-        decisionHandler (WKNavigationActionPolicyAllow);
+        NSURL *url = navigationAction.request.URL;
+        if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
+            //跳转别的应用如系统浏览器
+            if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+            }
+            decisionHandler(WKNavigationActionPolicyCancel);
+        } else {
+            //应用的web内跳转
+            decisionHandler (WKNavigationActionPolicyAllow);
+        }
     }
 }
 
 /// 得到响应后决定是否允许跳转
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 {
-    /*
-        NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
-        if (response && [response isKindOfClass:[NSHTTPURLResponse class]]) {
-            NSDictionary *allHeaderFields = [response allHeaderFields];
-            NSURL *URL = [response URL];
-            if (allHeaderFields && URL) {
-                NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:allHeaderFields forURL:URL];
-                if (cookies && cookies.count>0) {
-                    if (@available(iOS 11.0, *)) {
-                        //浏览器自动存储cookie, 这里就不用再处理了
-                    }
-                }
-            }
+    if (self.logEnable) {
+        NSInteger statusCode = 0;
+        NSString * urlStr = @"";
+        if ([navigationResponse.response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
+            statusCode =response.statusCode;
+            urlStr = response.URL.absoluteString;
         }
-     */
-    
-    //允许跳转
-    decisionHandler(WKNavigationResponsePolicyAllow);
+        SSLog(@"得到响应后决定是否允许跳转: %@ 状态值: %ld 跳转地址: %@ ... ",navigationResponse.isForMainFrame?@"isForMainFrame":@"noForMainFrame",statusCode,urlStr);
+    }
+    SEL sel = @selector(webView:decidePolicyForNavigationResponse:decisionHandler:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, navigationResponse, decisionHandler);
+    } else {
+        //允许跳转
+        decisionHandler(WKNavigationResponsePolicyAllow);
+    }
 }
 
 /// 当web视图需要响应身份验证时调用
 - (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
 {
-    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        NSURLCredential *card = [[NSURLCredential alloc] initWithTrust:challenge.protectionSpace.serverTrust];
-        completionHandler(NSURLSessionAuthChallengeUseCredential,card);
+    if (self.logEnable) {
+        //SSLog(@"需要响应身份验证: %@ ... ",challenge);
+    }
+    SEL sel = @selector(webView:didReceiveAuthenticationChallenge:completionHandler:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, challenge, completionHandler);
     } else {
-        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling ,nil);
+        dispatch_global_queue_safe(^{
+            if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+                NSURLCredential *card = [[NSURLCredential alloc] initWithTrust:challenge.protectionSpace.serverTrust];
+                completionHandler(NSURLSessionAuthChallengeUseCredential,card);
+            } else {
+                completionHandler(NSURLSessionAuthChallengePerformDefaultHandling ,nil);
+            }
+        });
     }
 }
 
-/// 开始加载
+/*! @abstract Invoked when a main frame navigation starts.
+ @param webView The web view invoking the delegate method.
+ @param navigation The navigation.
+ 开始加载
+ */
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation
 {
-
+    if (self.logEnable) {
+        SSLog(@"开始加载: ...");
+    }
+    SEL sel = @selector(webView:didStartProvisionalNavigation:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    }
 }
 
 /// 重定向
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(null_unspecified WKNavigation *)navigation
 {
-
+    if (self.logEnable) {
+        SSLog(@"重定向: ...");
+    }
+    SEL sel = @selector(webView:didReceiveServerRedirectForProvisionalNavigation:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    }
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     if (self.logEnable) {
-        SSLog(@"加载失败:%@",error);
+        SSLog(@"加载失败: %@ ... ",error.localizedDescription);
+    }
+    SEL sel = @selector(webView:didFailProvisionalNavigation:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
     }
 }
 
 ///开始接收Web内容
 - (void)webView:(WKWebView *)webView didCommitNavigation:(null_unspecified WKNavigation *)navigation
 {
-
+    if (self.logEnable) {
+        SSLog(@"加载导航内容: ... ");
+    }
+    SEL sel = @selector(webView:didCommitNavigation:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    }
 }
 
 /// 加载完成
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
     if (self.logEnable) {
-        [webView evaluateJavaScript:@"window.location.href" completionHandler:^(id _Nullable urlStr, NSError * _Nullable error) {
-            SSLog(@"加载完成:%@",urlStr);
-        }];
-        
+        SSLog(@"加载导航完成: ... ");
+    }
+    
+    SEL sel = @selector(webView:didFinishNavigation:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    } else {
+        //[webView evaluateJavaScript:@"window.location.href" completionHandler:^(id _Nullable urlStr, NSError * _Nullable error) {
+        //    SSLog(@"加载完成:%@",urlStr);
+        //}];
         //webView 高度自适应
-        [webView evaluateJavaScript:@"document.body.scrollHeight" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        //[webView evaluateJavaScript:@"document.body.scrollHeight" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
             // 获取页面高度，并重置 webview 的 frame
-            SSLog(@"html.body的高度：%@", result);
-        }];
+        //    SSLog(@"html.body的高度：%@", result);
+        //}];
     }
 }
 
@@ -726,7 +710,12 @@
 - (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
 {
     if (self.logEnable) {
-        SSLog(@"加载失败:%@",error);
+        SSLog(@"加载导航失败: %@ ... ",error.localizedDescription);
+    }
+    
+    SEL sel = @selector(webView:didFailNavigation:withError:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, navigation, error);
     }
 }
 
@@ -734,9 +723,15 @@
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
 {
     if (self.logEnable) {
-        SSLog(@"进程终止...");
+        SSLog(@"进程终止: ...");
     }
-    [webView reload];
+    
+    SEL sel = @selector(webViewWebContentProcessDidTerminate:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id(_ss_delegate, sel, webView);
+    } else {
+        [webView reload];
+    }
 }
 
 @end

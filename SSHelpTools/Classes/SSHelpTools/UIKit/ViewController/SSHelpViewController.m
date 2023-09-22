@@ -21,7 +21,7 @@
 
 - (void)dealloc
 {
-    SSLifeCycleLog(@"%@ dealloc ... ",self)
+    SSLifeCycleLog(@"%@ dealloc ... ",self);
 }
 
 - (void)viewDidLoad

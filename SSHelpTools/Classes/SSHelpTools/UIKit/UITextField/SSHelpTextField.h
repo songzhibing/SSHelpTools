@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpTextField : UITextField
 
+- (instancetype)initWithFrame:(CGRect)frame;
+
 @property(nonatomic, assign) CGRect ss_leftViewRect;
 
 @property(nonatomic, assign) CGRect ss_rightViewRect;

@@ -12,11 +12,26 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_OPTIONS(NSInteger, SSProgressHUDBackgroundStyle ) {
+    SSProgressHUDBackgroundStyleDefault = 0, //默认
+    SSProgressHUDBackgroundStyleBlack,       //深色
+    SSProgressHUDBackgroundStyleLight,       //浅色
+};
+
+
 @interface SSProgressHUD : MBProgressHUD
 @end
 
 
 @interface SSHelpProgressHUD : NSObject
+
++ (instancetype)sharedInstance;
+
+/// 设置视图背景风格
+@property(nonatomic, assign) SSProgressHUDBackgroundStyle style;
+
+/// 是否添加一个'取消'按钮，可强制销毁视图
+@property(nonatomic, assign) BOOL showCancelButton;
 
 #pragma mark 推荐，针对短时间内多次调用进行优化。
 

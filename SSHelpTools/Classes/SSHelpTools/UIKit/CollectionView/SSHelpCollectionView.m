@@ -206,6 +206,7 @@ UICollectionViewDropDelegate>
     return SSSectionLayoutStyleNormal;
 }
 
+#pragma mark -
 #pragma mark - UICollectionViewDataSource Method
 
 - (void)collectionView:(UICollectionView *)collectionView sectionLayoutAttributes:(SSCollectionSectionLayoutAttributes *)attributes inSection:(NSInteger)section
@@ -303,36 +304,68 @@ UICollectionViewDropDelegate>
 #pragma mark -
 #pragma mark - UICollectionViewDelegate Method
 
+//- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    SEL sel = @selector(collectionView:didHighlightItemAtIndexPath:);
+//    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+//        void_objc_msgSend_id_id(_ss_delegate, sel, collectionView, indexPath);
+//    }
+//}
+
+//- (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    SEL sel = @selector(collectionView:didUnhighlightItemAtIndexPath:);
+//    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+//        void_objc_msgSend_id_id(_ss_delegate, sel, collectionView, indexPath);
+//    }
+//}
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section < _data.count) {
-        if (indexPath.item < _data[indexPath.section].cellModels.count) {
-            //SSLog(@"DidSelectedItem (%ld,%ld)",indexPath.section,indexPath.item);
-            
-            SSCollectionViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
-            if (model.onClick) {
-                __kindof UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-                model.onClick(collectionView, cell, indexPath, model.data);
-            }
-            
-            if (model.didSelect) {
-                model.didSelect();
+    SEL sel = @selector(collectionView:didSelectItemAtIndexPath:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_ss_delegate, sel, collectionView, indexPath);
+    } else {
+        if (indexPath.section < _data.count) {
+            if (indexPath.item < _data[indexPath.section].cellModels.count) {
+                SSCollectionViewCellModel *model = _data[indexPath.section].cellModels[indexPath.item];
+                if (model.onClick) {
+                    __kindof UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+                    model.onClick(collectionView, cell, indexPath, model.data);
+                }
+                if (model.didSelect) {
+                    model.didSelect();
+                }
+                //pod.version > 0.2.0
+                if (model.callback) {
+                    model.callback(nil);
+                }
             }
         }
     }
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    SEL sel = @selector(collectionView:didDeselectItemAtIndexPath:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_ss_delegate, sel, collectionView, indexPath);
+    }
+}
+
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(8.0))
 {
-    if (_viewDelegate && [_viewDelegate respondsToSelector:@selector(collectionView:willDisplayCell:forItemAtIndexPath:)]) {
-        [_viewDelegate collectionView:collectionView willDisplayCell:cell forItemAtIndexPath:indexPath];
+    SEL sel = @selector(collectionView:willDisplayCell:forItemAtIndexPath:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_ss_delegate, sel, collectionView, cell, indexPath);
     }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_viewDelegate && [_viewDelegate respondsToSelector:@selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:)]) {
-        [_viewDelegate collectionView:collectionView didEndDisplayingCell:cell forItemAtIndexPath:indexPath];
+    SEL sel = @selector(collectionView:didEndDisplayingCell:forItemAtIndexPath:);
+    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_ss_delegate, sel, collectionView, cell, indexPath);
     }
 }
 

@@ -22,7 +22,7 @@
     return theImage;
 }
 
-
+/// 压缩大小
 + (NSData *)ss_compressImageQuality:(UIImage *)image toByte:(NSInteger)maxLength
 {
     CGFloat compression = 1;
@@ -43,6 +43,44 @@
     //SSLog(@"压缩图片大小:%.2fKB 系数：%.2f",data.length/1024.f,compression);
     #endif
     return data;
+}
+
+/// 生成居中带logo的图像
++ (UIImage *)ss_generateImageWithLogo:(UIImage *)logo backgroundColor:(UIColor *)backgroundColor size:(CGSize)size
+{
+    CGRect rect = CGRectMake(0, 0, size.width, size.height);
+    
+    // 创建一个位图上下文
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
+      
+    // 绘制背景颜色
+    CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), backgroundColor.CGColor);
+    CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, size.width, size.height));
+
+    if (logo) {
+        // 计算居中位置
+        CGSize logoSize = CGSizeMake(MIN(size.width, logo.size.width), MIN(size.height, logo.size.height));
+        CGFloat x = (size.width - logoSize.width) / 2.0;
+        CGFloat y = (size.height - logoSize.height) / 2.0;
+      
+        // 绘制logo图像
+        //CGContextSetAlpha(UIGraphicsGetCurrentContext(), 0.5); // 设置图像半透明
+        [logo drawInRect:CGRectMake(x, y, logoSize.width, logoSize.height)];
+        
+        // 绘制logo图像
+        //CGContextTranslateCTM(UIGraphicsGetCurrentContext(), 0, size.height/2 - logoSize.height/2); // 将图像上下居中
+        //CGContextScaleCTM(UIGraphicsGetCurrentContext(), 1, -1); // 上下翻转，使得图像向上对齐
+        //CGContextSetAlpha(UIGraphicsGetCurrentContext(), 0.5); // 设置图像半透明
+        //[logo drawInRect:CGRectMake(0, 0, logoSize.width, logoSize.height)];
+    }
+    
+    // 获取生成的图片
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+      
+    // 结束位图上下文
+    UIGraphicsEndImageContext();
+      
+    return image;
 }
 
 + (UIImage *)ss_addWatermarkInImage:(UIImage *)image atPonit:(CGPoint)point withText:(NSString *)text
@@ -103,7 +141,7 @@
 }
 
 /// 识别二维码
-+ (void)ss_featuresInImage:(UIImage *)image callback:(void(^_Nonnull)(NSString *_Nullable result))callback;
++ (void)ss_featuresInImage:(UIImage *)image callback:(SSBlockString)callback
 {
     NSString *resultString = nil;
     CIImage *ciimage     = [[CIImage alloc] initWithCGImage:image.CGImage options:nil];

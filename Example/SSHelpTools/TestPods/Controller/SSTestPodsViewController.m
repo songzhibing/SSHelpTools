@@ -102,6 +102,18 @@
         [self_weak_.navigationController pushViewController:vc animated:YES];
     };
     [_testData addObject:webBaidu];
+
+    SSTestPodsModel *webLoc = [[SSTestPodsModel alloc] init];
+    webLoc.title = @"Local Example Html";
+    webLoc.push = ^{
+        NSString *path = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"ExampleApp.html"];
+        SSHelpWebViewController *vc = [[SSHelpWebViewController alloc] init];
+        vc.fileURL = [NSURL fileURLWithPath:path];
+        vc.readAccessURL = [NSURL fileURLWithPath:NSBundle.mainBundle.bundlePath];
+        [self_weak_.navigationController pushViewController:vc animated:YES];
+    };
+    [_testData addObject:webLoc];
+    
     
     //
     SSTestPodsModel *progressHUD = [[SSTestPodsModel alloc] init];

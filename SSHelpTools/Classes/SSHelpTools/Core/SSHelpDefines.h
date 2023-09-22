@@ -6,6 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <objc/message.h>
+
 #import "SSHelpMetamacros.h"
 #import "SSHelpToolsConfig.h"
 #import "UIColor+SSHelp.h"
@@ -20,6 +22,12 @@ typedef void(^ _Nullable SSBlockBool)(BOOL success);
 typedef void(^ _Nullable SSBlockArray)(__kindof NSArray * _Nullable array);
 typedef void(^ _Nullable SSBlockDict)(__kindof NSDictionary * _Nullable dict);
 typedef void(^ _Nullable SSBlockString)(__kindof NSString * _Nullable string);
+typedef void(^ _Nullable SSBlockData)(__kindof NSData * _Nullable data);
+typedef void(^ _Nullable SSBlockCallback)(id _Nullable response, NSError * _Nullable error);
+
+static void (*void_objc_msgSend_id)(id, SEL, id, ...) = (void (*)(id, SEL, id, ...)) objc_msgSend;
+static void (*void_objc_msgSend_id_id)(id, SEL, id, id, ...)  = (void (*)(id, SEL, id, id, ...)) objc_msgSend;
+static void (*void_objc_msgSend_id_id_id)(id, SEL, id, id, id, ...) = (void (*)(id, SEL, id, id, id, ...)) objc_msgSend;
 
 //安全调用Block
 #define _kSafeBlock(blockName,...) ({(!blockName) ? nil : blockName(__VA_ARGS__);})
@@ -75,6 +83,8 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 #define _kUserDefaults         [NSUserDefaults standardUserDefaults]
 
 #define _kNotificationCenter   [NSNotificationCenter defaultCenter]
+
+#define _kAppBundleIdentifier  NSBundle.mainBundle.bundleIdentifier
 
 //设备
 
@@ -158,10 +168,6 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
     #define SSLog(...) @{};
 #endif
 
-#define SSToolsLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"\n[SSTOOLSLOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
-
-// WKWebView日志
-#define SSWebLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLog)?((void)fprintf(stderr,"\n[SSWEBLOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
 
 #define SSLifeCycleLog(fmt, ...) @autoreleasepool { ([SSHelpToolsConfig sharedConfig].enableLifeCycleLog)?((void)fprintf(stderr,"\n[SSLIFELOG][%s][%s:%d] %s\n", [[NSDate ss_stringFromDate:[NSDate date] withFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:fmt, ##__VA_ARGS__] UTF8String])):(NULL); };
 
@@ -229,6 +235,9 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 //Other
 
 #define _kRandSixValue [NSString stringWithFormat:@"%06d",arc4random() % 100000]
+
+// API废弃、不建议使用说明
+#define _kApiDeprecatedWarning(warning) __attribute__((deprecated(#warning)))
 
 @interface SSHelpDefines : NSObject
 

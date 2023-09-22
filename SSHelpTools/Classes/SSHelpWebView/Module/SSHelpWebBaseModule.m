@@ -13,7 +13,7 @@
 {
     _webView = nil;
     _moduleDelegate = nil;
-    SSWebLog(@"%@ dealloc ......",self);
+    SSLifeCycleLog(@"%@ dealloc ......",self);
 }
 
 - (instancetype)init
@@ -22,7 +22,7 @@
     if (self) {
         NSString *className = NSStringFromClass([self class]);
         _identifier = className;
-        SSWebLog(@"%@ alloc init ......",self);
+        SSLifeCycleLog(@"%@ alloc init ......",self);
     }
     return self;
 }

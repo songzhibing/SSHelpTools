@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SSHelpTools'
-  s.version          = '0.2.0'
+  s.version          = '0.2.1'
   s.summary          = '常用工具'
 
 # This description is used to generate tags and improve search results.
@@ -41,9 +41,7 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     tools.dependency 'SDWebImage'
     tools.dependency 'UICKeyChainStore'
     tools.dependency 'MBProgressHUD'
-    tools.dependency 'FMDB'
-    #tools.dependency 'YYKit'
-    #tools.dependency 'ReactiveObjC'
+    tools.dependency 'ReactiveObjC', :configurations => ['Debug']
   end
   
   # SSHelpWebView 库

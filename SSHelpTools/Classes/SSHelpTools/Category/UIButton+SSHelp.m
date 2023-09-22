@@ -23,9 +23,6 @@ static int _ss_targets_key;
     if (targets) {
         [targets removeAllObjects];
     }
-#ifdef DEBUG
-    //SSLifeCycleLog(@"%@ dealloc ... ", self);
-#endif
 }
 
 /// 添加事件回调

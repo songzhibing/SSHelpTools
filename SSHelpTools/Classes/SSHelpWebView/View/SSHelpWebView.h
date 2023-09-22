@@ -10,6 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol SSHelpWebViewDelegate <WKNavigationDelegate,WKUIDelegate>
+
+@end
+
+
 typedef void(^_Nullable SSWebViewConfigBlock)(WKWebViewConfiguration *_Nonnull configuration);
 
 
@@ -21,6 +26,9 @@ typedef void(^_Nullable SSWebViewConfigBlock)(WKWebViewConfiguration *_Nonnull c
 
 /// 日志输出
 @property(nonatomic, assign) BOOL logEnable;
+
+/// 代理
+@property(nonatomic, weak) id <SSHelpWebViewDelegate> ss_delegate;
 
 /// js接口功能模块代理
 @property(nonatomic, weak) id <SSWebModuleDelegate> moduleDelegate;
