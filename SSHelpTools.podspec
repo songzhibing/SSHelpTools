@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SSHelpTools'
-  s.version          = '0.2.0'
+  s.version          = '0.2.1'
   s.summary          = '常用工具'
 
 # This description is used to generate tags and improve search results.
