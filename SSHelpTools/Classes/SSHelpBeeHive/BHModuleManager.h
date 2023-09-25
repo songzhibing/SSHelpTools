@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, BHModuleLevel)
+typedef NS_ENUM(NSUInteger, SSBHModuleLevel)
 {
     BHModuleBasic  = 0,
     BHModuleNormal = 1
 };
 
-typedef NS_ENUM(NSInteger, BHModuleEventType)
+typedef NS_ENUM(NSInteger, SSBHModuleEventType)
 {
     BHMSetupEvent = 0,
     BHMInitEvent,

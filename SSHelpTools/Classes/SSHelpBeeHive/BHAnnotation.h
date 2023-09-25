@@ -8,7 +8,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import "BeeHive.h"
+#import "SSBeeHive.h"
 
 #ifndef BeehiveModSectName
 

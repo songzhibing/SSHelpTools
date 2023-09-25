@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "BHServiceProtocol.h"
 #import "BHConfig.h"
-#import "BHAppDelegate.h"
+#import "SSBHAppDelegate.h"
 
 typedef enum
 {

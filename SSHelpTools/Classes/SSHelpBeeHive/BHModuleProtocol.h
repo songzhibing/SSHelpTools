@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "BHAnnotation.h"
 @class BHContext;
-@class BeeHive;
+@class SSBeeHive;
 
 #define BH_EXPORT_MODULE(isAsync) \
 + (void)load { [BeeHive registerDynamicModule:[self class]]; } \

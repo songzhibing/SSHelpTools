@@ -207,7 +207,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 
 #pragma mark - private
 
-- (BHModuleLevel)checkModuleLevel:(NSUInteger)level
+- (SSBHModuleLevel)checkModuleLevel:(NSUInteger)level
 {
     switch (level) {
         case 0:

@@ -8,19 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000
 #import <UserNotifications/UserNotifications.h>
-#endif
 
-
-@interface BHAppDelegate : UIResponder <UIApplicationDelegate>
+@interface SSBHAppDelegate : UIResponder <UIApplicationDelegate>
 
 @end
 
 typedef void (^BHNotificationResultHandler)(UIBackgroundFetchResult);
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000
 typedef void (^BHNotificationPresentationOptionsHandler)(UNNotificationPresentationOptions options);
-typedef void (^BHNotificationCompletionHandler)();
+typedef void (^BHNotificationCompletionHandler)(void);
 #endif
 
 @interface BHNotificationsItem : NSObject

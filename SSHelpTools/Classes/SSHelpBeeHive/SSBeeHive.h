@@ -4,16 +4,17 @@
  *
  * This source code is licensed under the GNU GENERAL PUBLIC LICENSE.
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
+ * 基于 https://github.com/alibaba/BeeHive 改写！！！
  */
 
 #import <Foundation/Foundation.h>
 #import "BHModuleProtocol.h"
 #import "BHContext.h"
-#import "BHAppDelegate.h"
+#import "SSBHAppDelegate.h"
 #import "BHModuleManager.h"
 #import "BHServiceManager.h"
 
-@interface BeeHive : NSObject
+@interface SSBeeHive : NSObject
 
 //save application global context
 @property(nonatomic, strong) BHContext *context;
