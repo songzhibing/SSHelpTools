@@ -10,7 +10,7 @@
 #import "SSBHModuleProtocol.h"
 #import "SSBHContext.h"
 #import "SSBHTimeProfiler.h"
-#import "BHAnnotation.h"
+#import "SSBHAnnotation.h"
 
 #define kModuleArrayKey     @"moduleClasses"
 #define kModuleInfoNameKey  @"moduleClass"

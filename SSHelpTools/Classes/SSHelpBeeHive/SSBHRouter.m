@@ -6,16 +6,15 @@
 //  Copyright © 2017年 Taobao lnc. All rights reserved.
 //
 
-#import "SSBHRouter.h"
-
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 
+#import "SSBHRouter.h"
 #import "SSBHModuleProtocol.h"
 #import "SSBHServiceProtocol.h"
 #import "SSBHCommon.h"
 #import "SSBHModuleManager.h"
-#import "BHServiceManager.h"
+#import "SSBHServiceManager.h"
 
 @interface NSObject (BHRetType)
 
@@ -389,7 +388,7 @@ static NSString *BHRURLGlobalScheme = nil;
                 case BHRUsageCallService: {
                     NSString *selectorStr = subPaths[2];
                     SEL selector = NSSelectorFromString(selectorStr);
-                    obj = [[BHServiceManager sharedManager] createService:protocol];
+                    obj = [[SSBHServiceManager sharedManager] createService:protocol];
                     returnValue = [self safePerformAction:selector forTarget:obj withParams:finalParams];
                 } break;
                 case BHRUsageJumpViewControler: {
@@ -399,7 +398,7 @@ static NSString *BHRURLGlobalScheme = nil;
                     }
                     
                     if ([mClass conformsToProtocol:@protocol(SSBHServiceProtocol)] && protocol) {
-                        obj = [[BHServiceManager sharedManager] createService:protocol];
+                        obj = [[SSBHServiceManager sharedManager] createService:protocol];
                     } else {
                         obj = [[mClass alloc] init];
                     }
@@ -411,7 +410,7 @@ static NSString *BHRURLGlobalScheme = nil;
                     if ([mClass conformsToProtocol:@protocol(SSBHModuleProtocol)]) {
                         [[SSBHModuleManager sharedManager] registerDynamicModule:mClass];
                     } else if ([mClass conformsToProtocol:@protocol(SSBHServiceProtocol)] && protocol) {
-                        [[BHServiceManager sharedManager] registerService:protocol implClass:mClass];
+                        [[SSBHServiceManager sharedManager] registerService:protocol implClass:mClass];
                     }
                 } break;
                     

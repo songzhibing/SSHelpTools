@@ -12,7 +12,7 @@
 #include <dlfcn.h>
 #include <mach-o/ldsyms.h>
 
-#import "BHAnnotation.h"
+#import "SSBHAnnotation.h"
 #import "SSBHCommon.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
@@ -20,7 +20,7 @@
 NSArray<NSString *>* BHReadConfiguration(char *sectionName,const struct mach_header *mhp);
 static void dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide)
 {
-    NSArray *mods = BHReadConfiguration(BeehiveModSectName, mhp);
+    NSArray *mods = BHReadConfiguration(SSBeehiveModSectName, mhp);
     for (NSString *modName in mods) {
         Class cls;
         if (modName) {
@@ -33,7 +33,7 @@ static void dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide)
     }
     
     //register services
-    NSArray<NSString *> *services = BHReadConfiguration(BeehiveServiceSectName,mhp);
+    NSArray<NSString *> *services = BHReadConfiguration(SSBeehiveServiceSectName,mhp);
     for (NSString *map in services) {
         NSData *jsonData =  [map dataUsingEncoding:NSUTF8StringEncoding];
         NSError *error = nil;
@@ -45,7 +45,7 @@ static void dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide)
                 NSString *clsName  = [json allValues][0];
                 
                 if (protocol && clsName) {
-                    [[BHServiceManager sharedManager] registerService:NSProtocolFromString(protocol) implClass:NSClassFromString(clsName)];
+                    [[SSBHServiceManager sharedManager] registerService:NSProtocolFromString(protocol) implClass:NSClassFromString(clsName)];
                 }
                 
             }
@@ -84,7 +84,7 @@ NSArray<NSString *>* BHReadConfiguration(char *sectionName,const struct mach_hea
     
 }
 
-@implementation BHAnnotation
+@implementation SSBHAnnotation
 
 @end
 

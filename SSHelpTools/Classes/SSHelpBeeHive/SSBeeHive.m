@@ -31,12 +31,12 @@
 
 - (id)createService:(Protocol *)proto;
 {
-    return [[BHServiceManager sharedManager] createService:proto];
+    return [[SSBHServiceManager sharedManager] createService:proto];
 }
 
 - (void)registerService:(Protocol *)proto service:(Class) serviceClass
 {
-    [[BHServiceManager sharedManager] registerService:proto implClass:serviceClass];
+    [[SSBHServiceManager sharedManager] registerService:proto implClass:serviceClass];
 }
     
 + (void)triggerCustomEvent:(NSInteger)eventType
@@ -73,9 +73,9 @@
 
 -(void)loadStaticServices
 {
-    [BHServiceManager sharedManager].enableException = self.enableException;
+    [SSBHServiceManager sharedManager].enableException = self.enableException;
     
-    [[BHServiceManager sharedManager] registerLocalServices];
+    [[SSBHServiceManager sharedManager] registerLocalServices];
     
 }
 

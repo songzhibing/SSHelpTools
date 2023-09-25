@@ -10,9 +10,8 @@
 #endif
 #endif
 
-#import "BHAnnotation.h"
-#import "BHServiceManager.h"
 #import "SSBeeHive.h"
+#import "SSBHAnnotation.h"
 #import "SSBHAppDelegate.h"
 #import "SSBHCommon.h"
 #import "SSBHConfig.h"
@@ -21,6 +20,7 @@
 #import "SSBHModuleManager.h"
 #import "SSBHModuleProtocol.h"
 #import "SSBHRouter.h"
+#import "SSBHServiceManager.h"
 #import "SSBHServiceProtocol.h"
 #import "SSBHTimeProfiler.h"
 #import "SSBHWatchDog.h"

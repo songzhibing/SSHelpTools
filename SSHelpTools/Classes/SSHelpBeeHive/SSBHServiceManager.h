@@ -10,7 +10,7 @@
 
 @class SSBHContext;
 
-@interface BHServiceManager : NSObject
+@interface SSBHServiceManager : NSObject
 
 @property (nonatomic, assign) BOOL  enableException;
 

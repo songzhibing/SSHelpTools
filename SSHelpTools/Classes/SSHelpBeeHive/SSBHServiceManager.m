@@ -5,22 +5,22 @@
  * This source code is licensed under the GNU GENERAL PUBLIC LICENSE.
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
-#import "BHServiceManager.h"
+#import "SSBHServiceManager.h"
 #import "SSBHContext.h"
-#import "BHAnnotation.h"
+#import "SSBHAnnotation.h"
 #import <objc/runtime.h>
 
 static const NSString *kService = @"service";
 static const NSString *kImpl = @"impl";
 
-@interface BHServiceManager()
+@interface SSBHServiceManager()
 
 @property (nonatomic, strong) NSMutableDictionary *allServicesDict;
 @property (nonatomic, strong) NSRecursiveLock *lock;
 
 @end
 
-@implementation BHServiceManager
+@implementation SSBHServiceManager
 
 + (instancetype)sharedManager
 {

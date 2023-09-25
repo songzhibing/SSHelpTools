@@ -7,7 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "BHAnnotation.h"
+#import "SSBHAnnotation.h"
 @class SSBHContext;
 @class SSBeeHive;
 
