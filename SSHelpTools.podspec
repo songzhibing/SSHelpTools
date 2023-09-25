@@ -34,7 +34,10 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     tools.source_files = 'SSHelpTools/Classes/SSHelpTools/**/*.{h,m}'
     tools.public_header_files = 'SSHelpTools/Classes/SSHelpTools/**/*.h'
     tools.resource_bundles = {
-      'SSHelpTools'=> ['SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.bundle','SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.xcassets']
+      'SSHelpTools'=> [
+        'SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.bundle',
+        'SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.xcassets'
+      ]
     }
     tools.frameworks = 'UIKit','Foundation','CoreLocation','AVFoundation','PhotosUI','CoreTelephony','NetworkExtension','SystemConfiguration','QuickLook','MobileCoreServices'
     tools.dependency 'Masonry'
@@ -68,6 +71,13 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     network.frameworks = 'CoreTelephony'
     network.dependency 'AFNetworking'
     network.dependency 'ReactiveObjC', :configurations => ['Debug']
+  end
+  
+  # alibaba/BeeHive 改写
+  s.subspec 'SSHelpBeeHive' do |beehive|
+    beehive.source_files = 'SSHelpTools/Classes/SSHelpBeeHive/*.{h,m}'
+    #beehive.resource = 'SSHelpTools/Classes/SSHelpBeeHive/*.bundle'
+    beehive.frameworks = 'QuartzCore','UIKit'
   end
   
 end

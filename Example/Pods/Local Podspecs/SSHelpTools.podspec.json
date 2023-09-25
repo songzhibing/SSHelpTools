@@ -115,6 +115,15 @@
           "debug"
         ]
       }
+    },
+    {
+      "name": "SSHelpBeeHive",
+      "source_files": "SSHelpTools/Classes/SSHelpBeeHive/*.{h,m}",
+      "resources": "SSHelpTools/Classes/SSHelpBeeHive/*.bundle",
+      "frameworks": [
+        "QuartzCore",
+        "UIKit"
+      ]
     }
   ]
 }

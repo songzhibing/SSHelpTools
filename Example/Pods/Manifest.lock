@@ -14,6 +14,7 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
+  - BeeHive (1.6.0)
   - CocoaAsyncSocket (7.6.5)
   - CocoaHTTPServer (2.3):
     - CocoaAsyncSocket
@@ -37,10 +38,12 @@ PODS:
     - SDWebImage/Core (= 5.13.2)
   - SDWebImage/Core (5.13.2)
   - SSHelpTools (0.2.1):
+    - SSHelpTools/SSHelpBeeHive (= 0.2.1)
     - SSHelpTools/SSHelpLog (= 0.2.1)
     - SSHelpTools/SSHelpNetwork (= 0.2.1)
     - SSHelpTools/SSHelpTools (= 0.2.1)
     - SSHelpTools/SSHelpWebView (= 0.2.1)
+  - SSHelpTools/SSHelpBeeHive (0.2.1)
   - SSHelpTools/SSHelpLog (0.2.1):
     - CocoaLumberjack
     - GCDWebServer
@@ -63,6 +66,7 @@ PODS:
   - YYKit/no-arc (1.0.9)
 
 DEPENDENCIES:
+  - BeeHive
   - CocoaHTTPServer
   - FBSnapshotTestCase
   - FLEX
@@ -74,6 +78,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AFNetworking
+    - BeeHive
     - CocoaAsyncSocket
     - CocoaHTTPServer
     - CocoaLumberjack
@@ -94,6 +99,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
+  BeeHive: 64c01ddec33b9ef8813701e075eeb732327d0f75
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CocoaHTTPServer: 5624681fc3473d43b18202f635f9b3abb013b530
   CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
@@ -104,11 +110,11 @@ SPEC CHECKSUMS:
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
-  SSHelpTools: 5425ea39ac01fdf0bcd2d128ac8d6f2a9290d083
+  SSHelpTools: df22cf41203ea5e25ca825381e050cce9da02cda
   UICKeyChainStore: ba3bff2c762b12db1e516f395c837dd25298b05e
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: 9031dbf2b7fc4132534e46ed86ca37cd751162a2
+PODFILE CHECKSUM: 1a6f49bddc7ddfe0d43080206df0b47608a5e0e8
 
 COCOAPODS: 1.11.2
