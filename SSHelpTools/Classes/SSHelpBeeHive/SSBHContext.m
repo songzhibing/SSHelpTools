@@ -6,9 +6,9 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import "BHContext.h"
+#import "SSBHContext.h"
 
-@interface BHContext()
+@interface SSBHContext()
 
 @property(nonatomic, strong) NSMutableDictionary *modulesByName;
 
@@ -16,7 +16,7 @@
 
 @end
 
-@implementation BHContext
+@implementation SSBHContext
 
 + (instancetype)shareInstance
 {
@@ -25,8 +25,8 @@
     
     dispatch_once(&p, ^{
         BHInstance = [[[self class] alloc] init];
-        if ([BHInstance isKindOfClass:[BHContext class]]) {
-            ((BHContext *) BHInstance).config = [BHConfig shareInstance];
+        if ([BHInstance isKindOfClass:[SSBHContext class]]) {
+            ((SSBHContext *) BHInstance).config = [SSBHConfig shareInstance];
         }
     });
     
@@ -35,17 +35,17 @@
 
 - (void)addServiceWithImplInstance:(id)implInstance serviceName:(NSString *)serviceName
 {
-    [[BHContext shareInstance].servicesByName setObject:implInstance forKey:serviceName];
+    [[SSBHContext shareInstance].servicesByName setObject:implInstance forKey:serviceName];
 }
 
 - (void)removeServiceWithServiceName:(NSString *)serviceName
 {
-    [[BHContext shareInstance].servicesByName removeObjectForKey:serviceName];
+    [[SSBHContext shareInstance].servicesByName removeObjectForKey:serviceName];
 }
 
 - (id)getServiceInstanceFromServiceName:(NSString *)serviceName
 {
-    return [[BHContext shareInstance].servicesByName objectForKey:serviceName];
+    return [[SSBHContext shareInstance].servicesByName objectForKey:serviceName];
 }
 
 - (instancetype)init
@@ -70,7 +70,7 @@
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    BHContext *context = [[self.class allocWithZone:zone] init];
+    SSBHContext *context = [[self.class allocWithZone:zone] init];
     
     context.env = self.env;
     context.config = self.config;

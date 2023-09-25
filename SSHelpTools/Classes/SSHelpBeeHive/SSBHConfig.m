@@ -6,18 +6,18 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import "BHConfig.h"
+#import "SSBHConfig.h"
 #import "SSBHCommon.h"
 
-@interface BHConfig()
+@interface SSBHConfig()
 
 @property(nonatomic, strong) NSMutableDictionary *config;
 
 @end
 
-@implementation BHConfig
+@implementation SSBHConfig
 
-static BHConfig *_BHConfigInstance;
+static SSBHConfig *_BHConfigInstance;
 
 
 + (instancetype)shareInstance
@@ -33,76 +33,76 @@ static BHConfig *_BHConfigInstance;
 
 + (NSString *)stringValue:(NSString *)key
 {
-    if (![BHConfig shareInstance].config) {
+    if (![SSBHConfig shareInstance].config) {
         return nil;
     }
     
-    return (NSString *)[[BHConfig shareInstance].config objectForKey:key];
+    return (NSString *)[[SSBHConfig shareInstance].config objectForKey:key];
 }
 
 + (NSDictionary *)dictionaryValue:(NSString *)key
 {
-    if (![BHConfig shareInstance].config) {
+    if (![SSBHConfig shareInstance].config) {
         return nil;
     }
     
-    if (![[[BHConfig shareInstance].config objectForKey:key] isKindOfClass:[NSDictionary class]]) {
+    if (![[[SSBHConfig shareInstance].config objectForKey:key] isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
     
-    return (NSDictionary *)[[BHConfig shareInstance].config objectForKey:key];
+    return (NSDictionary *)[[SSBHConfig shareInstance].config objectForKey:key];
 }
 
 + (NSArray *)arrayValue:(NSString *)key
 {
-    if (![BHConfig shareInstance].config) {
+    if (![SSBHConfig shareInstance].config) {
         return nil;
     }
     
-    if (![[[BHConfig shareInstance].config objectForKey:key] isKindOfClass:[NSArray class]]) {
+    if (![[[SSBHConfig shareInstance].config objectForKey:key] isKindOfClass:[NSArray class]]) {
         return nil;
     }
     
-    return (NSArray *)[[BHConfig shareInstance].config objectForKey:key];
+    return (NSArray *)[[SSBHConfig shareInstance].config objectForKey:key];
 }
 
 + (NSInteger)integerValue:(NSString *)key
 {
-    if (![BHConfig shareInstance].config) {
+    if (![SSBHConfig shareInstance].config) {
         return 0;
     }
     
-    return [[[BHConfig shareInstance].config objectForKey:key] integerValue];
+    return [[[SSBHConfig shareInstance].config objectForKey:key] integerValue];
 }
 
 + (float)floatValue:(NSString *)key
 {
-    if (![BHConfig shareInstance].config) {
+    if (![SSBHConfig shareInstance].config) {
         return 0.0;
     }
     
-    return [(NSNumber *)[[BHConfig shareInstance].config objectForKey:key] floatValue];
+    return [(NSNumber *)[[SSBHConfig shareInstance].config objectForKey:key] floatValue];
 }
 
 + (BOOL)boolValue:(NSString *)key
 {
-    if (![BHConfig shareInstance].config) {
+    if (![SSBHConfig shareInstance].config) {
         return NO;
     }
     
-    return [(NSNumber *)[[BHConfig shareInstance].config objectForKey:key] boolValue];
+    return [(NSNumber *)[[SSBHConfig shareInstance].config objectForKey:key] boolValue];
 }
 
 
 + (id)get:(NSString *)key
 {
-    if (![BHConfig shareInstance].config) {
+    if (![SSBHConfig shareInstance].config) {
         @throw [NSException exceptionWithName:@"ConfigNotInitialize" reason:@"config not initialize" userInfo:nil];
         
         return nil;
     }
     
-    id v = [[BHConfig shareInstance].config objectForKey:key];
+    id v = [[SSBHConfig shareInstance].config objectForKey:key];
     if (!v) {
         SSBHLog(@"InvaildKeyValue %@ is nil", key);
     }
@@ -112,11 +112,11 @@ static BHConfig *_BHConfigInstance;
 
 + (BOOL)has:(NSString *)key
 {
-    if (![BHConfig shareInstance].config) {
+    if (![SSBHConfig shareInstance].config) {
         return NO;
     }
     
-    if (![[BHConfig shareInstance].config objectForKey:key]) {
+    if (![[SSBHConfig shareInstance].config objectForKey:key]) {
         return NO;
     }
     
@@ -125,11 +125,11 @@ static BHConfig *_BHConfigInstance;
 
 + (void)set:(NSString *)key value:(id)value
 {
-    if (![BHConfig shareInstance].config) {
-        [BHConfig shareInstance].config = [[NSMutableDictionary alloc] initWithCapacity:10];
+    if (![SSBHConfig shareInstance].config) {
+        [SSBHConfig shareInstance].config = [[NSMutableDictionary alloc] initWithCapacity:10];
     }
     
-    [[BHConfig shareInstance].config setObject:value forKey:key];
+    [[SSBHConfig shareInstance].config setObject:value forKey:key];
 }
 
 
@@ -146,22 +146,22 @@ static BHConfig *_BHConfigInstance;
 
 + (void) add:(NSDictionary *)parameters
 {
-    if (![BHConfig shareInstance].config) {
-        [BHConfig shareInstance].config = [[NSMutableDictionary alloc] initWithCapacity:10];
+    if (![SSBHConfig shareInstance].config) {
+        [SSBHConfig shareInstance].config = [[NSMutableDictionary alloc] initWithCapacity:10];
     }
     
-    [[BHConfig shareInstance].config addEntriesFromDictionary:parameters];
+    [[SSBHConfig shareInstance].config addEntriesFromDictionary:parameters];
 }
 
 + (NSDictionary *) getAll
 {
-    return [BHConfig shareInstance].config;
+    return [SSBHConfig shareInstance].config;
 }
 
 + (void)clear
 {
-    if ([BHConfig shareInstance].config) {
-        [[BHConfig shareInstance].config removeAllObjects];
+    if ([SSBHConfig shareInstance].config) {
+        [[SSBHConfig shareInstance].config removeAllObjects];
     }
 }
 

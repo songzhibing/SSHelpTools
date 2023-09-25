@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface BHConfig : NSObject
+@interface SSBHConfig : NSObject
 
 + (instancetype)shareInstance;
 

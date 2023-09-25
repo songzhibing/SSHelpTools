@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SSBHServiceProtocol.h"
-#import "BHConfig.h"
+#import "SSBHConfig.h"
 #import "SSBHAppDelegate.h"
 
 typedef enum
@@ -17,19 +17,20 @@ typedef enum
     BHEnvironmentTest,
     BHEnvironmentStage,
     BHEnvironmentProd
-}BHEnvironmentType;
+}SSBHEnvironmentType;
 
 
-@interface BHContext : NSObject <NSCopying>
+@interface SSBHContext : NSObject <NSCopying>
 
 //global env
-@property(nonatomic, assign) BHEnvironmentType env;
+@property(nonatomic, assign) SSBHEnvironmentType env;
 
 //global config
-@property(nonatomic, strong) BHConfig *config;
+@property(nonatomic, strong) SSBHConfig *config;
 
 //application appkey
 @property(nonatomic, strong) NSString *appkey;
+
 //customEvent>=1000
 @property(nonatomic, assign) NSInteger customEvent;
 

@@ -6,7 +6,7 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 #import "BHServiceManager.h"
-#import "BHContext.h"
+#import "SSBHContext.h"
 #import "BHAnnotation.h"
 #import <objc/runtime.h>
 
@@ -34,7 +34,7 @@ static const NSString *kImpl = @"impl";
 
 - (void)registerLocalServices
 {
-    NSString *serviceConfigName = [BHContext shareInstance].serviceConfigName;
+    NSString *serviceConfigName = [SSBHContext shareInstance].serviceConfigName;
     
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:serviceConfigName ofType:@"plist"];
     if (!plistPath) {
@@ -108,7 +108,7 @@ static const NSString *kImpl = @"impl";
     
     NSString *serviceStr = serviceName;
     if (shouldCache) {
-        id protocolImpl = [[BHContext shareInstance] getServiceInstanceFromServiceName:serviceStr];
+        id protocolImpl = [[SSBHContext shareInstance] getServiceInstanceFromServiceName:serviceStr];
         if (protocolImpl) {
             return protocolImpl;
         }
@@ -122,7 +122,7 @@ static const NSString *kImpl = @"impl";
             else
                 implInstance = [[implClass alloc] init];
             if (shouldCache) {
-                [[BHContext shareInstance] addServiceWithImplInstance:implInstance serviceName:serviceStr];
+                [[SSBHContext shareInstance] addServiceWithImplInstance:implInstance serviceName:serviceStr];
                 return implInstance;
             } else {
                 return implInstance;
@@ -134,12 +134,12 @@ static const NSString *kImpl = @"impl";
 
 - (id)getServiceInstanceFromServiceName:(NSString *)serviceName
 {
-    return [[BHContext shareInstance] getServiceInstanceFromServiceName:serviceName];
+    return [[SSBHContext shareInstance] getServiceInstanceFromServiceName:serviceName];
 }
 
 - (void)removeServiceWithServiceName:(NSString *)serviceName
 {
-    [[BHContext shareInstance] removeServiceWithServiceName:serviceName];
+    [[SSBHContext shareInstance] removeServiceWithServiceName:serviceName];
 }
 
 

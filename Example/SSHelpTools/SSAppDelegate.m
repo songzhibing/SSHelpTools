@@ -15,13 +15,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     printf("应用程序启动>>>");
-    [BHContext shareInstance].application = application;
-    [BHContext shareInstance].launchOptions = launchOptions;
+    [SSBHContext shareInstance].application = application;
+    [SSBHContext shareInstance].launchOptions = launchOptions;
     //[BHContext shareInstance].moduleConfigName = @"BeeHive.bundle/BeeHive";//可选，默认为BeeHive.bundle/BeeHive.plist
     //[BHContext shareInstance].serviceConfigName = @"BeeHive.bundle/BHService";
     
     [SSBeeHive shareInstance].enableException = YES;
-    [[SSBeeHive shareInstance] setContext:[BHContext shareInstance]];
+    [[SSBeeHive shareInstance] setContext:[SSBHContext shareInstance]];
     [[SSBHTimeProfiler sharedTimeProfiler] recordEventTime:@"SSBeeHive::super start launch"];
 
     

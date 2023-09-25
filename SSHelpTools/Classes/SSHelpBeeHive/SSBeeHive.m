@@ -50,7 +50,7 @@
 
 #pragma mark - Private
 
--(void)setContext:(BHContext *)context
+-(void)setContext:(SSBHContext *)context
 {
     _context = context;
     

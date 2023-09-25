@@ -9,7 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SSBHModuleProtocol.h"
-#import "BHContext.h"
+#import "SSBHContext.h"
 #import "SSBHAppDelegate.h"
 #import "SSBHModuleManager.h"
 #import "BHServiceManager.h"
@@ -17,7 +17,7 @@
 @interface SSBeeHive : NSObject
 
 //save application global context
-@property(nonatomic, strong) BHContext *context;
+@property(nonatomic, strong) SSBHContext *context;
 
 @property (nonatomic, assign) BOOL enableException;
 

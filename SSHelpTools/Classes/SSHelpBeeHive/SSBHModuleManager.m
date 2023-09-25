@@ -8,7 +8,7 @@
 
 #import "SSBHModuleManager.h"
 #import "SSBHModuleProtocol.h"
-#import "BHContext.h"
+#import "SSBHContext.h"
 #import "SSBHTimeProfiler.h"
 #import "BHAnnotation.h"
 
@@ -75,7 +75,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 - (void)loadLocalModules
 {
     
-    NSString *plistPath = [[NSBundle mainBundle] pathForResource:[BHContext shareInstance].moduleConfigName ofType:@"plist"];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:[SSBHContext shareInstance].moduleConfigName ofType:@"plist"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:plistPath]) {
         return;
     }
@@ -454,7 +454,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 - (void)handleModulesInitEventForTarget:(id<SSBHModuleProtocol>)target
                         withCustomParam:(NSDictionary *)customParam
 {
-    BHContext *context = [BHContext shareInstance].copy;
+    SSBHContext *context = [SSBHContext shareInstance].copy;
     context.customParam = customParam;
     context.customEvent = BHMInitEvent;
     
@@ -499,7 +499,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 - (void)handleModulesTearDownEventForTarget:(id<SSBHModuleProtocol>)target
                             withCustomParam:(NSDictionary *)customParam
 {
-    BHContext *context = [BHContext shareInstance].copy;
+    SSBHContext *context = [SSBHContext shareInstance].copy;
     context.customParam = customParam;
     context.customEvent = BHMTearDownEvent;
     
@@ -524,7 +524,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
            withSeletorStr:(NSString *)selectorStr
            andCustomParam:(NSDictionary *)customParam
 {
-    BHContext *context = [BHContext shareInstance].copy;
+    SSBHContext *context = [SSBHContext shareInstance].copy;
     context.customParam = customParam;
     context.customEvent = eventType;
     if (!selectorStr.length) {

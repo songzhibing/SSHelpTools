@@ -151,7 +151,7 @@ static NSString *BHRURLGlobalScheme = nil;
 + (instancetype)globalRouter
 {
     if (!BHRURLGlobalScheme) {
-        NSString *plistPath = [[NSBundle mainBundle] pathForResource:[BHContext shareInstance].moduleConfigName ofType:@"plist"];
+        NSString *plistPath = [[NSBundle mainBundle] pathForResource:[SSBHContext shareInstance].moduleConfigName ofType:@"plist"];
         if ([[NSFileManager defaultManager] fileExistsAtPath:plistPath]) {
             NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
             BHRURLGlobalScheme = [plist objectForKey:BHRURLSchemeGlobalKey];

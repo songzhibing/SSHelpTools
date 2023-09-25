@@ -11,12 +11,12 @@
 #endif
 
 #import "BHAnnotation.h"
-#import "BHConfig.h"
-#import "BHContext.h"
 #import "BHServiceManager.h"
 #import "SSBeeHive.h"
 #import "SSBHAppDelegate.h"
 #import "SSBHCommon.h"
+#import "SSBHConfig.h"
+#import "SSBHContext.h"
 #import "SSBHDefines.h"
 #import "SSBHModuleManager.h"
 #import "SSBHModuleProtocol.h"

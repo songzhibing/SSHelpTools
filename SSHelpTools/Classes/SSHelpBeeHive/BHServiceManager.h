@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class BHContext;
+@class SSBHContext;
 
 @interface BHServiceManager : NSObject
 

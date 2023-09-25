@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "BHAnnotation.h"
-@class BHContext;
+@class SSBHContext;
 @class SSBeeHive;
 
 #define BH_EXPORT_MODULE(isAsync) \
@@ -29,53 +29,53 @@
 
 - (BOOL)async;
 
-- (void)modSetUp:(BHContext *)context;
+- (void)modSetUp:(SSBHContext *)context;
 
-- (void)modInit:(BHContext *)context;
+- (void)modInit:(SSBHContext *)context;
 
-- (void)modSplash:(BHContext *)context;
+- (void)modSplash:(SSBHContext *)context;
 
-- (void)modQuickAction:(BHContext *)context;
+- (void)modQuickAction:(SSBHContext *)context;
 
-- (void)modTearDown:(BHContext *)context;
+- (void)modTearDown:(SSBHContext *)context;
 
-- (void)modWillResignActive:(BHContext *)context;
+- (void)modWillResignActive:(SSBHContext *)context;
 
-- (void)modDidEnterBackground:(BHContext *)context;
+- (void)modDidEnterBackground:(SSBHContext *)context;
 
-- (void)modWillEnterForeground:(BHContext *)context;
+- (void)modWillEnterForeground:(SSBHContext *)context;
 
-- (void)modDidBecomeActive:(BHContext *)context;
+- (void)modDidBecomeActive:(SSBHContext *)context;
 
-- (void)modWillTerminate:(BHContext *)context;
+- (void)modWillTerminate:(SSBHContext *)context;
 
-- (void)modUnmount:(BHContext *)context;
+- (void)modUnmount:(SSBHContext *)context;
 
-- (void)modOpenURL:(BHContext *)context;
+- (void)modOpenURL:(SSBHContext *)context;
 
-- (void)modDidReceiveMemoryWaring:(BHContext *)context;
+- (void)modDidReceiveMemoryWaring:(SSBHContext *)context;
 
-- (void)modDidFailToRegisterForRemoteNotifications:(BHContext *)context;
+- (void)modDidFailToRegisterForRemoteNotifications:(SSBHContext *)context;
 
-- (void)modDidRegisterForRemoteNotifications:(BHContext *)context;
+- (void)modDidRegisterForRemoteNotifications:(SSBHContext *)context;
 
-- (void)modDidReceiveRemoteNotification:(BHContext *)context;
+- (void)modDidReceiveRemoteNotification:(SSBHContext *)context;
 
-- (void)modDidReceiveLocalNotification:(BHContext *)context;
+- (void)modDidReceiveLocalNotification:(SSBHContext *)context;
 
-- (void)modWillPresentNotification:(BHContext *)context;
+- (void)modWillPresentNotification:(SSBHContext *)context;
 
-- (void)modDidReceiveNotificationResponse:(BHContext *)context;
+- (void)modDidReceiveNotificationResponse:(SSBHContext *)context;
 
-- (void)modWillContinueUserActivity:(BHContext *)context;
+- (void)modWillContinueUserActivity:(SSBHContext *)context;
 
-- (void)modContinueUserActivity:(BHContext *)context;
+- (void)modContinueUserActivity:(SSBHContext *)context;
 
-- (void)modDidFailToContinueUserActivity:(BHContext *)context;
+- (void)modDidFailToContinueUserActivity:(SSBHContext *)context;
 
-- (void)modDidUpdateContinueUserActivity:(BHContext *)context;
+- (void)modDidUpdateContinueUserActivity:(SSBHContext *)context;
 
-- (void)modHandleWatchKitExtensionRequest:(BHContext *)context;
+- (void)modHandleWatchKitExtensionRequest:(SSBHContext *)context;
 
-- (void)modDidCustomEvent:(BHContext *)context;
+- (void)modDidCustomEvent:(SSBHContext *)context;
 @end
