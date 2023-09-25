@@ -13,7 +13,7 @@
 #include <mach-o/ldsyms.h>
 
 #import "BHAnnotation.h"
-#import "BHCommon.h"
+#import "SSBHCommon.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 
@@ -75,7 +75,7 @@ NSArray<NSString *>* BHReadConfiguration(char *sectionName,const struct mach_hea
         NSString *str = [NSString stringWithUTF8String:string];
         if(!str)continue;
         
-        BHLog(@"config = %@", str);
+        SSBHLog(@"config = %@", str);
         if(str) [configs addObject:str];
     }
     

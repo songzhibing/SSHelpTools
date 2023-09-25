@@ -7,7 +7,7 @@
  */
 
 #import "BHConfig.h"
-#import "BHCommon.h"
+#import "SSBHCommon.h"
 
 @interface BHConfig()
 
@@ -104,7 +104,7 @@ static BHConfig *_BHConfigInstance;
     
     id v = [[BHConfig shareInstance].config objectForKey:key];
     if (!v) {
-        BHLog(@"InvaildKeyValue %@ is nil", key);
+        SSBHLog(@"InvaildKeyValue %@ is nil", key);
     }
     
     return v;

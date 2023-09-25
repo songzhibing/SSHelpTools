@@ -21,7 +21,7 @@ static NSString *const BHRURLFragmentViewControlerEnterModeModal = @"modal";
 
 typedef void(^BHRPathComponentCustomHandler)(NSDictionary<NSString *, id> *params);
 
-@interface BHRouter : NSObject
+@interface SSBHRouter : NSObject
 
 
 - (instancetype)init NS_UNAVAILABLE;

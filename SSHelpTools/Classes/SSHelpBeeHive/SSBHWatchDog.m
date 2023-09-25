@@ -7,7 +7,7 @@
  */
 
 #import "SSBHWatchDog.h"
-#import "BHCommon.h"
+#import "SSBHCommon.h"
 #import <UIKit/UIKit.h>
 
 typedef void (^handler)(void);
@@ -75,7 +75,7 @@ typedef void (^watchdogFiredCallBack)(void);
             //避免后台切换导致进入断言
             NSAssert([UIApplication sharedApplication].applicationState == UIApplicationStateBackground, message);
         } else {
-            BHLog(@"%@", message);
+            SSBHLog(@"%@", message);
         }
     }];
 

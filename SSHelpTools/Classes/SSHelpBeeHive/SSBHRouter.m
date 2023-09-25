@@ -6,14 +6,14 @@
 //  Copyright © 2017年 Taobao lnc. All rights reserved.
 //
 
-#import "BHRouter.h"
+#import "SSBHRouter.h"
 
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 
 #import "SSBHModuleProtocol.h"
 #import "SSBHServiceProtocol.h"
-#import "BHCommon.h"
+#import "SSBHCommon.h"
 #import "SSBHModuleManager.h"
 #import "BHServiceManager.h"
 
@@ -109,7 +109,7 @@ typedef NS_ENUM(NSUInteger, BHRUsage) {
     BHRUsageRegister
 };
 
-static NSMutableDictionary<NSString *, BHRouter *> *routerByScheme = nil;
+static NSMutableDictionary<NSString *, SSBHRouter *> *routerByScheme = nil;
 
 
 @interface BHRPathComponent : NSObject
@@ -129,14 +129,14 @@ static NSMutableDictionary<NSString *, BHRouter *> *routerByScheme = nil;
 
 static NSString *BHRURLGlobalScheme = nil;
 
-@interface BHRouter ()
+@interface SSBHRouter ()
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, BHRPathComponent *> *pathComponentByKey;
 @property (nonatomic, copy) NSString *scheme;
 
 @end
 
-@implementation BHRouter
+@implementation SSBHRouter
 
 #pragma mark - property init
 - (NSMutableDictionary<NSString *, BHRPathComponent *> *)pathComponentByKey {
@@ -172,7 +172,7 @@ static NSString *BHRURLGlobalScheme = nil;
         return nil;
     }
     
-    BHRouter *router = nil;
+    SSBHRouter *router = nil;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -240,7 +240,7 @@ static NSString *BHRURLGlobalScheme = nil;
         return NO;
     }
     
-    BHRouter *router = [self routerForScheme:scheme];
+    SSBHRouter *router = [self routerForScheme:scheme];
     
     NSArray<NSString *> *pathComponents = URL.pathComponents;
     
@@ -333,7 +333,7 @@ static NSString *BHRURLGlobalScheme = nil;
     }
     
     NSString *scheme = URL.scheme;
-    BHRouter *router = [self routerForScheme:scheme];
+    SSBHRouter *router = [self routerForScheme:scheme];
     
     NSString *host = URL.host;
     BHRUsage usage = [self usage:host];
@@ -514,7 +514,7 @@ static NSString *BHRURLGlobalScheme = nil;
     NSError *error;
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:[json dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&error];
     if (error) {
-        BHLog(@"BeeHive-BHRouter [Error] Wrong URL Query Format: \n%@", error.description);
+        SSBHLog(@"BeeHive-BHRouter [Error] Wrong URL Query Format: \n%@", error.description);
     }
     return dic;
 }

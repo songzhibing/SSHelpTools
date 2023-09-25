@@ -6,14 +6,14 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#ifndef BHDefines_h
-#define BHDefines_h
+#ifndef SSBHDefines_h
+#define SSBHDefines_h
 
 
 #if defined(__cplusplus)
-#define BH_EXTERN extern "C" __attribute__((visibility("default")))
+#define SSBH_EXTERN extern "C" __attribute__((visibility("default")))
 #else
-#define BH_EXTERN extern __attribute__((visibility("default")))
+#define SSBH_EXTERN extern __attribute__((visibility("default")))
 #endif
 
 #endif /* BHDefines_h */

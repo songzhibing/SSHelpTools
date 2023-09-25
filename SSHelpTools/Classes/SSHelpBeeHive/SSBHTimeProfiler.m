@@ -7,7 +7,7 @@
  */
 
 #import "SSBHTimeProfiler.h"
-#import "BHCommon.h"
+#import "SSBHCommon.h"
 #include <QuartzCore/QuartzCore.h>
 
 @interface SSBHTimeProfiler()
@@ -91,7 +91,7 @@
     NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *filePath =  [documentPath stringByAppendingPathComponent:[fileName stringByAppendingPathExtension:@"txt"]];
     
-    BHLog(@"TMTimeProfiler::SaveFilePath is %@", filePath);
+    SSBHLog(@"TMTimeProfiler::SaveFilePath is %@", filePath);
     
     BOOL res=[[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
     if (!res) {

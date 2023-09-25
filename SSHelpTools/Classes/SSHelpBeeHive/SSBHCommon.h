@@ -6,14 +6,14 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#ifndef BHCommon_h
-#define BHCommon_h
+#ifndef SSBHCommon_h
+#define SSBHCommon_h
 
 // Debug Logging
 #ifdef DEBUG
-#define BHLog(x, ...) NSLog(x, ## __VA_ARGS__);
+#define SSBHLog(x, ...) NSLog(x, ## __VA_ARGS__);
 #else
-#define BHLog(x, ...)
+#define SSBHLog(x, ...)
 #endif
 
 #endif /* BHCommon_h */
