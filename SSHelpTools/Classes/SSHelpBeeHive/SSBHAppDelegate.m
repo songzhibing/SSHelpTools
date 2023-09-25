@@ -8,7 +8,7 @@
 
 #import "SSBHAppDelegate.h"
 #import "SSBeeHive.h"
-#import "BHModuleManager.h"
+#import "SSBHModuleManager.h"
 #import "BHTimeProfiler.h"
 
 @interface SSBHAppDelegate () <UNUserNotificationCenterDelegate>
@@ -23,11 +23,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[BHModuleManager sharedManager] triggerEvent:BHMSetupEvent];
-    [[BHModuleManager sharedManager] triggerEvent:BHMInitEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMSetupEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMInitEvent];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[BHModuleManager sharedManager] triggerEvent:BHMSplashEvent];
+        [[SSBHModuleManager sharedManager] triggerEvent:BHMSplashEvent];
     });
     //#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000
     if ([UIDevice currentDevice].systemVersion.floatValue >= 10.0f) {
@@ -49,33 +49,33 @@
 {
     [[SSBeeHive shareInstance].context.touchShortcutItem setShortcutItem: shortcutItem];
     [[SSBeeHive shareInstance].context.touchShortcutItem setScompletionHandler: completionHandler];
-    [[BHModuleManager sharedManager] triggerEvent:BHMQuickActionEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMQuickActionEvent];
 }
 //#endif
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    [[BHModuleManager sharedManager] triggerEvent:BHMWillResignActiveEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMWillResignActiveEvent];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    [[BHModuleManager sharedManager] triggerEvent:BHMDidEnterBackgroundEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMDidEnterBackgroundEvent];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    [[BHModuleManager sharedManager] triggerEvent:BHMWillEnterForegroundEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMWillEnterForegroundEvent];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    [[BHModuleManager sharedManager] triggerEvent:BHMDidBecomeActiveEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMDidBecomeActiveEvent];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    [[BHModuleManager sharedManager] triggerEvent:BHMWillTerminateEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMWillTerminateEvent];
 }
 
 //- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
@@ -93,7 +93,7 @@
   
     [[SSBeeHive shareInstance].context.openURLItem setOpenURL:url];
     [[SSBeeHive shareInstance].context.openURLItem setOptions:options];
-    [[BHModuleManager sharedManager] triggerEvent:BHMOpenURLEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMOpenURLEvent];
     return YES;
 }
 //#endif
@@ -101,19 +101,19 @@
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
-    [[BHModuleManager sharedManager] triggerEvent:BHMDidReceiveMemoryWarningEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMDidReceiveMemoryWarningEvent];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
     [[SSBeeHive shareInstance].context.notificationsItem setNotificationsError:error];
-    [[BHModuleManager sharedManager] triggerEvent:BHMDidFailToRegisterForRemoteNotificationsEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMDidFailToRegisterForRemoteNotificationsEvent];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     [[SSBeeHive shareInstance].context.notificationsItem setDeviceToken: deviceToken];
-    [[BHModuleManager sharedManager] triggerEvent:BHMDidRegisterForRemoteNotificationsEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMDidRegisterForRemoteNotificationsEvent];
 }
 
 //- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
@@ -126,7 +126,7 @@
 {
     [[SSBeeHive shareInstance].context.notificationsItem setUserInfo: userInfo];
     [[SSBeeHive shareInstance].context.notificationsItem setNotificationResultHander: completionHandler];
-    [[BHModuleManager sharedManager] triggerEvent:BHMDidReceiveRemoteNotificationEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMDidReceiveRemoteNotificationEvent];
 }
 
 //- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
@@ -140,7 +140,7 @@
 {
     if([UIDevice currentDevice].systemVersion.floatValue >= 8.0f){
         [[SSBeeHive shareInstance].context.userActivityItem setUserActivity: userActivity];
-        [[BHModuleManager sharedManager] triggerEvent:BHMDidUpdateUserActivityEvent];
+        [[SSBHModuleManager sharedManager] triggerEvent:BHMDidUpdateUserActivityEvent];
     }
 }
 
@@ -149,7 +149,7 @@
     if([UIDevice currentDevice].systemVersion.floatValue >= 8.0f){
         [[SSBeeHive shareInstance].context.userActivityItem setUserActivityType: userActivityType];
         [[SSBeeHive shareInstance].context.userActivityItem setUserActivityError: error];
-        [[BHModuleManager sharedManager] triggerEvent:BHMDidFailToContinueUserActivityEvent];
+        [[SSBHModuleManager sharedManager] triggerEvent:BHMDidFailToContinueUserActivityEvent];
     }
 }
 
@@ -162,7 +162,7 @@
     if([UIDevice currentDevice].systemVersion.floatValue >= 8.0f){
         [[SSBeeHive shareInstance].context.userActivityItem setUserActivity: userActivity];
         [[SSBeeHive shareInstance].context.userActivityItem setRestorationHandler: restorationHandler];
-        [[BHModuleManager sharedManager] triggerEvent:BHMContinueUserActivityEvent];
+        [[SSBHModuleManager sharedManager] triggerEvent:BHMContinueUserActivityEvent];
     }
     return YES;
 }
@@ -171,7 +171,7 @@
 {
     if([UIDevice currentDevice].systemVersion.floatValue >= 8.0f){
         [[SSBeeHive shareInstance].context.userActivityItem setUserActivityType: userActivityType];
-        [[BHModuleManager sharedManager] triggerEvent:BHMWillContinueUserActivityEvent];
+        [[SSBHModuleManager sharedManager] triggerEvent:BHMWillContinueUserActivityEvent];
     }
     return YES;
 }
@@ -179,7 +179,7 @@
     if([UIDevice currentDevice].systemVersion.floatValue >= 8.0f){
         [SSBeeHive shareInstance].context.watchItem.userInfo = userInfo;
         [SSBeeHive shareInstance].context.watchItem.replyHandler = reply;
-        [[BHModuleManager sharedManager] triggerEvent:BHMHandleWatchKitExtensionRequestEvent];
+        [[SSBHModuleManager sharedManager] triggerEvent:BHMHandleWatchKitExtensionRequestEvent];
     }
 }
 //#endif
@@ -189,7 +189,7 @@
     [[SSBeeHive shareInstance].context.notificationsItem setNotification: notification];
     [[SSBeeHive shareInstance].context.notificationsItem setNotificationPresentationOptionsHandler: completionHandler];
     [[SSBeeHive shareInstance].context.notificationsItem setCenter:center];
-    [[BHModuleManager sharedManager] triggerEvent:BHMWillPresentNotificationEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMWillPresentNotificationEvent];
 };
 
 // The method will be called on the delegate when the user responded to the notification by opening the application, dismissing the notification or choosing a UNNotificationAction. The delegate must be set before the application returns from application:didFinishLaunchingWithOptions:.
@@ -197,7 +197,7 @@
     [[SSBeeHive shareInstance].context.notificationsItem setNotificationResponse: response];
     [[SSBeeHive shareInstance].context.notificationsItem setNotificationCompletionHandler:completionHandler];
     [[SSBeeHive shareInstance].context.notificationsItem setCenter:center];
-    [[BHModuleManager sharedManager] triggerEvent:BHMDidReceiveNotificationResponseEvent];
+    [[SSBHModuleManager sharedManager] triggerEvent:BHMDidReceiveNotificationResponseEvent];
 }
 //#endif
 

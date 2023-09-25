@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, SSBHModuleEventType)
 
 @class BHModule;
 
-@interface BHModuleManager : NSObject
+@interface SSBHModuleManager : NSObject
 
 + (instancetype)sharedManager;
 

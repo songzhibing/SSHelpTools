@@ -26,7 +26,7 @@
 
 + (void)registerDynamicModule:(Class)moduleClass
 {
-    [[BHModuleManager sharedManager] registerDynamicModule:moduleClass];
+    [[SSBHModuleManager sharedManager] registerDynamicModule:moduleClass];
 }
 
 - (id)createService:(Protocol *)proto;
@@ -45,7 +45,7 @@
         return;
     }
     
-    [[BHModuleManager sharedManager] triggerEvent:eventType];
+    [[SSBHModuleManager sharedManager] triggerEvent:eventType];
 }
 
 #pragma mark - Private
@@ -65,9 +65,9 @@
 - (void)loadStaticModules
 {
     
-    [[BHModuleManager sharedManager] loadLocalModules];
+    [[SSBHModuleManager sharedManager] loadLocalModules];
     
-    [[BHModuleManager sharedManager] registedAllModules];
+    [[SSBHModuleManager sharedManager] registedAllModules];
     
 }
 

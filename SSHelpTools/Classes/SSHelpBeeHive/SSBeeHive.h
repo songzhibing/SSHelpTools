@@ -8,10 +8,10 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "BHModuleProtocol.h"
+#import "SSBHModuleProtocol.h"
 #import "BHContext.h"
 #import "SSBHAppDelegate.h"
-#import "BHModuleManager.h"
+#import "SSBHModuleManager.h"
 #import "BHServiceManager.h"
 
 @interface SSBeeHive : NSObject

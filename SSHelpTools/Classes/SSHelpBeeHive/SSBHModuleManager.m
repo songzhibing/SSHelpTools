@@ -6,8 +6,8 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import "BHModuleManager.h"
-#import "BHModuleProtocol.h"
+#import "SSBHModuleManager.h"
+#import "SSBHModuleProtocol.h"
 #import "BHContext.h"
 #import "BHTimeProfiler.h"
 #import "BHAnnotation.h"
@@ -46,19 +46,19 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 
 
 
-@interface BHModuleManager()
+@interface SSBHModuleManager()
 
 @property(nonatomic, strong) NSMutableArray     *BHModuleDynamicClasses;
 
 @property(nonatomic, strong) NSMutableArray<NSDictionary *>     *BHModuleInfos;
 @property(nonatomic, strong) NSMutableArray     *BHModules;
 
-@property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSMutableArray<id<BHModuleProtocol>> *> *BHModulesByEvent;
+@property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSMutableArray<id<SSBHModuleProtocol>> *> *BHModulesByEvent;
 @property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSString *> *BHSelectorByEvent;
 
 @end
 
-@implementation BHModuleManager
+@implementation SSBHModuleManager
 
 #pragma mark - public
 
@@ -67,7 +67,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
     static id sharedManager = nil;
     static dispatch_once_t onceToken = 0;
     dispatch_once(&onceToken, ^{
-        sharedManager = [[BHModuleManager alloc] init];
+        sharedManager = [[SSBHModuleManager alloc] init];
     });
     return sharedManager;
 }
@@ -120,9 +120,9 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
     if (index >= 0) {
         [self.BHModules removeObjectAtIndex:index];
     }
-    [self.BHModulesByEvent enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSMutableArray<id<BHModuleProtocol>> * _Nonnull obj, BOOL * _Nonnull stop) {
+    [self.BHModulesByEvent enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSMutableArray<id<SSBHModuleProtocol>> * _Nonnull obj, BOOL * _Nonnull stop) {
         __block NSInteger index = -1;
-        [obj enumerateObjectsUsingBlock:^(id<BHModuleProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj enumerateObjectsUsingBlock:^(id<SSBHModuleProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj isKindOfClass:moduleClass]) {
                 index = idx;
                 *stop = NO;
@@ -159,7 +159,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
         Class moduleClass = NSClassFromString(classStr);
         BOOL hasInstantiated = ((NSNumber *)[module objectForKey:kModuleInfoHasInstantiatedKey]).boolValue;
         if (NSStringFromClass(moduleClass) && !hasInstantiated) {
-            id<BHModuleProtocol> moduleInstance = [[moduleClass alloc] init];
+            id<SSBHModuleProtocol> moduleInstance = [[moduleClass alloc] init];
             [tmpArray addObject:moduleInstance];
         }
         
@@ -248,7 +248,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
         return;
     }
     
-    if ([class conformsToProtocol:@protocol(BHModuleProtocol)]) {
+    if ([class conformsToProtocol:@protocol(SSBHModuleProtocol)]) {
         NSMutableDictionary *moduleInfo = [NSMutableDictionary dictionary];
         
         BOOL responseBasicLevel = [class instancesRespondToSelector:@selector(basicModuleLevel)];
@@ -266,10 +266,10 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 
         [self.BHModuleInfos addObject:moduleInfo];
         
-        id<BHModuleProtocol> moduleInstance = [[class alloc] init];
+        id<SSBHModuleProtocol> moduleInstance = [[class alloc] init];
         [self.BHModules addObject:moduleInstance];
         [moduleInfo setObject:@(YES) forKey:kModuleInfoHasInstantiatedKey];
-        [self.BHModules sortUsingComparator:^NSComparisonResult(id<BHModuleProtocol> moduleInstance1, id<BHModuleProtocol> moduleInstance2) {
+        [self.BHModules sortUsingComparator:^NSComparisonResult(id<SSBHModuleProtocol> moduleInstance1, id<SSBHModuleProtocol> moduleInstance2) {
             NSNumber *module1Level = @(BHModuleNormal);
             NSNumber *module2Level = @(BHModuleNormal);
             if ([moduleInstance1 respondsToSelector:@selector(basicModuleLevel)]) {
@@ -306,12 +306,12 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 
 - (void)registerAllSystemEvents
 {
-    [self.BHModules enumerateObjectsUsingBlock:^(id<BHModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.BHModules enumerateObjectsUsingBlock:^(id<SSBHModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
         [self registerEventsByModuleInstance:moduleInstance];
     }];
 }
 
-- (void)registerEventsByModuleInstance:(id<BHModuleProtocol>)moduleInstance
+- (void)registerEventsByModuleInstance:(id<SSBHModuleProtocol>)moduleInstance
 {
     NSArray<NSNumber *> *events = self.BHSelectorByEvent.allKeys;
     [events enumerateObjectsUsingBlock:^(NSNumber * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -336,7 +336,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
     NSMutableArray *eventModules = [self.BHModulesByEvent objectForKey:eventTypeNumber];
     if (![eventModules containsObject:moduleInstance]) {
         [eventModules addObject:moduleInstance];
-        [eventModules sortUsingComparator:^NSComparisonResult(id<BHModuleProtocol> moduleInstance1, id<BHModuleProtocol> moduleInstance2) {
+        [eventModules sortUsingComparator:^NSComparisonResult(id<SSBHModuleProtocol> moduleInstance1, id<SSBHModuleProtocol> moduleInstance2) {
             NSNumber *module1Level = @(BHModuleNormal);
             NSNumber *module2Level = @(BHModuleNormal);
             if ([moduleInstance1 respondsToSelector:@selector(basicModuleLevel)]) {
@@ -378,7 +378,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
     return _BHModules;
 }
 
-- (NSMutableDictionary<NSNumber *, NSMutableArray<id<BHModuleProtocol>> *> *)BHModulesByEvent
+- (NSMutableDictionary<NSNumber *, NSMutableArray<id<SSBHModuleProtocol>> *> *)BHModulesByEvent
 {
     if (!_BHModulesByEvent) {
         _BHModulesByEvent = @{}.mutableCopy;
@@ -430,7 +430,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 
 #pragma mark - module protocol
 - (void)handleModuleEvent:(NSInteger)eventType
-                forTarget:(id<BHModuleProtocol>)target
+                forTarget:(id<SSBHModuleProtocol>)target
           withCustomParam:(NSDictionary *)customParam
 {
     switch (eventType) {
@@ -451,21 +451,21 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
     
 }
 
-- (void)handleModulesInitEventForTarget:(id<BHModuleProtocol>)target
+- (void)handleModulesInitEventForTarget:(id<SSBHModuleProtocol>)target
                         withCustomParam:(NSDictionary *)customParam
 {
     BHContext *context = [BHContext shareInstance].copy;
     context.customParam = customParam;
     context.customEvent = BHMInitEvent;
     
-    NSArray<id<BHModuleProtocol>> *moduleInstances;
+    NSArray<id<SSBHModuleProtocol>> *moduleInstances;
     if (target) {
         moduleInstances = @[target];
     } else {
         moduleInstances = [self.BHModulesByEvent objectForKey:@(BHMInitEvent)];
     }
     
-    [moduleInstances enumerateObjectsUsingBlock:^(id<BHModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
+    [moduleInstances enumerateObjectsUsingBlock:^(id<SSBHModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
         __weak typeof(&*self) wself = self;
         void ( ^ bk )(void);
         bk = ^(){
@@ -496,14 +496,14 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
     }];
 }
 
-- (void)handleModulesTearDownEventForTarget:(id<BHModuleProtocol>)target
+- (void)handleModulesTearDownEventForTarget:(id<SSBHModuleProtocol>)target
                             withCustomParam:(NSDictionary *)customParam
 {
     BHContext *context = [BHContext shareInstance].copy;
     context.customParam = customParam;
     context.customEvent = BHMTearDownEvent;
     
-    NSArray<id<BHModuleProtocol>> *moduleInstances;
+    NSArray<id<SSBHModuleProtocol>> *moduleInstances;
     if (target) {
         moduleInstances = @[target];
     } else {
@@ -512,7 +512,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 
     //Reverse Order to unload
     for (int i = (int)moduleInstances.count - 1; i >= 0; i--) {
-        id<BHModuleProtocol> moduleInstance = [moduleInstances objectAtIndex:i];
+        id<SSBHModuleProtocol> moduleInstance = [moduleInstances objectAtIndex:i];
         if (moduleInstance && [moduleInstance respondsToSelector:@selector(modTearDown:)]) {
             [moduleInstance modTearDown:context];
         }
@@ -520,7 +520,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 }
 
 - (void)handleModuleEvent:(NSInteger)eventType
-                forTarget:(id<BHModuleProtocol>)target
+                forTarget:(id<SSBHModuleProtocol>)target
            withSeletorStr:(NSString *)selectorStr
            andCustomParam:(NSDictionary *)customParam
 {
@@ -535,13 +535,13 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
         selectorStr = [self.BHSelectorByEvent objectForKey:@(eventType)];
         seletor = NSSelectorFromString(selectorStr);
     }
-    NSArray<id<BHModuleProtocol>> *moduleInstances;
+    NSArray<id<SSBHModuleProtocol>> *moduleInstances;
     if (target) {
         moduleInstances = @[target];
     } else {
         moduleInstances = [self.BHModulesByEvent objectForKey:@(eventType)];
     }
-    [moduleInstances enumerateObjectsUsingBlock:^(id<BHModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
+    [moduleInstances enumerateObjectsUsingBlock:^(id<SSBHModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([moduleInstance respondsToSelector:seletor]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"

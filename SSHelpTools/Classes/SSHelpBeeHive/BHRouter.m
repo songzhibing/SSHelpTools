@@ -11,10 +11,10 @@
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 
-#import "BHModuleProtocol.h"
+#import "SSBHModuleProtocol.h"
 #import "BHServiceProtocol.h"
 #import "BHCommon.h"
-#import "BHModuleManager.h"
+#import "SSBHModuleManager.h"
 #import "BHServiceManager.h"
 
 @interface NSObject (BHRetType)
@@ -408,8 +408,8 @@ static NSString *BHRURLGlobalScheme = nil;
                     [self solveJumpWithViewController:(UIViewController *)obj andJumpMode:enterMode shouldAnimate:isLast];
                 } break;
                 case BHRUsageRegister: {
-                    if ([mClass conformsToProtocol:@protocol(BHModuleProtocol)]) {
-                        [[BHModuleManager sharedManager] registerDynamicModule:mClass];
+                    if ([mClass conformsToProtocol:@protocol(SSBHModuleProtocol)]) {
+                        [[SSBHModuleManager sharedManager] registerDynamicModule:mClass];
                     } else if ([mClass conformsToProtocol:@protocol(BHServiceProtocol)] && protocol) {
                         [[BHServiceManager sharedManager] registerService:protocol implClass:mClass];
                     }

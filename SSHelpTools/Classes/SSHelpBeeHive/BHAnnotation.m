@@ -6,16 +6,16 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-
-#import "BHAnnotation.h"
-#import "BHCommon.h"
 #include <mach-o/getsect.h>
 #include <mach-o/loader.h>
 #include <mach-o/dyld.h>
 #include <dlfcn.h>
+#include <mach-o/ldsyms.h>
+
+#import "BHAnnotation.h"
+#import "BHCommon.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
-#include <mach-o/ldsyms.h>
 
 NSArray<NSString *>* BHReadConfiguration(char *sectionName,const struct mach_header *mhp);
 static void dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide)
@@ -27,7 +27,7 @@ static void dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide)
             cls = NSClassFromString(modName);
             
             if (cls) {
-                [[BHModuleManager sharedManager] registerDynamicModule:cls];
+                [[SSBHModuleManager sharedManager] registerDynamicModule:cls];
             }
         }
     }
