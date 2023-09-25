@@ -13,6 +13,7 @@ target 'SSHelpTools_Example' do
 #  pod 'BeeHive'
   pod 'FLEX', :configurations => ['Debug'] #调试工具
   pod 'SSHelpTools', :path => '../'
+  pod 'SSHelpTools/SSHelpBeeHive', :path => '../'
 
   target 'SSHelpTools_Tests' do
     inherit! :search_paths

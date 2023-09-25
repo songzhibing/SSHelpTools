@@ -7,7 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "BHServiceProtocol.h"
+#import "SSBHServiceProtocol.h"
 #import "BHConfig.h"
 #import "SSBHAppDelegate.h"
 

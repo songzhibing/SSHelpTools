@@ -7,9 +7,13 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "BHAnnotation.h"
+@protocol SSBHServiceProtocol <NSObject>
 
-@interface BHWatchDog : NSObject
+@optional
 
-- (instancetype)initWithThreshold:(double)threshold strictMode:(BOOL)strictMode;
++ (BOOL)singleton;
+
++ (id)shareInstance;
 
 @end

@@ -12,7 +12,7 @@
 #import <objc/runtime.h>
 
 #import "SSBHModuleProtocol.h"
-#import "BHServiceProtocol.h"
+#import "SSBHServiceProtocol.h"
 #import "BHCommon.h"
 #import "SSBHModuleManager.h"
 #import "BHServiceManager.h"
@@ -276,7 +276,7 @@ static NSString *BHRURLGlobalScheme = nil;
                 SEL selector = NSSelectorFromString(selectorStr);
                 if (!protocol ||
                     !selector ||
-                    ![mClass conformsToProtocol:@protocol(BHServiceProtocol)] ||
+                    ![mClass conformsToProtocol:@protocol(SSBHServiceProtocol)] ||
                     ![mClass conformsToProtocol:protocol] ||
                     ![mClass instancesRespondToSelector:selector]) {
                     flag = NO;
@@ -292,7 +292,7 @@ static NSString *BHRURLGlobalScheme = nil;
                 }
             } break;
             case BHRUsageRegister: {
-                if (![mClass conformsToProtocol:@protocol(BHServiceProtocol)]) {
+                if (![mClass conformsToProtocol:@protocol(SSBHServiceProtocol)]) {
                     return;
                 }
                 if (subPaths.count < 2) {
@@ -398,7 +398,7 @@ static NSString *BHRURLGlobalScheme = nil;
                         enterMode = [self viewControllerEnterMode:subPaths[2]];
                     }
                     
-                    if ([mClass conformsToProtocol:@protocol(BHServiceProtocol)] && protocol) {
+                    if ([mClass conformsToProtocol:@protocol(SSBHServiceProtocol)] && protocol) {
                         obj = [[BHServiceManager sharedManager] createService:protocol];
                     } else {
                         obj = [[mClass alloc] init];
@@ -410,7 +410,7 @@ static NSString *BHRURLGlobalScheme = nil;
                 case BHRUsageRegister: {
                     if ([mClass conformsToProtocol:@protocol(SSBHModuleProtocol)]) {
                         [[SSBHModuleManager sharedManager] registerDynamicModule:mClass];
-                    } else if ([mClass conformsToProtocol:@protocol(BHServiceProtocol)] && protocol) {
+                    } else if ([mClass conformsToProtocol:@protocol(SSBHServiceProtocol)] && protocol) {
                         [[BHServiceManager sharedManager] registerService:protocol implClass:mClass];
                     }
                 } break;

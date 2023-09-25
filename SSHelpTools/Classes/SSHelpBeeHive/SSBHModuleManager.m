@@ -9,7 +9,7 @@
 #import "SSBHModuleManager.h"
 #import "SSBHModuleProtocol.h"
 #import "BHContext.h"
-#import "BHTimeProfiler.h"
+#import "SSBHTimeProfiler.h"
 #import "BHAnnotation.h"
 
 #define kModuleArrayKey     @"moduleClasses"
@@ -477,7 +477,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
             }
         };
 
-        [[BHTimeProfiler sharedTimeProfiler] recordEventTime:[NSString stringWithFormat:@"%@ --- modInit:", [moduleInstance class]]];
+        [[SSBHTimeProfiler sharedTimeProfiler] recordEventTime:[NSString stringWithFormat:@"%@ --- modInit:", [moduleInstance class]]];
         
         if ([moduleInstance respondsToSelector:@selector(async)]) {
             BOOL async = [moduleInstance async];
@@ -548,7 +548,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
             [moduleInstance performSelector:seletor withObject:context];
 #pragma clang diagnostic pop
             
-            [[BHTimeProfiler sharedTimeProfiler] recordEventTime:[NSString stringWithFormat:@"%@ --- %@", [moduleInstance class], NSStringFromSelector(seletor)]];
+            [[SSBHTimeProfiler sharedTimeProfiler] recordEventTime:[NSString stringWithFormat:@"%@ --- %@", [moduleInstance class], NSStringFromSelector(seletor)]];
             
         }
     }];

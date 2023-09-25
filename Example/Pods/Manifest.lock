@@ -71,6 +71,7 @@ DEPENDENCIES:
   - ReactiveObjC
   - SDWebImage
   - SSHelpTools (from `../`)
+  - SSHelpTools/SSHelpBeeHive (from `../`)
   - YYKit
 
 SPEC REPOS:
@@ -111,6 +112,6 @@ SPEC CHECKSUMS:
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: a66adf3acbce300587b7d6356f37960afb6a00da
+PODFILE CHECKSUM: db001c4ca07fffb223993b92c80e0ebead7d4b37
 
 COCOAPODS: 1.11.2

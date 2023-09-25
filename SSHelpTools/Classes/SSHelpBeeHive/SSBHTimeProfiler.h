@@ -8,14 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@interface BHTimeProfiler : NSObject
+@interface SSBHTimeProfiler : NSObject
 
 #pragma mark - Open API
 
-#define kTimeProfilerResultNotificationName @"BHTimeProfilerResult"
-#define kNotificationUserInfoKey            @"logArray"
+#define _kTimeProfilerResultNotificationName @"_BHTimeProfilerResult"
+#define _kNotificationUserInfoKey            @"_logArray"
 
-+ (BHTimeProfiler *)sharedTimeProfiler;
++ (SSBHTimeProfiler *)sharedTimeProfiler;
 
 - (instancetype)initTimeProfilerWithMainKey:(NSString *)mainKey;
 - (void)recordEventTime:(NSString *)eventName;

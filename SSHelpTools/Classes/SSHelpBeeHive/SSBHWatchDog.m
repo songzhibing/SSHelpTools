@@ -6,12 +6,12 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import "BHWatchDog.h"
+#import "SSBHWatchDog.h"
 #import "BHCommon.h"
 #import <UIKit/UIKit.h>
 
-typedef void (^handler)();
-typedef void (^watchdogFiredCallBack)();
+typedef void (^handler)(void);
+typedef void (^watchdogFiredCallBack)(void);
 
 
 @interface PingThread : NSThread
@@ -57,7 +57,7 @@ typedef void (^watchdogFiredCallBack)();
 
 @end
 
-@interface BHWatchDog()
+@interface SSBHWatchDog()
 
 
 @property (nonatomic, assign) double threshold;
@@ -65,7 +65,7 @@ typedef void (^watchdogFiredCallBack)();
 
 @end
 
-@implementation BHWatchDog
+@implementation SSBHWatchDog
 
 - (instancetype)initWithThreshold:(double)threshold strictMode:(BOOL)strictMode
 {

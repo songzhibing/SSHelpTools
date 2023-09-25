@@ -256,8 +256,8 @@
 		C0F8F660291217D800E34EDB /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				C0F8F661291217D800E34EDB /* SSTestNetworkViewController.m */,
 				C0F8F662291217D800E34EDB /* SSTestNetworkViewController.h */,
+				C0F8F661291217D800E34EDB /* SSTestNetworkViewController.m */,
 			);
 			path = Network;
 			sourceTree = "<group>";

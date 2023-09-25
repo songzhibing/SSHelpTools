@@ -9,7 +9,7 @@
 #import "SSBHAppDelegate.h"
 #import "SSBeeHive.h"
 #import "SSBHModuleManager.h"
-#import "BHTimeProfiler.h"
+#import "SSBHTimeProfiler.h"
 
 @interface SSBHAppDelegate () <UNUserNotificationCenterDelegate>
 
@@ -36,7 +36,7 @@
     //#endif
     
     #ifdef DEBUG
-    [[BHTimeProfiler sharedTimeProfiler] saveTimeProfileDataIntoFile:@"BeeHiveTimeProfiler"];
+    [[SSBHTimeProfiler sharedTimeProfiler] saveTimeProfileDataIntoFile:@"BeeHiveTimeProfiler"];
     #endif
     
     return YES;

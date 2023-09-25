@@ -6,37 +6,26 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import "BHTimeProfiler.h"
+#import "SSBHTimeProfiler.h"
 #import "BHCommon.h"
 #include <QuartzCore/QuartzCore.h>
 
-
-#if __has_feature(objc_generics)
-#   define TM__GENERICS(class, ...)         class<__VA_ARGS__>
-#else
-#   define TM__GENERICS(class, ...)         class
-#endif
-
-#define TMMutableArrayWith(valueType)                   TM__GENERICS(NSMutableArray, valueType)
-#define TMMutableDictionaryWith(keyType, valueType)     TM__GENERICS(NSMutableDictionary, keyType, valueType)
-
-
-@interface BHTimeProfiler()
+@interface SSBHTimeProfiler()
 @property (nonatomic, copy)   NSString *mainIdentifier;
-@property (nonatomic, strong) TMMutableArrayWith(NSString *) *identifiers;
-@property (nonatomic, strong) TMMutableDictionaryWith(NSString *, NSNumber *) *timeDataDic;
+@property (nonatomic, strong) NSMutableArray<NSString *> *identifiers;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *timeDataDic;
 @property (nonatomic)         CFTimeInterval lastTime;
 @property (nonatomic)         CFTimeInterval recordStartTime;
 @end
 
-@implementation BHTimeProfiler
+@implementation SSBHTimeProfiler
 
-+ (BHTimeProfiler *)sharedTimeProfiler
++ (SSBHTimeProfiler *)sharedTimeProfiler
 {
     static dispatch_once_t onceToken;
-    static BHTimeProfiler *profiler = nil;
+    static SSBHTimeProfiler *profiler = nil;
     dispatch_once(&onceToken, ^{
-        profiler = [[BHTimeProfiler alloc] initTimeProfilerWithMainKey:@""];
+        profiler = [[SSBHTimeProfiler alloc] initTimeProfilerWithMainKey:@""];
     });
     return profiler;
 }
@@ -53,20 +42,20 @@
 }
 
 #pragma mark - Lazy Initializer
-- (TMMutableArrayWith(NSString *) *)identifiers
+- (NSMutableArray<NSString *> *)identifiers
 {
     if (_identifiers == nil)
     {
-        _identifiers = [TMMutableArrayWith(NSString *) new];
+        _identifiers = [NSMutableArray<NSString *> new];
     }
     return _identifiers;
 }
 
-- (TMMutableDictionaryWith(NSString *, NSNumber *) *)timeDataDic
+- (NSMutableDictionary<NSString *, NSNumber *> *)timeDataDic
 {
     if (_timeDataDic == nil)
     {
-        _timeDataDic = [TMMutableDictionaryWith(NSString *, NSNumber *) new];
+        _timeDataDic = [NSMutableDictionary<NSString *, NSNumber *> new];
     }
     return _timeDataDic;
 }
@@ -144,7 +133,7 @@
     }
     
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTimeProfilerResultNotificationName object:nil userInfo:@{kNotificationUserInfoKey:logArray}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:_kTimeProfilerResultNotificationName object:nil userInfo:@{_kNotificationUserInfoKey:logArray}];
 }
 
 @end
