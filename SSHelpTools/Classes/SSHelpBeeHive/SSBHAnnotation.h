@@ -30,7 +30,7 @@
 #define SSBeeHiveMod(name) \
 class BeeHive; char * k##name##_mod SSBeeHiveDATA(SSBeehiveMods) = ""#name"";
 
-#define BeeHiveService(servicename,impl) \
+#define SSBeeHiveService(servicename,impl) \
 class BeeHive; char * k##servicename##_service SSBeeHiveDATA(SSBeehiveServices) = "{ \""#servicename"\" : \""#impl"\"}";
 
 @interface SSBHAnnotation : NSObject

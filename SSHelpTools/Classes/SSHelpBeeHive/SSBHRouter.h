@@ -8,18 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
-static NSString *const BHRURLSchemeGlobalKey = @"URLGlobalScheme";
-static NSString *const BHRURLHostCallService = @"call.service.beehive";
-static NSString *const BHRURLHostRegister = @"register.beehive";
-static NSString *const BHRURLHostJumpViewController = @"jump.vc.beehive";
-static NSString *const BHRURLSubPathSplitPattern = @".";
-static NSString *const BHRURLQueryParamsKey = @"params";
-static NSString *const BHRURLFragmentViewControlerEnterModePush = @"push";
-static NSString *const BHRURLFragmentViewControlerEnterModeModal = @"modal";
+static NSString *const _BHRURLSchemeGlobalKey = @"URLGlobalScheme";
+static NSString *const _BHRURLHostCallService = @"call.service.beehive";
+static NSString *const _BHRURLHostRegister = @"register.beehive";
+static NSString *const _BHRURLHostJumpViewController = @"jump.vc.beehive";
+static NSString *const _BHRURLSubPathSplitPattern = @".";
+static NSString *const _BHRURLQueryParamsKey = @"params";
+static NSString *const _BHRURLFragmentViewControlerEnterModePush = @"push";
+static NSString *const _BHRURLFragmentViewControlerEnterModeModal = @"modal";
 
 
 
-typedef void(^BHRPathComponentCustomHandler)(NSDictionary<NSString *, id> *params);
+typedef void(^SSBHRPathComponentCustomHandler)(NSDictionary<NSString *, id> *params);
 
 @interface SSBHRouter : NSObject
 
@@ -38,7 +38,7 @@ typedef void(^BHRPathComponentCustomHandler)(NSDictionary<NSString *, id> *param
        forClass:(Class)mClass;
 - (void)addPathComponent:(NSString *)pathComponentKey
        forClass:(Class)mClass
-        handler:(BHRPathComponentCustomHandler)handler;
+        handler:(SSBHRPathComponentCustomHandler)handler;
 - (void)removePathComponent:(NSString *)pathComponentKey;
 
 //url - >  com.alibaba.beehive://call.service.beehive/pathComponentKey.protocolName.selector/...?params={}(value url encode)

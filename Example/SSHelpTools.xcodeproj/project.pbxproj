@@ -23,6 +23,15 @@
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		C025E9B427C36412003F1DDD /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = C025E9B327C36412003F1DDD /* ExampleApp.html */; };
+		C057EB2C2AC17F1300C0A919 /* ShopModuleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C057EB292AC17F1300C0A919 /* ShopModuleViewController.m */; };
+		C057EB2D2AC17F1300C0A919 /* ShopModule.m in Sources */ = {isa = PBXBuildFile; fileRef = C057EB2A2AC17F1300C0A919 /* ShopModule.m */; };
+		C057EB2E2AC17F1300C0A919 /* ShopModuleService.m in Sources */ = {isa = PBXBuildFile; fileRef = C057EB2B2AC17F1300C0A919 /* ShopModuleService.m */; };
+		C057EB342AC17F2700C0A919 /* UserTrackModule.m in Sources */ = {isa = PBXBuildFile; fileRef = C057EB302AC17F2600C0A919 /* UserTrackModule.m */; };
+		C057EB352AC17F2700C0A919 /* BHUserTrackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C057EB312AC17F2600C0A919 /* BHUserTrackViewController.m */; };
+		C057EB3B2AC17F3700C0A919 /* HomeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = C057EB382AC17F3700C0A919 /* HomeModule.m */; };
+		C057EB3C2AC17F3700C0A919 /* BHViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C057EB3A2AC17F3700C0A919 /* BHViewController.m */; };
+		C057EB422AC17F4900C0A919 /* TradeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = C057EB402AC17F4900C0A919 /* TradeModule.m */; };
+		C057EB432AC17F4900C0A919 /* BHTradeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C057EB412AC17F4900C0A919 /* BHTradeViewController.m */; };
 		C06D1C302A6E20F60030A16E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C06D1C2F2A6E20F60030A16E /* MobileCoreServices.framework */; };
 		C06D30F32A692B520022D709 /* SSTestDocViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C06D30F22A692B520022D709 /* SSTestDocViewController.m */; };
 		C0A3D35827FEB30500B52510 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A3D35727FEB30500B52510 /* AVFoundation.framework */; };
@@ -75,6 +84,30 @@
 		9D4E949A45097E7CCB1CE547 /* Pods-SSHelpTools_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SSHelpTools_Tests.release.xcconfig"; path = "Target Support Files/Pods-SSHelpTools_Tests/Pods-SSHelpTools_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		B7DD1477AC30F9096D176E34 /* Pods-SSHelpTools_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SSHelpTools_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SSHelpTools_Tests/Pods-SSHelpTools_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C025E9B327C36412003F1DDD /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ExampleApp.html; sourceTree = "<group>"; };
+		C057EB1F2AC17F0100C0A919 /* TradeServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TradeServiceProtocol.h; sourceTree = "<group>"; };
+		C057EB202AC17F0100C0A919 /* AppConfigServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConfigServiceProtocol.h; sourceTree = "<group>"; };
+		C057EB212AC17F0100C0A919 /* HomeServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeServiceProtocol.h; sourceTree = "<group>"; };
+		C057EB222AC17F0100C0A919 /* UserTrackServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserTrackServiceProtocol.h; sourceTree = "<group>"; };
+		C057EB232AC17F0100C0A919 /* AppUISkeletonServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppUISkeletonServiceProtocol.h; sourceTree = "<group>"; };
+		C057EB242AC17F0200C0A919 /* BHService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BHService.h; sourceTree = "<group>"; };
+		C057EB262AC17F1300C0A919 /* ShopModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopModule.h; sourceTree = "<group>"; };
+		C057EB272AC17F1300C0A919 /* ShopModuleService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopModuleService.h; sourceTree = "<group>"; };
+		C057EB282AC17F1300C0A919 /* ShopModuleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopModuleViewController.h; sourceTree = "<group>"; };
+		C057EB292AC17F1300C0A919 /* ShopModuleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopModuleViewController.m; sourceTree = "<group>"; };
+		C057EB2A2AC17F1300C0A919 /* ShopModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopModule.m; sourceTree = "<group>"; };
+		C057EB2B2AC17F1300C0A919 /* ShopModuleService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopModuleService.m; sourceTree = "<group>"; };
+		C057EB302AC17F2600C0A919 /* UserTrackModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserTrackModule.m; sourceTree = "<group>"; };
+		C057EB312AC17F2600C0A919 /* BHUserTrackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BHUserTrackViewController.m; sourceTree = "<group>"; };
+		C057EB322AC17F2600C0A919 /* UserTrackModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserTrackModule.h; sourceTree = "<group>"; };
+		C057EB332AC17F2600C0A919 /* BHUserTrackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BHUserTrackViewController.h; sourceTree = "<group>"; };
+		C057EB372AC17F3700C0A919 /* HomeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeModule.h; sourceTree = "<group>"; };
+		C057EB382AC17F3700C0A919 /* HomeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeModule.m; sourceTree = "<group>"; };
+		C057EB392AC17F3700C0A919 /* BHViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BHViewController.h; sourceTree = "<group>"; };
+		C057EB3A2AC17F3700C0A919 /* BHViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BHViewController.m; sourceTree = "<group>"; };
+		C057EB3E2AC17F4900C0A919 /* BHTradeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BHTradeViewController.h; sourceTree = "<group>"; };
+		C057EB3F2AC17F4900C0A919 /* TradeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TradeModule.h; sourceTree = "<group>"; };
+		C057EB402AC17F4900C0A919 /* TradeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TradeModule.m; sourceTree = "<group>"; };
+		C057EB412AC17F4900C0A919 /* BHTradeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BHTradeViewController.m; sourceTree = "<group>"; };
 		C06D1C2F2A6E20F60030A16E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		C06D30F12A692B520022D709 /* SSTestDocViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSTestDocViewController.h; sourceTree = "<group>"; };
 		C06D30F22A692B520022D709 /* SSTestDocViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSTestDocViewController.m; sourceTree = "<group>"; };
@@ -220,6 +253,77 @@
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
 		};
+		C057EB1D2AC17ED800C0A919 /* BeeHive */ = {
+			isa = PBXGroup;
+			children = (
+				C057EB3D2AC17F4100C0A919 /* Trade */,
+				C057EB362AC17F2F00C0A919 /* Home */,
+				C057EB2F2AC17F1D00C0A919 /* UserTrack */,
+				C057EB252AC17F0A00C0A919 /* Shop */,
+				C057EB1E2AC17EF400C0A919 /* Services */,
+			);
+			path = BeeHive;
+			sourceTree = "<group>";
+		};
+		C057EB1E2AC17EF400C0A919 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C057EB202AC17F0100C0A919 /* AppConfigServiceProtocol.h */,
+				C057EB232AC17F0100C0A919 /* AppUISkeletonServiceProtocol.h */,
+				C057EB242AC17F0200C0A919 /* BHService.h */,
+				C057EB212AC17F0100C0A919 /* HomeServiceProtocol.h */,
+				C057EB1F2AC17F0100C0A919 /* TradeServiceProtocol.h */,
+				C057EB222AC17F0100C0A919 /* UserTrackServiceProtocol.h */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		C057EB252AC17F0A00C0A919 /* Shop */ = {
+			isa = PBXGroup;
+			children = (
+				C057EB262AC17F1300C0A919 /* ShopModule.h */,
+				C057EB2A2AC17F1300C0A919 /* ShopModule.m */,
+				C057EB272AC17F1300C0A919 /* ShopModuleService.h */,
+				C057EB2B2AC17F1300C0A919 /* ShopModuleService.m */,
+				C057EB282AC17F1300C0A919 /* ShopModuleViewController.h */,
+				C057EB292AC17F1300C0A919 /* ShopModuleViewController.m */,
+			);
+			path = Shop;
+			sourceTree = "<group>";
+		};
+		C057EB2F2AC17F1D00C0A919 /* UserTrack */ = {
+			isa = PBXGroup;
+			children = (
+				C057EB332AC17F2600C0A919 /* BHUserTrackViewController.h */,
+				C057EB312AC17F2600C0A919 /* BHUserTrackViewController.m */,
+				C057EB322AC17F2600C0A919 /* UserTrackModule.h */,
+				C057EB302AC17F2600C0A919 /* UserTrackModule.m */,
+			);
+			path = UserTrack;
+			sourceTree = "<group>";
+		};
+		C057EB362AC17F2F00C0A919 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				C057EB392AC17F3700C0A919 /* BHViewController.h */,
+				C057EB3A2AC17F3700C0A919 /* BHViewController.m */,
+				C057EB372AC17F3700C0A919 /* HomeModule.h */,
+				C057EB382AC17F3700C0A919 /* HomeModule.m */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		C057EB3D2AC17F4100C0A919 /* Trade */ = {
+			isa = PBXGroup;
+			children = (
+				C057EB3E2AC17F4900C0A919 /* BHTradeViewController.h */,
+				C057EB412AC17F4900C0A919 /* BHTradeViewController.m */,
+				C057EB3F2AC17F4900C0A919 /* TradeModule.h */,
+				C057EB402AC17F4900C0A919 /* TradeModule.m */,
+			);
+			path = Trade;
+			sourceTree = "<group>";
+		};
 		C06D30F02A692B350022D709 /* Doc */ = {
 			isa = PBXGroup;
 			children = (
@@ -232,6 +336,7 @@
 		C0F8F65C291217D800E34EDB /* TestPods */ = {
 			isa = PBXGroup;
 			children = (
+				C057EB1D2AC17ED800C0A919 /* BeeHive */,
 				C06D30F02A692B350022D709 /* Doc */,
 				C0F8F678291217D800E34EDB /* Collention */,
 				C0F8F66F291217D800E34EDB /* Controller */,
@@ -527,9 +632,18 @@
 				C0F8F67C291217D800E34EDB /* SSTestNetworkViewController.m in Sources */,
 				C0F8F686291217D800E34EDB /* SSTestPodsModel.m in Sources */,
 				C06D30F32A692B520022D709 /* SSTestDocViewController.m in Sources */,
+				C057EB3B2AC17F3700C0A919 /* HomeModule.m in Sources */,
+				C057EB342AC17F2700C0A919 /* UserTrackModule.m in Sources */,
+				C057EB2C2AC17F1300C0A919 /* ShopModuleViewController.m in Sources */,
+				C057EB3C2AC17F3700C0A919 /* BHViewController.m in Sources */,
+				C057EB422AC17F4900C0A919 /* TradeModule.m in Sources */,
+				C057EB2E2AC17F1300C0A919 /* ShopModuleService.m in Sources */,
+				C057EB432AC17F4900C0A919 /* BHTradeViewController.m in Sources */,
+				C057EB2D2AC17F1300C0A919 /* ShopModule.m in Sources */,
 				C0F8F688291217D800E34EDB /* SSTestCollectionViewController.m in Sources */,
 				6003F59E195388D20070C39A /* SSAppDelegate.m in Sources */,
 				C0F8F684291217D800E34EDB /* SSTestHttpsServerViewController.m in Sources */,
+				C057EB352AC17F2700C0A919 /* BHUserTrackViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

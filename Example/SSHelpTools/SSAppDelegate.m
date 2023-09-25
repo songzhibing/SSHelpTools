@@ -7,7 +7,6 @@
 //
 
 #import "SSAppDelegate.h"
-#import <SSHelpTools/SSBeeHive.h>
 #import <SSHelpTools/SSBHTimeProfiler.h>
 
 @implementation SSAppDelegate

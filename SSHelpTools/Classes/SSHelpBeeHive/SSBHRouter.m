@@ -101,7 +101,7 @@ typedef NS_ENUM(NSUInteger, BHRViewControlerEnterMode) {
     BHRViewControlerEnterModeModal
 };
 
-typedef NS_ENUM(NSUInteger, BHRUsage) {
+typedef NS_ENUM(NSUInteger, SSBHRUsage) {
     BHRUsageUnknown,
     BHRUsageCallService,
     BHRUsageJumpViewControler,
@@ -116,7 +116,7 @@ static NSMutableDictionary<NSString *, SSBHRouter *> *routerByScheme = nil;
 @property (nonatomic, copy) NSString *key;
 @property (nonatomic, strong) Class mClass;
 @property (nonatomic, copy) NSDictionary<NSString *, id> *params;
-@property (nonatomic, copy) BHRPathComponentCustomHandler handler;
+@property (nonatomic, copy) SSBHRPathComponentCustomHandler handler;
 
 @end
 
@@ -126,7 +126,7 @@ static NSMutableDictionary<NSString *, SSBHRouter *> *routerByScheme = nil;
 
 @end
 
-static NSString *BHRURLGlobalScheme = nil;
+static NSString *_BHRURLGlobalScheme = nil;
 
 @interface SSBHRouter ()
 
@@ -149,21 +149,21 @@ static NSString *BHRURLGlobalScheme = nil;
 
 + (instancetype)globalRouter
 {
-    if (!BHRURLGlobalScheme) {
+    if (!_BHRURLGlobalScheme) {
         NSString *plistPath = [[NSBundle mainBundle] pathForResource:[SSBHContext shareInstance].moduleConfigName ofType:@"plist"];
         if ([[NSFileManager defaultManager] fileExistsAtPath:plistPath]) {
             NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
-            BHRURLGlobalScheme = [plist objectForKey:BHRURLSchemeGlobalKey];
+            _BHRURLGlobalScheme = [plist objectForKey:_BHRURLSchemeGlobalKey];
         }
-        if (!BHRURLGlobalScheme.length) {
+        if (!_BHRURLGlobalScheme.length) {
             NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-            BHRURLGlobalScheme = [infoDictionary objectForKey:@"CFBundleIdentifier"];
+            _BHRURLGlobalScheme = [infoDictionary objectForKey:@"CFBundleIdentifier"];
         }
-        if (!BHRURLGlobalScheme.length) {
-            BHRURLGlobalScheme = @"com.alibaba.beehive";
+        if (!_BHRURLGlobalScheme.length) {
+            _BHRURLGlobalScheme = @"com.alibaba.beehive";
         }
     }
-    return [self routerForScheme:BHRURLGlobalScheme];
+    return [self routerForScheme:_BHRURLGlobalScheme];
 }
 + (instancetype)routerForScheme:(NSString *)scheme
 {
@@ -210,7 +210,7 @@ static NSString *BHRURLGlobalScheme = nil;
 //handler is a custom module or service init function
 - (void)addPathComponent:(NSString *)pathComponentKey
        forClass:(Class)mClass
-        handler:(BHRPathComponentCustomHandler)handler
+        handler:(SSBHRPathComponentCustomHandler)handler
 {
     BHRPathComponent *pathComponent = [[BHRPathComponent alloc] init];
     pathComponent.key = pathComponentKey;
@@ -234,7 +234,7 @@ static NSString *BHRURLGlobalScheme = nil;
     }
     
     NSString *host = URL.host;
-    BHRUsage usage = [self usage:host];
+    SSBHRUsage usage = [self usage:host];
     if (usage == BHRUsageUnknown) {
         return NO;
     }
@@ -246,7 +246,7 @@ static NSString *BHRURLGlobalScheme = nil;
     __block BOOL flag = YES;
     
     [pathComponents enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSArray<NSString *> * subPaths = [obj componentsSeparatedByString:BHRURLSubPathSplitPattern];
+        NSArray<NSString *> * subPaths = [obj componentsSeparatedByString:_BHRURLSubPathSplitPattern];
         if (!subPaths.count) {
             flag = NO;
             *stop = NO;
@@ -335,7 +335,7 @@ static NSString *BHRURLGlobalScheme = nil;
     SSBHRouter *router = [self routerForScheme:scheme];
     
     NSString *host = URL.host;
-    BHRUsage usage = [self usage:host];
+    SSBHRUsage usage = [self usage:host];
     
     BHRViewControlerEnterMode defaultMode = BHRViewControlerEnterModePush;
     if (URL.fragment.length) {
@@ -344,7 +344,7 @@ static NSString *BHRURLGlobalScheme = nil;
     
     
     NSDictionary<NSString *, NSString *> *queryDic = [self queryDicFromURL:URL];
-    NSString *paramsJson = [queryDic objectForKey:BHRURLQueryParamsKey];
+    NSString *paramsJson = [queryDic objectForKey:_BHRURLQueryParamsKey];
     NSDictionary<NSString *, NSDictionary<NSString *, id> *> *allURLParams = [self paramsFromJson:paramsJson];
     
     NSArray<NSString *> *pathComponents = URL.pathComponents;
@@ -352,11 +352,11 @@ static NSString *BHRURLGlobalScheme = nil;
     [pathComponents enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (![obj isEqualToString:@"/"]) {
             
-            NSArray<NSString *> * subPaths = [obj componentsSeparatedByString:BHRURLSubPathSplitPattern];
+            NSArray<NSString *> * subPaths = [obj componentsSeparatedByString:_BHRURLSubPathSplitPattern];
             NSString *pathComponentKey = subPaths.firstObject;
             
             Class mClass;
-            BHRPathComponentCustomHandler handler;
+            SSBHRPathComponentCustomHandler handler;
             BHRPathComponent *pathComponent = [router.pathComponentByKey objectForKey:pathComponentKey];
             if (pathComponent) {
                 mClass = pathComponent.mClass;
@@ -425,14 +425,14 @@ static NSString *BHRURLGlobalScheme = nil;
 }
 
 #pragma mark - private
-+ (BHRUsage)usage:(NSString *)usagePattern
++ (SSBHRUsage)usage:(NSString *)usagePattern
 {
     usagePattern = usagePattern.lowercaseString;
-    if ([usagePattern isEqualToString:BHRURLHostCallService]) {
+    if ([usagePattern isEqualToString:_BHRURLHostCallService]) {
         return BHRUsageCallService;
-    } else if ([usagePattern isEqualToString:BHRURLHostJumpViewController]) {
+    } else if ([usagePattern isEqualToString:_BHRURLHostJumpViewController]) {
         return BHRUsageJumpViewControler;
-    } else if ([usagePattern isEqualToString:BHRURLHostRegister]) {
+    } else if ([usagePattern isEqualToString:_BHRURLHostRegister]) {
         return BHRUsageRegister;
     }
     return BHRUsageUnknown;
@@ -441,9 +441,9 @@ static NSString *BHRURLGlobalScheme = nil;
 + (BHRViewControlerEnterMode)viewControllerEnterMode:(NSString *)enterModePattern
 {
     enterModePattern = enterModePattern.lowercaseString;
-    if ([enterModePattern isEqualToString:BHRURLFragmentViewControlerEnterModePush]) {
+    if ([enterModePattern isEqualToString:_BHRURLFragmentViewControlerEnterModePush]) {
         return BHRViewControlerEnterModePush;
-    } else if ([enterModePattern isEqualToString:BHRURLFragmentViewControlerEnterModeModal]) {
+    } else if ([enterModePattern isEqualToString:_BHRURLFragmentViewControlerEnterModeModal]) {
         return BHRViewControlerEnterModeModal;
     }
     return BHRViewControlerEnterModePush;
@@ -451,7 +451,7 @@ static NSString *BHRURLGlobalScheme = nil;
 
 + (UIViewController *)currentViewController
 {
-    UIViewController *viewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *viewController = [UIApplication sharedApplication].delegate.window.rootViewController;
     
     while (viewController) {
         if ([viewController isKindOfClass:[UITabBarController class]]) {

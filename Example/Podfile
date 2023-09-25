@@ -10,7 +10,8 @@ target 'SSHelpTools_Example' do
   pod 'YYKit'
   pod 'CocoaHTTPServer'
   pod 'ReactiveObjC'
-#  pod 'BeeHive'
+  pod 'BeeHive'
+  pod 'DateTools'
   pod 'FLEX', :configurations => ['Debug'] #调试工具
   pod 'SSHelpTools', :path => '../'
   pod 'SSHelpTools/SSHelpBeeHive', :path => '../'

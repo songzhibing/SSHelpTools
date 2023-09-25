@@ -8,6 +8,7 @@
 #import "SSBHServiceManager.h"
 #import "SSBHContext.h"
 #import "SSBHAnnotation.h"
+#import "SSBHCommon.h"
 #import <objc/runtime.h>
 
 static const NSString *kService = @"service";
@@ -81,7 +82,8 @@ static const NSString *kImpl = @"impl";
         [self.allServicesDict addEntriesFromDictionary:@{key:value}];
         [self.lock unlock];
     }
-   
+    
+    SSBHLog(@"allServicesDict: %@ ",self.allServicesDict);
 }
 
 - (id)createService:(Protocol *)service
