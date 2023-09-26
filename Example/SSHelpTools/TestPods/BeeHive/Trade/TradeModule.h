@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TradeModule : NSObject
+@interface TradeModule : NSObject <SSBHModuleProtocol>
 
 @end

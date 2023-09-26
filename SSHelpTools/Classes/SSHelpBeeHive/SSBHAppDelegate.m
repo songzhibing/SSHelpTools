@@ -203,18 +203,18 @@
 
 @end
 
-@implementation BHOpenURLItem
+@implementation SSBHOpenURLItem
 
 @end
 
-@implementation BHShortcutItem
+@implementation SSBHShortcutItem
 
 @end
 
-@implementation BHUserActivityItem
+@implementation SSBHUserActivityItem
 
 @end
 
-@implementation BHNotificationsItem
+@implementation SSBHNotificationsItem
 
 @end

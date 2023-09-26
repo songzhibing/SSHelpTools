@@ -7,10 +7,9 @@
 //
 
 #import "TradeModule.h"
-#import "BeeHive.h"
 #import "BHTradeViewController.h"
 
-@interface TradeModule()<BHModuleProtocol>
+@interface TradeModule()
 
 @end
 
@@ -18,7 +17,7 @@
 
 + (void)load
 {
-    [BeeHive registerDynamicModule:[self class]];
+    [SSBeeHive registerDynamicModule:[self class]];
 }
 
 - (id)init{
@@ -31,6 +30,10 @@
 }
 
 
+- (void)modWillResignActive:(BHContext *)context
+{
+    NSLog(@"失活...");
+}
 
 -(void)modInit:(BHContext *)context
 {
@@ -38,7 +41,7 @@
     NSLog(@"%@",context.moduleConfigName);
     
     
-    id<TradeServiceProtocol> service = [[BeeHive shareInstance] createService:@protocol(TradeServiceProtocol)];
+    id<TradeServiceProtocol> service = [[SSBeeHive shareInstance] createService:@protocol(TradeServiceProtocol)];
     
     service.itemId = @"我是单例";
 }

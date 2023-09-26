@@ -14,7 +14,7 @@ typedef void (^handler)(void);
 typedef void (^watchdogFiredCallBack)(void);
 
 
-@interface PingThread : NSThread
+@interface SSPingThread : NSThread
 
 @property (nonatomic, assign) double threshold;
 @property (nonatomic, assign) BOOL   pingTaskIsRunning;
@@ -22,7 +22,7 @@ typedef void (^watchdogFiredCallBack)(void);
 
 @end
 
-@implementation PingThread
+@implementation SSPingThread
 
 - (instancetype)initWithThreshold:(double)threshold handler:(handler)handler
 {
@@ -61,7 +61,7 @@ typedef void (^watchdogFiredCallBack)(void);
 
 
 @property (nonatomic, assign) double threshold;
-@property (nonatomic, strong) PingThread *pingThread;
+@property (nonatomic, strong) SSPingThread *pingThread;
 
 @end
 
@@ -88,7 +88,7 @@ typedef void (^watchdogFiredCallBack)(void);
     if (self = [self init]) {
         self.threshold = 0.4;//默认间隔
         self.threshold = threshold;
-        self.pingThread = [[PingThread alloc] initWithThreshold:threshold handler:callBack];
+        self.pingThread = [[SSPingThread alloc] initWithThreshold:threshold handler:callBack];
         [self.pingThread start];
     }
    

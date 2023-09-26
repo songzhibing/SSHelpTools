@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
 #import "BHService.h"
 
 @interface BHTradeViewController : UIViewController<TradeServiceProtocol>

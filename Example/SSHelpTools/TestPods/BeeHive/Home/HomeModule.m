@@ -7,12 +7,10 @@
 //
 
 #import "HomeModule.h"
-#import "BeeHive.h"
-#import "BHService.h"
 #import "BHViewController.h"
 
 
-@interface HomeModule()<BHModuleProtocol>
+@interface HomeModule()<SSBHModuleProtocol>
 
 @end
 

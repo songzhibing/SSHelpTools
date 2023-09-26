@@ -7,8 +7,6 @@
 //
 
 #import "BHTradeViewController.h"
-#import "BeeHive.h"
-
 
 @implementation BHTradeViewController
 

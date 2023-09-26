@@ -137,7 +137,7 @@
     SSTestPodsModel *bhModel = [[SSTestPodsModel alloc] init];
     bhModel.title = @"BeeHive";
     bhModel.push = ^{
-        id<HomeServiceProtocol> homeVc = [[BeeHive shareInstance] createService:@protocol(HomeServiceProtocol)];
+        id<HomeServiceProtocol> homeVc = [[SSBeeHive shareInstance] createService:@protocol(HomeServiceProtocol)];
         [self_weak_.navigationController pushViewController:homeVc animated:YES];
     };
     [_testData addObject:bhModel];

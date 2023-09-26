@@ -11,7 +11,7 @@
 
 // Debug Logging
 #ifdef DEBUG
-#define SSBHLog(format, ...) printf("\n[%s] %s [第%d行] %s\n", __TIME__, __PRETTY_FUNCTION__, __LINE__, [[NSString stringWithFormat:format, ##__VA_ARGS__] UTF8String]);
+    #define SSBHLog(format, ...) printf("\n[%s] SSBeeHive %s [第%d行] %s\n", __TIME__, __PRETTY_FUNCTION__, __LINE__, [[NSString stringWithFormat:format, ##__VA_ARGS__] UTF8String]);
 #else
     #define SSBHLog(format, ...)
 #endif

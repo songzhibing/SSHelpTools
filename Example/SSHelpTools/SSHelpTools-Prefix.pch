@@ -18,6 +18,6 @@
     #import <SSHelpTools/SSHelpWebViewController.h>
     #import <SSHelpTools/SSHelpLog.h>
     #import <YYKit/YYKit.h>
-    #import <BeeHive/BeeHive.h>
+//    #import <BeeHive/BeeHive.h>
     #import <SSHelpTools/SSBeeHive.h>
 #endif

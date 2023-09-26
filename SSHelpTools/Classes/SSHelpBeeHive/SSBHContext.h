@@ -44,20 +44,20 @@ typedef enum
 
 //3D-Touch model
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > 80400
-@property (nonatomic, strong) BHShortcutItem *touchShortcutItem;
+@property (nonatomic, strong) SSBHShortcutItem *touchShortcutItem;
 #endif
 
 //OpenURL model
-@property (nonatomic, strong) BHOpenURLItem *openURLItem;
+@property (nonatomic, strong) SSBHOpenURLItem *openURLItem;
 
 //Notifications Remote or Local
-@property (nonatomic, strong) BHNotificationsItem *notificationsItem;
+@property (nonatomic, strong) SSBHNotificationsItem *notificationsItem;
 
 //user Activity Model
-@property (nonatomic, strong) BHUserActivityItem *userActivityItem;
+@property (nonatomic, strong) SSBHUserActivityItem *userActivityItem;
 
 //watch Model
-@property (nonatomic, strong) BHWatchItem *watchItem;
+@property (nonatomic, strong) SSBHWatchItem *watchItem;
 
 //custom param
 @property (nonatomic, copy) NSDictionary *customParam;

@@ -111,7 +111,7 @@ typedef NS_ENUM(NSUInteger, SSBHRUsage) {
 static NSMutableDictionary<NSString *, SSBHRouter *> *routerByScheme = nil;
 
 
-@interface BHRPathComponent : NSObject
+@interface SSBHRPathComponent : NSObject
 
 @property (nonatomic, copy) NSString *key;
 @property (nonatomic, strong) Class mClass;
@@ -120,7 +120,7 @@ static NSMutableDictionary<NSString *, SSBHRouter *> *routerByScheme = nil;
 
 @end
 
-@implementation BHRPathComponent
+@implementation SSBHRPathComponent
 
 
 
@@ -130,7 +130,7 @@ static NSString *_BHRURLGlobalScheme = nil;
 
 @interface SSBHRouter ()
 
-@property (nonatomic, strong) NSMutableDictionary<NSString *, BHRPathComponent *> *pathComponentByKey;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, SSBHRPathComponent *> *pathComponentByKey;
 @property (nonatomic, copy) NSString *scheme;
 
 @end
@@ -138,7 +138,7 @@ static NSString *_BHRURLGlobalScheme = nil;
 @implementation SSBHRouter
 
 #pragma mark - property init
-- (NSMutableDictionary<NSString *, BHRPathComponent *> *)pathComponentByKey {
+- (NSMutableDictionary<NSString *, SSBHRPathComponent *> *)pathComponentByKey {
     if (!_pathComponentByKey) {
         _pathComponentByKey = @{}.mutableCopy;
     }
@@ -212,7 +212,7 @@ static NSString *_BHRURLGlobalScheme = nil;
        forClass:(Class)mClass
         handler:(SSBHRPathComponentCustomHandler)handler
 {
-    BHRPathComponent *pathComponent = [[BHRPathComponent alloc] init];
+    SSBHRPathComponent *pathComponent = [[SSBHRPathComponent alloc] init];
     pathComponent.key = pathComponentKey;
     pathComponent.mClass = mClass;
     pathComponent.handler = handler;
@@ -357,7 +357,7 @@ static NSString *_BHRURLGlobalScheme = nil;
             
             Class mClass;
             SSBHRPathComponentCustomHandler handler;
-            BHRPathComponent *pathComponent = [router.pathComponentByKey objectForKey:pathComponentKey];
+            SSBHRPathComponent *pathComponent = [router.pathComponentByKey objectForKey:pathComponentKey];
             if (pathComponent) {
                 mClass = pathComponent.mClass;
                 handler = pathComponent.handler;

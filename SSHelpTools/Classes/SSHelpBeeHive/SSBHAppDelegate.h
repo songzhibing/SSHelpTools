@@ -20,7 +20,7 @@ typedef void (^BHNotificationPresentationOptionsHandler)(UNNotificationPresentat
 typedef void (^BHNotificationCompletionHandler)(void);
 #endif
 
-@interface BHNotificationsItem : NSObject
+@interface SSBHNotificationsItem : NSObject
 
 @property (nonatomic, strong) NSError *notificationsError;
 @property (nonatomic, strong) NSData *deviceToken;
@@ -37,7 +37,7 @@ typedef void (^BHNotificationCompletionHandler)(void);
 
 @end
 
-@interface BHOpenURLItem : NSObject
+@interface SSBHOpenURLItem : NSObject
 
 @property (nonatomic, strong) NSURL *openURL;
 @property (nonatomic, copy) NSString *sourceApplication;
@@ -48,7 +48,7 @@ typedef void (^BHNotificationCompletionHandler)(void);
 
 typedef void (^BHShortcutCompletionHandler)(BOOL);
 
-@interface BHShortcutItem : NSObject
+@interface SSBHShortcutItem : NSObject
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > 80400
 @property(nonatomic, strong) UIApplicationShortcutItem *shortcutItem;
@@ -60,7 +60,7 @@ typedef void (^BHShortcutCompletionHandler)(BOOL);
 
 typedef void (^BHUserActivityRestorationHandler)(NSArray *);
 
-@interface BHUserActivityItem : NSObject
+@interface SSBHUserActivityItem : NSObject
 
 @property (nonatomic, copy) NSString *userActivityType;
 @property (nonatomic, strong) NSUserActivity *userActivity;
@@ -71,7 +71,7 @@ typedef void (^BHUserActivityRestorationHandler)(NSArray *);
 
 typedef void (^BHWatchReplyHandler)(NSDictionary *replyInfo);
 
-@interface BHWatchItem : NSObject
+@interface SSBHWatchItem : NSObject
 
 @property (nonatomic, strong) NSDictionary *userInfo;
 @property (nonatomic, copy) BHWatchReplyHandler replyHandler;

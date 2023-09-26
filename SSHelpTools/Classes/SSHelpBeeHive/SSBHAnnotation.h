@@ -12,13 +12,13 @@
 
 #ifndef SSBeehiveModSectName
 
-#define SSBeehiveModSectName "SSBeehiveMods"
+#define SSBeehiveModSectName "SSBHMods"
 
 #endif
 
 #ifndef SSBeehiveServiceSectName
 
-#define SSBeehiveServiceSectName "SSBeehiveServices"
+#define SSBeehiveServiceSectName "SSBHServices"
 
 #endif
 
@@ -28,10 +28,10 @@
 
 
 #define SSBeeHiveMod(name) \
-class BeeHive; char * k##name##_mod SSBeeHiveDATA(SSBeehiveMods) = ""#name"";
+class SSBeeHive; char * k##name##_mod SSBeeHiveDATA(SSBHMods) = ""#name"";
 
 #define SSBeeHiveService(servicename,impl) \
-class BeeHive; char * k##servicename##_service SSBeeHiveDATA(SSBeehiveServices) = "{ \""#servicename"\" : \""#impl"\"}";
+class SSBeeHive; char * k##servicename##_service SSBeeHiveDATA(SSBHServices) = "{ \""#servicename"\" : \""#impl"\"}";
 
 @interface SSBHAnnotation : NSObject
 
