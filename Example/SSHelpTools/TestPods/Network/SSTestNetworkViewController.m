@@ -20,7 +20,6 @@
     self.title = @"TestNet";
     
     
-    NSMutableArray <SSCollectionViewSectionModel *> *sectionModels = [[NSMutableArray alloc] init];
     SSCollectionViewSectionModel *section = [[SSCollectionViewSectionModel alloc] init];
     section.cellModels = [[NSMutableArray alloc] init];
     for (int index=0; index<3; index++) {
@@ -41,8 +40,7 @@
     section.headerModel.headerHeight = 20;
     section.footerModel = [[SSCollectionViewFooterModel alloc] init];
     section.footerModel.footerHeight = 10;
-    [sectionModels addObject:section];
-    self.collectionView.data = @[sectionModels].mutableCopy;
+    self.collectionView.data = @[section].mutableCopy;
 }
 
 /*

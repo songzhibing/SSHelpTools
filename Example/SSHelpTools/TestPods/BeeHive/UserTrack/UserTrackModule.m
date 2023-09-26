@@ -7,29 +7,25 @@
 //
 
 #import "UserTrackModule.h"
-
-
-
-
 #import "BHUserTrackViewController.h"
 
-@interface UserTrackModule()<BHModuleProtocol>
+@interface UserTrackModule()<SSBHModuleProtocol>
 
 @end
 
 @implementation UserTrackModule
 
 
-BH_EXPORT_MODULE(NO)
+SSBH_EXPORT_MODULE(NO)
 
-- (void)modSetUp:(BHContext *)context
+- (void)modSetUp:(SSBHContext *)context
 {
     NSLog(@"UserTrackModule setup");
 }
 
 
 
--(void)modInit:(BHContext *)context
+-(void)modInit:(SSBHContext *)context
 {
 
 //    [[BeeHive shareInstance] registerService:@protocol(UserTrackServiceProtocol) service:[BHUserTrackViewController class]];

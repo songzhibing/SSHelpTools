@@ -16,20 +16,20 @@
 
 @implementation HomeModule
 
--(void)modInit:(BHContext *)context
+-(void)modInit:(SSBHContext *)context
 {
     switch (context.env) {
-        case BHEnvironmentDev:
+        case SSBHEnvironmentDev:
             //....初始化开发环境
             break;
-        case BHEnvironmentProd:
+        case SSBHEnvironmentProd:
             //....初始化生产环境
         default:
             break;
     }
 }
 
-- (void)modSetUp:(BHContext *)context
+- (void)modSetUp:(SSBHContext *)context
 {
     NSLog(@"HomeModule setup");
 }

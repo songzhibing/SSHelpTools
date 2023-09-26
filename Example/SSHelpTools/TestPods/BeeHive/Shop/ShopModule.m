@@ -28,7 +28,7 @@
     return 0;
 }
 
-- (void)modSetUp:(BHContext *)context
+- (void)modSetUp:(SSBHContext *)context
 {
     NSLog(@"ShopModule setup");
 }

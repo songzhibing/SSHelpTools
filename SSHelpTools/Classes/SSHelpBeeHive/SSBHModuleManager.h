@@ -10,42 +10,40 @@
 
 typedef NS_ENUM(NSUInteger, SSBHModuleLevel)
 {
-    BHModuleBasic  = 0,
-    BHModuleNormal = 1
+    SSBHModuleBasic  = 0,
+    SSBHModuleNormal = 1
 };
 
 typedef NS_ENUM(NSInteger, SSBHModuleEventType)
 {
-    BHMSetupEvent = 0,
-    BHMInitEvent,
-    BHMTearDownEvent,
-    BHMSplashEvent,
-    BHMQuickActionEvent,
-    BHMWillResignActiveEvent,
-    BHMDidEnterBackgroundEvent,
-    BHMWillEnterForegroundEvent,
-    BHMDidBecomeActiveEvent,
-    BHMWillTerminateEvent,
-    BHMUnmountEvent,
-    BHMOpenURLEvent,
-    BHMDidReceiveMemoryWarningEvent,
-    BHMDidFailToRegisterForRemoteNotificationsEvent,
-    BHMDidRegisterForRemoteNotificationsEvent,
-    BHMDidReceiveRemoteNotificationEvent,
-    BHMDidReceiveLocalNotificationEvent,
-    BHMWillPresentNotificationEvent,
-    BHMDidReceiveNotificationResponseEvent,
-    BHMWillContinueUserActivityEvent,
-    BHMContinueUserActivityEvent,
-    BHMDidFailToContinueUserActivityEvent,
-    BHMDidUpdateUserActivityEvent,
-    BHMHandleWatchKitExtensionRequestEvent,
-    BHMDidCustomEvent = 1000
+    SSBHMSetupEvent = 0,
+    SSBHMInitEvent,
+    SSBHMTearDownEvent,
+    SSBHMSplashEvent,
+    SSBHMQuickActionEvent,
+    SSBHMWillResignActiveEvent,
+    SSBHMDidEnterBackgroundEvent,
+    SSBHMWillEnterForegroundEvent,
+    SSBHMDidBecomeActiveEvent,
+    SSBHMWillTerminateEvent,
+    SSBHMUnmountEvent,
+    SSBHMOpenURLEvent,
+    SSBHMDidReceiveMemoryWarningEvent,
+    SSBHMDidFailToRegisterForRemoteNotificationsEvent,
+    SSBHMDidRegisterForRemoteNotificationsEvent,
+    SSBHMDidReceiveRemoteNotificationEvent,
+    SSBHMDidReceiveLocalNotificationEvent,
+    SSBHMWillPresentNotificationEvent,
+    SSBHMDidReceiveNotificationResponseEvent,
+    SSBHMWillContinueUserActivityEvent,
+    SSBHMContinueUserActivityEvent,
+    SSBHMDidFailToContinueUserActivityEvent,
+    SSBHMDidUpdateUserActivityEvent,
+    SSBHMHandleWatchKitExtensionRequestEvent,
+    SSBHMDidCustomEvent = 1000
     
 };
 
-
-@class BHModule;
 
 @interface SSBHModuleManager : NSObject
 
