@@ -65,11 +65,7 @@
     
     //是否被自定义
     NSString *newApi = [self p_hookJsName:handlerName];
-    SEL hookJsName = @selector(webModule:hookJsName:);
-    if (self.moduleDelegate && [self.moduleDelegate respondsToSelector:hookJsName]) {
-        newApi = [self.moduleDelegate webModule:self.identifier hookJsName:handlerName];
-    }
-    
+
     //注册方法
     [self.bridge registerHandler:newApi handler:^(id data, WVJBResponseCallback responseCallback) {
         /// 根据返回数据类型进行转换
