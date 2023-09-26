@@ -54,8 +54,8 @@
     if (self) {
         self.modulesByName  = [[NSMutableDictionary alloc] initWithCapacity:1];
         self.servicesByName  = [[NSMutableDictionary alloc] initWithCapacity:1];
-        self.moduleConfigName = @"BeeHive.bundle/BeeHive";
-        self.serviceConfigName = @"BeeHive.bundle/BHService";
+        self.moduleConfigName = @"";//@"BeeHive.bundle/BeeHive";
+        self.serviceConfigName = @"";//@"BeeHive.bundle/BHService";
       
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > 80400
         self.touchShortcutItem = [SSBHShortcutItem new];

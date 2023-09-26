@@ -36,8 +36,7 @@
     return newApi?:api;
 }
 
-- (void)p_hookJsHandler:(SSHelpWebObjcHandler *)jsHandler
-          moduleHandler:(SSBridgeHandler)moduleHandler
+- (void)p_hookJsHandler:(SSHelpWebObjcHandler *)jsHandler moduleHandler:(SSBridgeHandler)moduleHandler
 {
     if (_moduleDelegate && [_moduleDelegate respondsToSelector:@selector(webModule:hookJsHandler:moduleHandler:)]) {
         [_moduleDelegate webModule:self.identifier hookJsHandler:jsHandler moduleHandler:moduleHandler];
@@ -66,10 +65,14 @@
     
     //是否被自定义
     NSString *newApi = [self p_hookJsName:handlerName];
+    SEL hookJsName = @selector(webModule:hookJsName:);
+    if (self.moduleDelegate && [self.moduleDelegate respondsToSelector:hookJsName]) {
+        newApi = [self.moduleDelegate webModule:self.identifier hookJsName:handlerName];
+    }
     
     //注册方法
     [self.bridge registerHandler:newApi handler:^(id data, WVJBResponseCallback responseCallback) {
-        /// 根据返回数据类型进行转换【建议统一返回对象】
+        /// 根据返回数据类型进行转换
         void (^_nonullCallBack)(id response) = ^(id response){
             if (responseCallback && response) {
                 if ([response isKindOfClass:[SSHelpWebObjcResponse class]]) {
@@ -84,6 +87,9 @@
                 } else if([response isKindOfClass:[NSString class]]) {
                     NSString *jsonString = response;
                     responseCallback(jsonString);
+                } else {
+                    SSHelpWebObjcResponse *error = [SSHelpWebObjcResponse failedWithError:@"未知数据类型"];
+                    responseCallback(error.toJsonString);
                 }
             }
         };
@@ -98,9 +104,7 @@
 
 
 /// 本身完成不了jshandle，需要使用者完成
-- (void)baseInvokeJsHandler:(NSString *)api
-                       data:(id)data
-                   callBack:(SSBridgeCallback)callBack
+- (void)baseInvokeJsHandler:(NSString *)api data:(id)data callBack:(SSBridgeCallback)callBack
 {
     /// 转成OC对象
     SSHelpWebObjcHandler *jshandler = nil;

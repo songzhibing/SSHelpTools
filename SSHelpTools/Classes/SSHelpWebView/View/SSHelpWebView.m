@@ -666,9 +666,9 @@
     if (self.logEnable) {
         SSLog(@"加载失败: %@ ... ",error.localizedDescription);
     }
-    SEL sel = @selector(webView:didFailProvisionalNavigation:);
+    SEL sel = @selector(webView:didFailProvisionalNavigation:withError:);
     if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
-        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, navigation, error);
     }
 }
 
@@ -687,22 +687,16 @@
 /// 加载完成
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
-    if (self.logEnable) {
-        SSLog(@"加载导航完成: ... ");
-    }
-    
     SEL sel = @selector(webView:didFinishNavigation:);
     if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
         void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
-    } else {
-        //[webView evaluateJavaScript:@"window.location.href" completionHandler:^(id _Nullable urlStr, NSError * _Nullable error) {
-        //    SSLog(@"加载完成:%@",urlStr);
-        //}];
-        //webView 高度自适应
-        //[webView evaluateJavaScript:@"document.body.scrollHeight" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-            // 获取页面高度，并重置 webview 的 frame
-        //    SSLog(@"html.body的高度：%@", result);
-        //}];
+    }
+    
+    if (self.logEnable) {
+        SSLog(@"加载导航完成: ... ");
+        [webView evaluateJavaScript:@"window.location.href" completionHandler:^(id _Nullable urlStr, NSError * _Nullable error) {
+            SSLog(@"页面最终地址:%@",urlStr);
+        }];
     }
 }
 

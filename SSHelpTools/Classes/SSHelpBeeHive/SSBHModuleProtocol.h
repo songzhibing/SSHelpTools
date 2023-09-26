@@ -13,7 +13,7 @@
 
 #define SSBH_EXPORT_MODULE(isAsync) \
 + (void)load { [SSBeeHive registerDynamicModule:[self class]]; } \
--(BOOL)async { return [[NSString stringWithUTF8String:#isAsync] boolValue];}
+- (BOOL)async { return [[NSString stringWithUTF8String:#isAsync] boolValue];}
 
 
 @protocol SSBHModuleProtocol <NSObject>

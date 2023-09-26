@@ -49,7 +49,7 @@
 
 - (void)modSetUp:(BHContext *)context
 {
-    [[BeeHive shareInstance]  registerService:@protocol(TradeServiceProtocol) service:[BHTradeViewController class]];
+//    [[BeeHive shareInstance]  registerService:@protocol(TradeServiceProtocol) service:[BHTradeViewController class]];
     
     NSLog(@"TradeModule setup");
 
