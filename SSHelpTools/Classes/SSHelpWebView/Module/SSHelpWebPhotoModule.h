@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpWebPhotoModule : SSHelpWebBaseModule
 
++ (id)sharedInstance;
+
+- (void)evaluateJsHandler:(SSHelpWebObjcHandler *)handler;
+
 @end
 
 NS_ASSUME_NONNULL_END

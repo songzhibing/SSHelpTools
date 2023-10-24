@@ -11,15 +11,7 @@
 #import "SSBHModuleManager.h"
 #import "SSBHTimeProfiler.h"
 
-@interface SSBHAppDelegate () <UNUserNotificationCenterDelegate>
-
-@end
-
-
 @implementation SSBHAppDelegate
-
-@synthesize window;
-
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -29,11 +21,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [[SSBHModuleManager sharedManager] triggerEvent:SSBHMSplashEvent];
     });
-    //#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000
-    if ([UIDevice currentDevice].systemVersion.floatValue >= 10.0f) {
-        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
-    }
-    //#endif
+
+    [UNUserNotificationCenter currentNotificationCenter].delegate = self;
     
     #ifdef DEBUG
     [[SSBHTimeProfiler sharedTimeProfiler] saveTimeProfileDataIntoFile:@"BeeHiveTimeProfiler"];
@@ -42,16 +31,12 @@
     return YES;
 }
 
-
-//#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80400
-
--(void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler
+- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler
 {
     [[SSBeeHive shareInstance].context.touchShortcutItem setShortcutItem: shortcutItem];
     [[SSBeeHive shareInstance].context.touchShortcutItem setScompletionHandler: completionHandler];
     [[SSBHModuleManager sharedManager] triggerEvent:SSBHMQuickActionEvent];
 }
-//#endif
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -90,7 +75,6 @@
 //#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80400
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
 {
-  
     [[SSBeeHive shareInstance].context.openURLItem setOpenURL:url];
     [[SSBeeHive shareInstance].context.openURLItem setOptions:options];
     [[SSBHModuleManager sharedManager] triggerEvent:SSBHMOpenURLEvent];

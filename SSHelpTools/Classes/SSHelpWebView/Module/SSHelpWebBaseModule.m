@@ -12,8 +12,7 @@
 - (void)dealloc
 {
     _webView = nil;
-    _moduleDelegate = nil;
-    SSLifeCycleLog(@"%@ dealloc ......",self);
+    SSLifeCycleLog(@"%@ dealloc ...... ",self);
 }
 
 - (instancetype)init
@@ -22,97 +21,9 @@
     if (self) {
         NSString *className = NSStringFromClass([self class]);
         _identifier = className;
-        SSLifeCycleLog(@"%@ alloc init ......",self);
+        SSLifeCycleLog(@"%@ alloc init ...... ",self);
     }
     return self;
-}
-
-- (NSString *)p_hookJsName:(NSString *)api
-{
-    NSString *newApi  = nil;
-    if (_moduleDelegate && [_moduleDelegate respondsToSelector:@selector(webModule:hookJsName:)]) {
-        newApi = [_moduleDelegate webModule:self.identifier hookJsName:api];
-    }
-    return newApi?:api;
-}
-
-- (void)p_hookJsHandler:(SSHelpWebObjcHandler *)jsHandler moduleHandler:(SSBridgeHandler)moduleHandler
-{
-    if (_moduleDelegate && [_moduleDelegate respondsToSelector:@selector(webModule:hookJsHandler:moduleHandler:)]) {
-        [_moduleDelegate webModule:self.identifier hookJsHandler:jsHandler moduleHandler:moduleHandler];
-    } else {
-        if (moduleHandler) {
-            moduleHandler(jsHandler.api,jsHandler.data,jsHandler.callback);
-        }
-    }
-}
-
-#pragma mark - ZWWebModuleProtocol Method
-
-- (void)moduleRegisterJsHandler
-{
-    //子类继承
-}
-
-#pragma mark - Public Method
-
-/// 注册jshandle，支持自定义
-/// @param handlerName api
-/// @param handler 回调
-- (void)baseRegisterHandler:(NSString *)handlerName handler:(SSBridgeHandler)handler
-{
-    @weakify(self);
-    
-    //是否被自定义
-    NSString *newApi = [self p_hookJsName:handlerName];
-
-    //注册方法
-    [self.bridge registerHandler:newApi handler:^(id data, WVJBResponseCallback responseCallback) {
-        /// 根据返回数据类型进行转换
-        void (^_nonullCallBack)(id response) = ^(id response){
-            if (responseCallback && response) {
-                if ([response isKindOfClass:[SSHelpWebObjcResponse class]]) {
-                    SSHelpWebObjcResponse *objcResponse = (SSHelpWebObjcResponse *)response;
-                    responseCallback(objcResponse.toJsonString);
-                } else if([response isKindOfClass:[NSDictionary class]]) {
-                    NSString *jsonString = ((NSDictionary *)response).ss_jsonStringEncoded;
-                    responseCallback(jsonString);
-                } else if([response isKindOfClass:[NSArray class]]) {
-                    NSString *jsonString = ((NSArray *)response).ss_jsonStringEncoded;
-                    responseCallback(jsonString);
-                } else if([response isKindOfClass:[NSString class]]) {
-                    NSString *jsonString = response;
-                    responseCallback(jsonString);
-                } else {
-                    SSHelpWebObjcResponse *error = [SSHelpWebObjcResponse failedWithError:@"未知数据类型"];
-                    responseCallback(error.toJsonString);
-                }
-            }
-        };
-        /// 转成OC对象
-        SSHelpWebObjcHandler *jshandler = nil;
-        jshandler = [SSHelpWebObjcHandler handlerWithData:data callBack:_nonullCallBack];
-        jshandler.api = newApi;
-        /// 是否被自定义
-        [self_weak_ p_hookJsHandler:jshandler moduleHandler:handler];
-    }];
-}
-
-
-/// 本身完成不了jshandle，需要使用者完成
-- (void)baseInvokeJsHandler:(NSString *)api data:(id)data callBack:(SSBridgeCallback)callBack
-{
-    /// 转成OC对象
-    SSHelpWebObjcHandler *jshandler = nil;
-    jshandler = [SSHelpWebObjcHandler handlerWithData:data callBack:callBack];
-    jshandler.api = api;
-    
-    /// 代理
-    if (_moduleDelegate && [_moduleDelegate respondsToSelector:@selector(webModule:invokeJsHandler:)]) {
-        [_moduleDelegate webModule:self.identifier invokeJsHandler:jshandler];
-    } else {
-        callBack([SSHelpWebObjcResponse failedWithError:@"未实现该功能"]);
-    }
 }
 
 - (void)basePushViewController:(UIViewController *)viewController animated:(BOOL)animated

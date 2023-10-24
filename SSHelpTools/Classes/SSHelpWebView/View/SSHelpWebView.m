@@ -7,125 +7,99 @@
 
 #import "SSHelpWebView.h"
 #import "SSHelpWebTestBridgeModule.h"
-#import <SSHelpTools/UIImage+SSHelp.h>
-#import <SSHelpTools/SSHelpPhotoManager.h>
+#import "SSHelpWebPhotoModule.h"
 
-@interface SSHelpWebView()<WKUIDelegate,WKNavigationDelegate,UIGestureRecognizerDelegate>
+@interface SSHelpWebView()
 
 @property(nonatomic, strong) WKWebViewJavascriptBridge *bridge;
 
+@property(nonatomic, strong) NSMutableDictionary <NSString *, id> *moduleImpInstances;
+
 @property(nonatomic, strong) NSMutableDictionary <NSString *, SSBridgeHandler> *messageHandlers;
-
-@property(nonatomic, strong) NSMutableArray <NSString *> *moduleImpClasses;
-
-@property(nonatomic, strong) NSMutableArray <__kindof SSHelpWebBaseModule *> *moduleImpInstances;
-
-/// 自定义多功能长按手势识别
-@property(nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
 
 @end
 
 
 @implementation SSHelpWebView
 
-+ (WKWebViewConfiguration *)defaultConfiguration
++ (instancetype)ss_new
 {
-    WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
-    configuration.allowsInlineMediaPlayback = YES; // 允许在线播放
-    configuration.allowsAirPlayForMediaPlayback = YES; //允许视频播放
-    configuration.userContentController = [[WKUserContentController alloc] init];
+    return [self ss_newBy:nil];
+}
 
++ (instancetype)ss_newBy:(void(^_Nullable)(WKWebViewConfiguration *))block
+{
+    WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
+    config.allowsInlineMediaPlayback = YES; // 允许在线播放
+    config.allowsAirPlayForMediaPlayback = YES; //允许视频播放
+    config.userContentController = [[WKUserContentController alloc] init];
+
+    // 跨域问题
     @try {
-        //跨域问题
-        [configuration setValue:@YES forKey:@"allowUniversalAccessFromFileURLs"];
+        [config setValue:@YES forKey:@"allowUniversalAccessFromFileURLs"];
     } @catch (NSException *exception) {
     } @finally {
     }
     
-    BOOL injectPageshowJs = YES;
-    BOOL injectWebkitUserSelectJs = YES;
-    BOOL injectWebkitTouchCalloutJs = YES;
+    // web脚本插入：
+    NSArray *scripts = @[
+        @"document.documentElement.style.webkitTouchCallout='none';",
+        @"document.documentElement.style.webkitUserSelect='none';",
+        // 页面返回刷新js
+        // @"window.addEventListener('pageshow', function(event){if(event.persisted || window.performance && window.performance.navigation.type == 2){location.reload();}});"
+    ];
+    [scripts enumerateObjectsUsingBlock:^(NSString   * _Nonnull string, NSUInteger idx, BOOL * _Nonnull stop) {
+        WKUserScript *script = [[WKUserScript alloc] initWithSource:string injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
+        [config.userContentController addUserScript:script];
+    }];
     
-    if (injectWebkitTouchCalloutJs) {
-        WKUserScript *touchCalloutScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitTouchCallout='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
-        [configuration.userContentController addUserScript:touchCalloutScript];
-    }
-    
-    if (injectWebkitUserSelectJs) {
-        WKUserScript *selectScript = [[WKUserScript alloc] initWithSource:@"document.documentElement.style.webkitUserSelect='none';" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
-        [configuration.userContentController addUserScript:selectScript];
-    }
-    if (injectPageshowJs) {
-        WKUserScript *reloadScript = [[WKUserScript alloc] initWithSource:@"window.addEventListener('pageshow', function(event){if(event.persisted || window.performance && window.performance.navigation.type == 2){location.reload();}});" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:NO];
-        [configuration.userContentController addUserScript:reloadScript];
-    }
-    //共享进程池,同一进程池中的webview才可以互相通讯
-    static WKProcessPool *processPool;
-    static dispatch_once_t poolOnceToken;
-    dispatch_once(&poolOnceToken, ^{
-        processPool = [[WKProcessPool alloc] init];
+    // web进程池： 共享进程池,同一进程池中的webview才可以互相通讯
+    static WKProcessPool *pool;
+    static dispatch_once_t onceTokenPool;
+    dispatch_once(&onceTokenPool, ^{
+        pool = [[WKProcessPool alloc] init];
     });
-    configuration.processPool = processPool;
-    
-    //web的首选项设置
+    config.processPool = pool;
+
+    // web选项设置：
     static WKPreferences *preferences;
-    static dispatch_once_t preferensOnceToken;
-    dispatch_once(&preferensOnceToken, ^{
+    static dispatch_once_t onceTokenPre;
+    dispatch_once(&onceTokenPre, ^{
         preferences = [[WKPreferences alloc] init];
-        preferences.minimumFontSize = 0.0f; //最小字体设置,默认为0,H5中css的“font-size” 的值如果小于该值，则会使用该值作为字体的最小尺寸
-        preferences.javaScriptEnabled = YES; //是否启用js脚本，默认启用，关闭则不会运算js脚本，加快渲染速度
-        preferences.javaScriptCanOpenWindowsAutomatically = YES; //允许使用js自动打开Window，默认不允许，js 在调用window.open方法的时候，必须将改值设置为YES，才能从 WKUIDelegate 的代理方法中获取到
+        preferences.javaScriptEnabled = YES;
+        // 是否允许 window.open 方法
+        preferences.javaScriptCanOpenWindowsAutomatically = YES;
     });
-    configuration.preferences = preferences;
-    
-    //web的首选项设置
-    if (@available(iOS 14.0, *)) {
-        static WKWebpagePreferences *pagePreference;
-        static dispatch_once_t pagePreferenceOnceToken;
-        dispatch_once(&pagePreferenceOnceToken, ^{
-            pagePreference = [[WKWebpagePreferences alloc] init];
-            pagePreference.allowsContentJavaScript = YES;
-            pagePreference.preferredContentMode = WKContentModeMobile;
-        });
-        configuration.defaultWebpagePreferences = pagePreference;
-    }
+    config.preferences = preferences;
+        
+
+    // web数据存储：
+    static WKWebsiteDataStore *dataStore;
+    static dispatch_once_t onceTokenDataStore;
+    dispatch_once(&onceTokenDataStore, ^{
+        dataStore = [WKWebsiteDataStore defaultDataStore];
+    });
+    config.websiteDataStore = dataStore;
    
-
-    //数据存储
-    static WKWebsiteDataStore *websiteDataStore;
-    static dispatch_once_t storeOnceToken;
-    dispatch_once(&storeOnceToken, ^{
-        websiteDataStore = [WKWebsiteDataStore defaultDataStore];
-    });
-    configuration.websiteDataStore = websiteDataStore;
+    //  最终可自定义修改
+    if (block) {
+        block(config);
+    }
     
-    //返回
-    return configuration;
-}
-
-+ (instancetype)defauleWebView
-{
-    return [[self class] defauleWebViewWithFrame:UIScreen.mainScreen.bounds configuration:nil];
-}
-
-+ (instancetype)defauleWebViewWithFrame:(CGRect)frame configuration:(SSWebViewConfigBlock)block
-{
-    __block WKWebViewConfiguration *configuration = [SSHelpWebView defaultConfiguration];
-    _kSafeBlock(block,configuration);
-    __kindof SSHelpWebView *webView = [[[self class] alloc] initWithFrame:frame configuration:configuration];
+    // 构建WKWebview
+    SSHelpWebView *webView = [[self.class alloc] initWithFrame:UIScreen.mainScreen.bounds configuration:config];
     return webView;
 }
+
 
 - (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration
 {
     self = [super initWithFrame:frame configuration:configuration];
     if (self) {
-        // 适配
         self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         self.UIDelegate = self;
-        self.navigationDelegate = self;
+        self.navigationDelegate = self;        
         #ifdef DEBUG
-        // 日志
         self.logEnable = YES;
         #endif
     }
@@ -134,60 +108,72 @@
 
 - (void)dealloc
 {
-    if (_messageHandlers) {
-        [_messageHandlers removeAllObjects];
-    }
-    if (_moduleImpClasses) {
-        [_moduleImpClasses removeAllObjects];
-    }
     if (_moduleImpInstances) {
         [_moduleImpInstances removeAllObjects];
+        _moduleImpInstances = nil;
+    }
+    if (_messageHandlers) {
+        [_messageHandlers removeAllObjects];
+        _messageHandlers = nil;
     }
 }
 
-/// 注册"js handler"功能方法
-/// @param handlerName 方法名称
+- (NSMutableDictionary<NSString *,id> *)moduleImpInstances
+{
+    if (!_moduleImpInstances) {
+        _moduleImpInstances = [NSMutableDictionary dictionary];
+    }
+    return _moduleImpInstances;
+}
+
+- (NSMutableDictionary <NSString *,SSBridgeHandler> *)messageHandlers
+{
+    if (!_messageHandlers) {
+        _messageHandlers = [NSMutableDictionary dictionaryWithCapacity:1];
+    }
+    return _messageHandlers;
+}
+
+#pragma mark -
+#pragma mark - Public Method
+
+/// 注册js接口模块类
+- (void)registerJsHandlerImpClasses:(NSArray <Class> *)classes
+{
+    @Tweakify(self);
+    [classes enumerateObjectsUsingBlock:^(Class  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString *className = NSStringFromClass(obj);
+        if (NO==[self_weak_.moduleImpInstances.allKeys containsObject:className]) {
+            [self_weak_.moduleImpInstances setObject:[NSNull null] forKey:className];
+        }
+    }];
+}
+/// 注册js接口
+/// @param handlerName js方法名称
 /// @param handler 回调
 - (void)registerHandler:(NSString *)handlerName handler:(SSBridgeHandler)handler
 {
     if (handlerName && handler) {
-        if (!_messageHandlers) {
-            _messageHandlers = [[NSMutableDictionary alloc] initWithCapacity:1];
-        }
-        _messageHandlers[handlerName] = [handler copy];
-    }
-}
-
-/// 注册"js handler"模块功能类
-- (BOOL)registerJsHandlerImpClass:(Class)moduleClass
-{
-    NSString *className = NSStringFromClass(moduleClass);
-    if (!_moduleImpClasses) {
-        _moduleImpClasses = [[NSMutableArray alloc] initWithCapacity:1];
-    }
-    if ([_moduleImpClasses containsObject:className]) {
-        return NO;
-    } else {
-        [_moduleImpClasses addObject:className];
-        return YES;
+        self.messageHandlers[handlerName] = [handler copy];
     }
 }
 
 /// 回调js接口
 - (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(SSBridgeCallback)responseCallback;
 {
-    if (_bridge) {
-        [_bridge callHandler:handlerName data:data responseCallback:^(id responseData) {
-            if (responseCallback) {
-                responseCallback(responseData);
-            }
-        }];
-    }
+    [self.bridge callHandler:handlerName data:data responseCallback:^(id responseData) {
+        if (responseCallback) {
+            responseCallback(responseData);
+        }
+    }];
 }
+
+#pragma mark -
+#pragma mark - Private Method
 
 - (void)setupJavescriptBridge
 {
-    if (_bridge) {
+    if (self.bridge) {
         return;
     }
     
@@ -196,44 +182,92 @@
     self.bridge = [WKWebViewJavascriptBridge bridgeForWebView:self];
     [self.bridge setWebViewDelegate:self];
 
-    //非模块化接口注册
-    [_messageHandlers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, SSBridgeHandler  _Nonnull callBack, BOOL * _Nonnull stop) {
+    // 非模块化接口注册
+    [self.messageHandlers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, SSBridgeHandler  _Nonnull callBack, BOOL * _Nonnull stop) {
         [self_weak_.bridge registerHandler:key handler:^(id data, WVJBResponseCallback responseCallback) {
             callBack(key,data,responseCallback);
         }];
     }];
     
-    //模块化接口初始化
-    [self registerJsHandlerImpClass:[SSHelpWebTestBridgeModule class]];
-    _moduleImpInstances = [NSMutableArray arrayWithCapacity:_moduleImpClasses.count];
-    [_moduleImpClasses enumerateObjectsUsingBlock:^(NSString * _Nonnull className, NSUInteger idx, BOOL * _Nonnull stop) {
-        Class jsModuleClass = NSClassFromString(className);
-        __kindof SSHelpWebBaseModule *jsModuleObj = [[jsModuleClass alloc] init];
-        jsModuleObj.webView = self_weak_;
-        jsModuleObj.bridge = self_weak_.bridge;
-        jsModuleObj.moduleDelegate = self_weak_.moduleDelegate;
-        if ([jsModuleObj respondsToSelector:@selector(moduleRegisterJsHandler)]) {
-            [jsModuleObj moduleRegisterJsHandler];
-            //持有对象，防止提前释放，视图销毁时在释放
-            [self_weak_.moduleImpInstances addObject:jsModuleObj];
-        } else {
-            if (self_weak_.logEnable) {
-                SSLog(@"%@ dosn't responds to selector 'moduleRegisterJsHandler'?",className);
+    // 模块化接口初始化
+    [self registerJsHandlerImpClasses:@[SSHelpWebTestBridgeModule.class,SSHelpWebPhotoModule.class]];
+
+    BOOL hookApi = (self.delegate && [self.delegate respondsToSelector:@selector(webModule:hookJsName:)]);
+    BOOL hookHandler = (self.delegate && [self.delegate respondsToSelector:@selector(webModule:hookJsHandler:callback:)]);
+
+    [self.moduleImpInstances enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull className, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        Class class = NSClassFromString(className);
+        if ([class conformsToProtocol:@protocol(SSHelpWebModuleProtocol)]) {
+            NSArray *jsNames = nil;
+            if ([class respondsToSelector:@selector(suppertJsNames)]) {
+                jsNames = [class suppertJsNames];
             }
+            [jsNames enumerateObjectsUsingBlock:^(NSString * _Nonnull jsName, NSUInteger idx, BOOL * _Nonnull stop) {
+                // ①是否可自定义方法名
+                NSString *newJsName = hookApi?[self_weak_.delegate webModule:className hookJsName:jsName]:jsName;
+                // 注册js方法
+                [self_weak_.bridge registerHandler:newJsName handler:^(id data, WVJBResponseCallback responseCallback) {
+                    // 转成自定义对象
+                    SSHelpWebObjcHandler *jsHandler = [SSHelpWebObjcHandler handlerWithApi:newJsName data:data callBack:^(id  _Nonnull response) {
+                        if (responseCallback && response) {
+                            if ([response isKindOfClass:[SSHelpWebObjcResponse class]]) {
+                                SSHelpWebObjcResponse *objcResponse = (SSHelpWebObjcResponse *)response;
+                                responseCallback(objcResponse.toJsonString);
+                            } else if([response isKindOfClass:[NSDictionary class]]) {
+                                NSString *jsonString = ((NSDictionary *)response).ss_jsonStringEncoded;
+                                responseCallback(jsonString);
+                            } else if([response isKindOfClass:[NSArray class]]) {
+                                NSString *jsonString = ((NSArray *)response).ss_jsonStringEncoded;
+                                responseCallback(jsonString);
+                            } else if([response isKindOfClass:[NSString class]]) {
+                                NSString *jsonString = response;
+                                responseCallback(jsonString);
+                            } else {
+                                SSHelpWebObjcResponse *error = [SSHelpWebObjcResponse failedWithError:@"未知数据类型"];
+                                responseCallback(error.toJsonString);
+                            }
+                        }
+                    }];
+
+                    // 模块调用
+                    SSBlockId moduleCallback = ^(SSHelpWebObjcHandler *jsHandler){
+                        SSHelpWebBaseModule *instance = [self_weak_.moduleImpInstances objectForKey:className];
+                        if (instance && [instance isKindOfClass:SSHelpWebBaseModule.class]) {
+                            // 已经构造过模块对象
+                        } else {
+                            // 构造模块对象并持有
+                            if ([class respondsToSelector:@selector(sharedInstance)]) {
+                                instance = [class sharedInstance];
+                            } else {
+                                instance = [[class alloc] init];
+                            }
+                            [self_weak_.moduleImpInstances setObject:instance forKey:className];
+                        }
+                        // 执行js方法
+                        if ([instance respondsToSelector:@selector(evaluateJsHandler:)]) {
+                            // 相关属性重新赋值
+                            instance.webView = self_weak_;
+                            instance.bridge = self_weak_.bridge;
+                            // ③调用模块实现的方法
+                            [instance evaluateJsHandler:jsHandler];
+                        }
+                    };
+                    
+                    // 执行js方法
+                    if (hookHandler) {
+                        // ②是否自定义实现
+                        [self_weak_.delegate webModule:className hookJsHandler:jsHandler callback:^(SSHelpWebObjcHandler * _Nonnull jsHandler) {
+                            // 转一圈还是调用模块实现...
+                            moduleCallback(jsHandler);
+                        }];
+                    } else {
+                        // ②调用模块实现
+                        moduleCallback(jsHandler);
+                    }
+                }];
+            }];
         }
     }];
-}
-
-#pragma mark -
-#pragma mark - PresentViewController Methtod
-
-- (void)presentAlertViewControllerWithMessage:(NSString *)message
-{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-    }];
-    [alert addAction:cancel];
-    [self presentViewController:alert animated:YES completion:NULL];
 }
 
 /// 弹出视图控制器
@@ -243,214 +277,6 @@
         dispatch_main_async_safe(^{
             [self.ss_viewController presentViewController:alert animated:flag completion:completion];
         });
-    }
-}
-
-#pragma mark -
-#pragma mark - UIGestureRecognizer Method
-
-/// 长按识别手势设置
-- (void)setSupportLongPressGestureRecognizer:(BOOL)supportLongPressGestureRecognizer
-{
-    if (supportLongPressGestureRecognizer) {
-        if (_longPressGesture) return;
-        _longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(gestureRecognizerHandler:)];
-        _longPressGesture.delegate = self;
-        _longPressGesture.name = @"SSHelpWebView.LongPressGesture.identifier";
-        [self addGestureRecognizer:_longPressGesture];
-    } else {
-        if (_longPressGesture) {
-            [self removeGestureRecognizer:_longPressGesture];
-            _longPressGesture = nil;
-        }
-    }
-}
-
-/// 长按识别手势
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    return YES;
-}
-
-/// 长按识别手势
-- (void)gestureRecognizerHandler:(UIGestureRecognizer *)gestureRecognizer
-{
-    @weakify(self);
-    if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
-    {
-        CGPoint point = [gestureRecognizer locationInView:self];
-        if (point.x == NSNotFound || point.y == NSNotFound) return;
-        if (_logEnable) {
-            SSLog(@"手势开始...(%lf,%lf)",point.x,point.y);
-        }
-
-#ifdef DEBUG
-//        NSString *js = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).style.color='red';", point.x, point.y];
-//        [self evaluateJavaScript:js completionHandler:^(NSString *_Nullable url, NSError * _Nullable error) {
-//
-//        }];
-#endif
-        
-        dispatch_queue_t queue = dispatch_get_main_queue();
-        dispatch_group_t group = dispatch_group_create();
-        
-        NSString *toSaveImage    = @"保存图片";  //NSString *fcQRCode = @"识别二维码";
-        NSString *toBrowseImages = @"看图模式";
-        NSString *toCopyLinkText = @"复制链接文字";
-        NSString *toCopyHref     = @"复制链接地址";
-        NSArray  *toActionArray  = @[toSaveImage,toBrowseImages,toCopyLinkText,toCopyHref];
-        __block NSMutableArray <UIAlertAction *> *actionArray = [[NSMutableArray alloc] init];
-        
-        for (NSInteger index=0; index<toActionArray.count; index++)
-        {
-            NSString *actionItem = toActionArray[index];
-            dispatch_group_enter(group);
-            dispatch_group_async(group, queue, ^{
-                @strongify(self);
-                if ([actionItem isEqualToString:toSaveImage])
-                {
-                    //获取长按位置对应的图片url
-                    NSString *javaScript = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", point.x, point.y];
-                    [self evaluateJavaScript:javaScript completionHandler:^(NSString *_Nullable url, NSError * _Nullable error) {
-                        if (self_weak_.logEnable) {
-                            SSLog(@"长按图片信息：%@ 错误信息:%@",url,error.localizedDescription);
-                        }
-                        if (url) {
-                            UIImage *image = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url]]];
-                            if (image) {
-                                //只要是图片，则可保存图片
-                                UIAlertAction *action = [UIAlertAction actionWithTitle:@"保存图片" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                                    [SSHelpPhotoManager saveImage:image completionHandler:^(BOOL success, NSError * _Nullable error) {
-                                        @strongify(self);
-                                        [self presentAlertViewControllerWithMessage:success?@"保存成功":@"保存失败"];
-                                    }];
-                                }];
-                                [actionArray addObject:action];
-                                
-                                //图片是二维码，则可进行识别
-                                [UIImage ss_featuresInImage:image callback:^(NSString * _Nullable result) {
-                                    if (result) {
-                                        UIAlertAction *action = [UIAlertAction actionWithTitle:@"识别二维码" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                                            //
-                                        }];
-                                        [actionArray addObject:action];
-                                    }
-                                    dispatch_group_leave(group);
-                                }];
-                                // 保证 dispatch_group_leave 对应
-                                return;
-                            }
-                        }
-                        dispatch_group_leave(group);
-                    }];
-                }
-                else if ([actionItem isEqualToString:toBrowseImages])
-                {
-                    //获取所有图片
-                    NSString *javaScript = @"function tmpDynamicSearchAllImage(){"
-                                        "var img = [];"
-                                        "for(var i=0;i<$(\"img\").length;i++){"
-                                            "if(parseInt($(\"img\").eq(i).css(\"width\"))> 60){ "//获取所有符合放大要求的图片，将图片路径(src)获取
-                                               //" img[i] = $(\"img\").eq(i).attr(\"src\");"
-                                                "img[i] = $(\"img\").eq(i).prop(\"src\");"
-                                           " }"
-                                        "}"
-                                        "var img_info = {};"
-                                        "img_info.list = img;" //保存所有图片的url
-                                        "return img;"
-                                    "}";
-                    [self evaluateJavaScript:javaScript completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-                        if (!error) {
-                            @strongify(self);
-                            [self evaluateJavaScript:@"tmpDynamicSearchAllImage()" completionHandler:^(id _Nullable array, NSError * _Nullable error){
-                                if (self_weak_.logEnable) {
-                                    SSLog(@"所有图片：%@",array);
-                                }
-                                dispatch_group_leave(group);
-                            }];
-                        } else {
-                            dispatch_group_leave(group);
-                        }
-                    }];
-                }
-                else if ([actionItem isEqualToString:toCopyLinkText])
-                {
-                    //复制链接文字
-                    NSString *javaScript = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).innerText",point.x, point.y];
-                    [self evaluateJavaScript:javaScript completionHandler:^(NSString *_Nullable text, NSError * _Nullable error) {
-                        if (self_weak_.logEnable) {
-                            SSLog(@"获取文字信息：%@ 错误信息:%@",text,error.localizedDescription);
-                        }
-                        if (text && text.length) {
-                            UIAlertAction *action = [UIAlertAction actionWithTitle:toCopyLinkText style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                                [UIPasteboard generalPasteboard].string = text;
-                            }];
-                            [actionArray addObject:action];
-                        }
-                        dispatch_group_leave(group);
-                    }];
-                } else if ([actionItem isEqualToString:toCopyHref]) {
-                    //复制链接
-                    NSString *javaScript = @"function tmpDynamicJavaScriptSearchHref(x,y) {\
-                                                var e = document.elementFromPoint(x, y);\
-                                                while(e){\
-                                                    if(e.href){\
-                                                        return e.href;\
-                                                    }\
-                                                    e = e.parentElement;\
-                                                }\
-                                                return e.href;\
-                                            }";
-                    [self evaluateJavaScript:javaScript completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-                        if (error) {
-                            if (self_weak_.logEnable) {
-                                SSLog(@"注入获取链接JavaScript失败:%@",error.localizedDescription);
-                            }
-                            dispatch_group_leave(group);
-                        } else {
-                            @strongify(self);
-                            NSString *javaScript = [NSString stringWithFormat:@"tmpDynamicJavaScriptSearchHref(%f,%f);",point.x,point.y];
-                            [self evaluateJavaScript:javaScript completionHandler:^(NSString *_Nullable href, NSError * _Nullable error){
-                                if (self_weak_.logEnable) {
-                                    SSLog(@"获取链接信息：%@ 错误信息:%@",result,error.localizedDescription);
-                                }
-                                if (href && href.length) {
-                                    UIAlertAction *action = [UIAlertAction actionWithTitle:toCopyHref style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                                        [UIPasteboard generalPasteboard].string = href;
-                                    }];
-                                    [actionArray addObject:action];
-                                }
-                                dispatch_group_leave(group);
-                            }];
-                        }
-                    }];
-
-                } else {
-                    dispatch_group_leave(group);
-                }
-            });
-        }
-        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-            if (actionArray.count) {
-                @strongify(self);
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-                for (NSInteger index=0; index<actionArray.count; index++) {
-                    [alert addAction:actionArray[index]];
-                }
-                UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                }];
-                [alert addAction:cancel];
-                [self presentViewController:alert animated:YES completion:nil];
-            }
-        });
-    } else if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
-        if (_logEnable) {
-            //SSLog(@"长按手势变化...");
-        }
-    } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        if (_logEnable) {
-            SSLog(@"结束长按手势...");
-        }
     }
 }
 
@@ -541,24 +367,20 @@
 - (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString * _Nullable))completionHandler
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:prompt preferredStyle:UIAlertControllerStyleAlert];
+    @Tweakify(alert);
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder = @"请输入";
+        textField.placeholder = defaultText;
     }];
-    
-    UIAlertAction *ok = [UIAlertAction actionWithTitle:@"确定"
-                                                 style:UIAlertActionStyleDefault
-                                               handler:^(UIAlertAction * _Nonnull action) {
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UITextField *tf = [alert.textFields firstObject];
         completionHandler(tf.text);
-    }];
-    
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消"
-                                                     style:UIAlertActionStyleCancel
-                                                   handler:^(UIAlertAction * _Nonnull action) {
+        if (alert_weak_) {
+            [alert_weak_ dismissViewControllerAnimated:YES completion:nil];
+        }
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         completionHandler(defaultText);
-    }];
-    [alert addAction:ok];
-    [alert addAction:cancel];
+    }]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -571,10 +393,10 @@
     if (self.logEnable) {
         SSLog(@"决定是否允许或取消加载: %@ ... ",navigationAction.request.URL);
     }
-    
+
     SEL sel = @selector(webView:decidePolicyForNavigationAction:decisionHandler:);
-    if (_ss_delegate &&  [_ss_delegate respondsToSelector:sel]) {
-        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, navigationAction, decisionHandler);
+    if (_delegate &&  [_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_delegate, sel, webView, navigationAction, decisionHandler);
     } else {
         NSURL *url = navigationAction.request.URL;
         if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
@@ -594,18 +416,12 @@
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 {
     if (self.logEnable) {
-        NSInteger statusCode = 0;
-        NSString * urlStr = @"";
-        if ([navigationResponse.response isKindOfClass:[NSHTTPURLResponse class]]) {
-            NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
-            statusCode =response.statusCode;
-            urlStr = response.URL.absoluteString;
-        }
-        SSLog(@"得到响应后决定是否允许跳转: %@ 状态值: %ld 跳转地址: %@ ... ",navigationResponse.isForMainFrame?@"isForMainFrame":@"noForMainFrame",statusCode,urlStr);
+        SSLog(@"得到响应后决定是否允许跳转: %@",navigationResponse.response.URL);
     }
+    
     SEL sel = @selector(webView:decidePolicyForNavigationResponse:decisionHandler:);
-    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
-        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, navigationResponse, decisionHandler);
+    if (_delegate && [_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_delegate, sel, webView, navigationResponse, decisionHandler);
     } else {
         //允许跳转
         decisionHandler(WKNavigationResponsePolicyAllow);
@@ -616,20 +432,18 @@
 - (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
 {
     if (self.logEnable) {
-        //SSLog(@"需要响应身份验证: %@ ... ",challenge);
+        SSLog(@"需要响应身份验证: %@ ... ",challenge);
     }
     SEL sel = @selector(webView:didReceiveAuthenticationChallenge:completionHandler:);
-    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
-        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, challenge, completionHandler);
+    if (_delegate && [_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_delegate, sel, webView, challenge, completionHandler);
     } else {
-        dispatch_global_queue_safe(^{
-            if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-                NSURLCredential *card = [[NSURLCredential alloc] initWithTrust:challenge.protectionSpace.serverTrust];
-                completionHandler(NSURLSessionAuthChallengeUseCredential,card);
-            } else {
-                completionHandler(NSURLSessionAuthChallengePerformDefaultHandling ,nil);
-            }
-        });
+        if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+            NSURLCredential *card = [[NSURLCredential alloc] initWithTrust:challenge.protectionSpace.serverTrust];
+            completionHandler(NSURLSessionAuthChallengeUseCredential,card);
+        } else {
+            completionHandler(NSURLSessionAuthChallengePerformDefaultHandling ,nil);
+        }
     }
 }
 
@@ -644,8 +458,8 @@
         SSLog(@"开始加载: ...");
     }
     SEL sel = @selector(webView:didStartProvisionalNavigation:);
-    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
-        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    if (_delegate && [_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_delegate, sel, webView, navigation);
     }
 }
 
@@ -656,8 +470,8 @@
         SSLog(@"重定向: ...");
     }
     SEL sel = @selector(webView:didReceiveServerRedirectForProvisionalNavigation:);
-    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
-        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    if (_delegate && [_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_delegate, sel, webView, navigation);
     }
 }
 
@@ -667,8 +481,8 @@
         SSLog(@"加载失败: %@ ... ",error.localizedDescription);
     }
     SEL sel = @selector(webView:didFailProvisionalNavigation:withError:);
-    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
-        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, navigation, error);
+    if (_delegate && [_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_delegate, sel, webView, navigation, error);
     }
 }
 
@@ -679,8 +493,8 @@
         SSLog(@"加载导航内容: ... ");
     }
     SEL sel = @selector(webView:didCommitNavigation:);
-    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
-        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    if (_delegate && [_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_delegate, sel, webView, navigation);
     }
 }
 
@@ -688,8 +502,8 @@
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
     SEL sel = @selector(webView:didFinishNavigation:);
-    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
-        void_objc_msgSend_id_id(_ss_delegate, sel, webView, navigation);
+    if (_delegate && [_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_delegate, sel, webView, navigation);
     }
     
     if (self.logEnable) {
@@ -708,8 +522,8 @@
     }
     
     SEL sel = @selector(webView:didFailNavigation:withError:);
-    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
-        void_objc_msgSend_id_id_id(_ss_delegate, sel, webView, navigation, error);
+    if (_delegate && [_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id_id(_delegate, sel, webView, navigation, error);
     }
 }
 
@@ -721,8 +535,8 @@
     }
     
     SEL sel = @selector(webViewWebContentProcessDidTerminate:);
-    if (_ss_delegate && [_ss_delegate respondsToSelector:sel]) {
-        void_objc_msgSend_id(_ss_delegate, sel, webView);
+    if (_delegate && [_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id(_delegate, sel, webView);
     } else {
         [webView reload];
     }

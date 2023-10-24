@@ -96,6 +96,7 @@
 #import "SSHelpWebObjcHandler.h"
 #import "SSHelpWebObjcResponse.h"
 #import "SSHelpWebBaseModule.h"
+#import "SSHelpWebLongPressGestureModule.h"
 #import "SSHelpWebPhotoModule.h"
 #import "SSHelpWebTestBridgeModule.h"
 #import "SSHelpWebView.h"

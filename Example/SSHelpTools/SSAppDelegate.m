@@ -8,6 +8,7 @@
 
 #import "SSAppDelegate.h"
 #import <SSHelpTools/SSBHTimeProfiler.h>
+#import "SSTestPodsViewController.h"
 
 @implementation SSAppDelegate
 
@@ -33,6 +34,9 @@
 
     [[SSBHTimeProfiler sharedTimeProfiler] printOutTimeProfileResult];
     
+    self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+    self.window.rootViewController = [[SSHelpNavigationController alloc] initWithRootViewController:SSTestPodsViewController.new];
+    [self.window makeKeyAndVisible];
     return YES;
 }
 

@@ -10,10 +10,24 @@
 
 @implementation SSHelpWebPhotoModule
 
-- (void)moduleRegisterJsHandler
++ (id)sharedInstance
 {
-    @weakify(self);
-    [self baseRegisterHandler:kWebApiTakePhoto handler:^(NSString * _Nonnull api, id  _Nonnull data, SSBridgeCallback  _Nonnull callback) {
+    static SSHelpWebPhotoModule *photoModule;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        photoModule = [[SSHelpWebPhotoModule alloc] init];
+    });
+    return photoModule;
+}
+
++ (nullable NSArray <NSString *> *)suppertJsNames;
+{
+    return @[kWebApiTakePhoto];
+}
+
+- (void)evaluateJsHandler:(SSHelpWebObjcHandler *)handler
+{
+    if ([handler.api isEqualToString:kWebApiTakePhoto]) {
         [SSHelpPhotoManager toAccessCameraOrPhoto:^(UIImage * _Nullable image) {
             SSHelpWebObjcResponse *response = [[SSHelpWebObjcResponse alloc] init];
             if (image) {
@@ -32,9 +46,9 @@
             }else{
                 response.code = 0;
             }
-            callback(response);
-        } presentingViewController:self_weak_.webView.ss_viewController];
-    }];
+            handler.callback(response);
+        } presentingViewController:self.webView.ss_viewController];
+    }
 }
 
 + (BOOL)imageHasAlpha:(UIImage *)image

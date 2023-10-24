@@ -25,9 +25,14 @@ typedef void(^ _Nullable SSBlockString)(__kindof NSString * _Nullable string);
 typedef void(^ _Nullable SSBlockData)(__kindof NSData * _Nullable data);
 typedef void(^ _Nullable SSBlockCallback)(id _Nullable response, NSError * _Nullable error);
 
-static void (*void_objc_msgSend_id)(id, SEL, id, ...) = (void (*)(id, SEL, id, ...)) objc_msgSend;
-static void (*void_objc_msgSend_id_id)(id, SEL, id, id, ...)  = (void (*)(id, SEL, id, id, ...)) objc_msgSend;
-static void (*void_objc_msgSend_id_id_id)(id, SEL, id, id, id, ...) = (void (*)(id, SEL, id, id, id, ...)) objc_msgSend;
+static void (*void_objc_msgSend_id)(id, SEL, id, ...) =
+                                      (void (*)(id, SEL, id, ...)) objc_msgSend;
+
+static void (*void_objc_msgSend_id_id)(id, SEL, id, id, ...)  =
+                                  (void (*)(id, SEL, id, id, ...)) objc_msgSend;
+
+static void (*void_objc_msgSend_id_id_id)(id, SEL, id, id, id, ...) =
+                              (void (*)(id, SEL, id, id, id, ...)) objc_msgSend;
 
 //安全调用Block
 #define _kSafeBlock(blockName,...) ({(!blockName) ? nil : blockName(__VA_ARGS__);})
@@ -102,7 +107,7 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 #define _kToolBarHeight   (49.f)
 
-#define _kHomeIndicatorHeight  ([SSHelpToolsConfig sharedConfig].homeIndicatorHeight) //"home键"高度
+#define _kHomeIndicatorHeight  ([SSHelpToolsConfig sharedConfig].homeIndicatorHeight) // "home键"高度
 
 //颜色
 

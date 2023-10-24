@@ -14,14 +14,12 @@
 
 + (instancetype)shareInstance
 {
-    static dispatch_once_t p;
-    static id BHInstance = nil;
-    
-    dispatch_once(&p, ^{
-        BHInstance = [[self alloc] init];
+    static id beeHiveInstance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        beeHiveInstance = [[self alloc] init];
     });
-    
-    return BHInstance;
+    return beeHiveInstance;
 }
 
 + (void)registerDynamicModule:(Class)moduleClass

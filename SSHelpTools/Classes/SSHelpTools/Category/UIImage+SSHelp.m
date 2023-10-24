@@ -47,9 +47,7 @@
 
 /// 生成居中带logo的图像
 + (UIImage *)ss_generateImageWithLogo:(UIImage *)logo backgroundColor:(UIColor *)backgroundColor size:(CGSize)size
-{
-    CGRect rect = CGRectMake(0, 0, size.width, size.height);
-    
+{    
     // 创建一个位图上下文
     UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
       
