@@ -9,13 +9,11 @@ platform :ios, '13.0'
 target 'SSHelpTools_Example' do
   
   pod 'GPUImage'
-  #pod 'LFLiveKit'
-  
+  pod 'DateTools'
   pod 'YYKit'
   #pod 'CocoaHTTPServer'
   pod 'ReactiveObjC'
   pod 'BeeHive'
-  pod 'DateTools'
   pod 'CocoaLumberjack', '~> 3.8.1'
   pod 'FLEX', :configurations => ['Debug'] #调试工具
   

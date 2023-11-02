@@ -88,6 +88,7 @@
 #import "SSHelpImageView.h"
 #import "SSHelpLabel.h"
 #import "SSHelpTextField.h"
+#import "SSHelpTextView.h"
 #import "SSHelpView.h"
 #import "SSHelpNavigationController.h"
 #import "SSHelpViewController.h"

@@ -1,6 +1,6 @@
 {
   "name": "SSHelpTools",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "summary": "常用工具",
   "description": "TODO: 代码逐渐完善中，欢迎提出问题.",
   "homepage": "https://github.com/songzhibing/SSHelpTools",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/songzhibing/SSHelpTools.git",
-    "tag": "0.2.1"
+    "tag": "0.2.2"
   },
   "platforms": {
     "ios": "13.0"

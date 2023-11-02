@@ -7,9 +7,12 @@
 
 #import "SSTestNetworkViewController.h"
 #import <SSHelpTools/SSHelpNetwork.h>
+#import <ReactiveObjC/ReactiveObjC.h>
+#import <Foundation/Foundation.h>
+#import <stdlib.h>
 
 @interface SSTestNetworkViewController ()
-
+@property(nonatomic, strong) NSURLSessionDataTask *task ;
 @end
 
 @implementation SSTestNetworkViewController
@@ -20,19 +23,17 @@
     self.title = @"TestNet";
     
     
+    @Tweakify(self);
+    
     SSCollectionViewSectionModel *section = [[SSCollectionViewSectionModel alloc] init];
     section.cellModels = [[NSMutableArray alloc] init];
     for (int index=0; index<3; index++) {
         SSCollectionViewCellModel *cell = [[SSCollectionViewCellModel alloc] init];
         cell.onClick = ^(__kindof UICollectionView * _Nullable collectionView, __kindof UICollectionReusableView * _Nullable reusableView, NSIndexPath * _Nullable indexPath, id  _Nullable data) {
-            [[SSHelpNetworkCenter defaultCenter] sendRequest:^(SSHelpNetworkRequest * _Nonnull request) {
-                request.url = @"https://api.vvhan.com/api/en";
-                //     request.url = @"https://updatecdn.meeting.qq.com/cos/65f61cbaa77157dfc47de068775210e3/TencentMeeting_0300000000_3.11.3.453.publish.x86_64.dmg";
-            } success:^(id  _Nullable responseObject) {
-                SSLog(@"接口：%@",responseObject);
-            } failure:^(NSError * _Nullable error) {
-                SSLog(@"接口：%@",error);
-            }];
+            if (indexPath.item==0) {
+                [self_weak_ testapp];
+                
+            }
         };
         [section.cellModels addObject:cell];
     }
@@ -41,6 +42,21 @@
     section.footerModel = [[SSCollectionViewFooterModel alloc] init];
     section.footerModel.footerHeight = 10;
     self.collectionView.data = @[section].mutableCopy;
+}
+
+- (void)testapp
+{
+    AFHTTPSessionManager *session = AFHTTPSessionManager.manager;
+    NSURLSessionDataTask *task = [session POST:@"https://api.vvhan.com/api/en" parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        SSLog(@"response=%@",responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        SSLog(@"error=%@",error);
+    }];
+    [task.rac_willDeallocSignal subscribeNext:^(id  _Nullable x) {
+        SSLog(@"task will dealloc signal...");
+    } completed:^{
+        SSLog(@"task widll dealloc signal completed...")
+    }];
 }
 
 /*
