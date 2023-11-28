@@ -31,8 +31,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpWebView : WKWebView <WKNavigationDelegate,WKUIDelegate>
 
++ (instancetype)new NS_UNAVAILABLE;
+
+- (instancetype)init NS_UNAVAILABLE;
+
+- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration NS_UNAVAILABLE;
+
+/// 初始化
 + (instancetype)ss_new;
 
+/// 初始化
+/// - Parameter block: 自定义回调
 + (instancetype)ss_newBy:(void(^_Nullable)(WKWebViewConfiguration *))block;
 
 /// 日志输出
@@ -50,14 +59,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)registerHandler:(NSString *)handlerName handler:(SSBridgeHandler)handler;
 
 /// 回调js接口
-- (void)callHandler:(NSString *)handlerName
-               data:(id)data
-   responseCallback:(SSBridgeCallback)responseCallback;
+- (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(SSBridgeCallback)responseCallback;
 
 /// 弹出视图控制器
-- (void)presentViewController:(UIViewController *)alert
-                     animated: (BOOL)flag
-                   completion:(SSBlockVoid)completion;
+- (void)presentViewController:(UIViewController *)alert animated:(BOOL)flag completion:(SSBlockVoid)completion;
 
 @end
 
