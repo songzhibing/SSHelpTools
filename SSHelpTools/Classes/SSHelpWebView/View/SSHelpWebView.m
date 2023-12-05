@@ -13,7 +13,7 @@
 
 @property(nonatomic, strong) WKWebViewJavascriptBridge *bridge;
 
-@property(nonatomic, strong) NSMutableDictionary <NSString *, id> *moduleImpInstances;
+@property(nonatomic, strong) NSMutableDictionary <NSString *, id> *moduleInstancesByClassKey;
 
 @property(nonatomic, strong) NSMutableDictionary <NSString *, SSBridgeHandler> *messageHandlers;
 
@@ -108,9 +108,9 @@
 
 - (void)dealloc
 {
-    if (_moduleImpInstances) {
-        [_moduleImpInstances removeAllObjects];
-        _moduleImpInstances = nil;
+    if (_moduleInstancesByClassKey) {
+        [_moduleInstancesByClassKey removeAllObjects];
+        _moduleInstancesByClassKey = nil;
     }
     if (_messageHandlers) {
         [_messageHandlers removeAllObjects];
@@ -118,12 +118,12 @@
     }
 }
 
-- (NSMutableDictionary<NSString *,id> *)moduleImpInstances
+- (NSMutableDictionary<NSString *,id> *)moduleInstancesByClassKey
 {
-    if (!_moduleImpInstances) {
-        _moduleImpInstances = [NSMutableDictionary dictionary];
+    if (!_moduleInstancesByClassKey) {
+        _moduleInstancesByClassKey = [NSMutableDictionary dictionaryWithCapacity:1];
     }
-    return _moduleImpInstances;
+    return _moduleInstancesByClassKey;
 }
 
 - (NSMutableDictionary <NSString *,SSBridgeHandler> *)messageHandlers
@@ -138,16 +138,17 @@
 #pragma mark - Public Method
 
 /// 注册js接口模块类
-- (void)registerJsHandlerImpClasses:(NSArray <Class> *)classes
+- (void)registerWebModuleClasses:(NSArray <Class> *)classes
 {
     @Tweakify(self);
     [classes enumerateObjectsUsingBlock:^(Class  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSString *className = NSStringFromClass(obj);
-        if (NO==[self_weak_.moduleImpInstances.allKeys containsObject:className]) {
-            [self_weak_.moduleImpInstances setObject:[NSNull null] forKey:className];
+        if (NO==[self_weak_.moduleInstancesByClassKey.allKeys containsObject:className]) {
+            [self_weak_.moduleInstancesByClassKey setObject:[NSNull null] forKey:className];
         }
     }];
 }
+
 /// 注册js接口
 /// @param handlerName js方法名称
 /// @param handler 回调
@@ -189,83 +190,84 @@
         }];
     }];
     
-    // 模块化接口初始化
-    [self registerJsHandlerImpClasses:@[SSHelpWebTestBridgeModule.class,SSHelpWebPhotoModule.class]];
+    // 注册基础模块类
+    [self registerWebModuleClasses:@[SSHelpWebTestBridgeModule.class,SSHelpWebPhotoModule.class]];
 
+    // 是否有自定义
     BOOL hookApi = (self.delegate && [self.delegate respondsToSelector:@selector(webModule:hookJsName:)]);
     BOOL hookHandler = (self.delegate && [self.delegate respondsToSelector:@selector(webModule:hookJsHandler:callback:)]);
-
-    [self.moduleImpInstances enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull className, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        Class class = NSClassFromString(className);
-        if ([class conformsToProtocol:@protocol(SSHelpWebModuleProtocol)]) {
-            NSArray *jsNames = nil;
-            if ([class respondsToSelector:@selector(suppertJsNames)]) {
-                jsNames = [class suppertJsNames];
-            }
-            [jsNames enumerateObjectsUsingBlock:^(NSString * _Nonnull jsName, NSUInteger idx, BOOL * _Nonnull stop) {
-                // ①是否可自定义方法名
-                NSString *newJsName = hookApi?[self_weak_.delegate webModule:className hookJsName:jsName]:jsName;
-                // 注册js方法
-                [self_weak_.bridge registerHandler:newJsName handler:^(id data, WVJBResponseCallback responseCallback) {
-                    // 转成自定义对象
-                    SSHelpWebObjcHandler *jsHandler = [SSHelpWebObjcHandler handlerWithApi:newJsName data:data callBack:^(id  _Nonnull response) {
-                        if (responseCallback && response) {
-                            if ([response isKindOfClass:[SSHelpWebObjcResponse class]]) {
-                                SSHelpWebObjcResponse *objcResponse = (SSHelpWebObjcResponse *)response;
-                                responseCallback(objcResponse.toJsonString);
-                            } else if([response isKindOfClass:[NSDictionary class]]) {
-                                NSString *jsonString = ((NSDictionary *)response).ss_jsonStringEncoded;
-                                responseCallback(jsonString);
-                            } else if([response isKindOfClass:[NSArray class]]) {
-                                NSString *jsonString = ((NSArray *)response).ss_jsonStringEncoded;
-                                responseCallback(jsonString);
-                            } else if([response isKindOfClass:[NSString class]]) {
-                                NSString *jsonString = response;
-                                responseCallback(jsonString);
-                            } else {
-                                SSHelpWebObjcResponse *error = [SSHelpWebObjcResponse failedWithError:@"未知数据类型"];
-                                responseCallback(error.toJsonString);
-                            }
-                        }
-                    }];
-
-                    // 模块调用
-                    SSBlockId moduleCallback = ^(SSHelpWebObjcHandler *jsHandler){
-                        SSHelpWebBaseModule *instance = [self_weak_.moduleImpInstances objectForKey:className];
-                        if (instance && [instance isKindOfClass:SSHelpWebBaseModule.class]) {
-                            // 已经构造过模块对象
-                        } else {
-                            // 构造模块对象并持有
-                            if ([class respondsToSelector:@selector(sharedInstance)]) {
-                                instance = [class sharedInstance];
-                            } else {
-                                instance = [[class alloc] init];
-                            }
-                            [self_weak_.moduleImpInstances setObject:instance forKey:className];
-                        }
-                        // 执行js方法
-                        if ([instance respondsToSelector:@selector(evaluateJsHandler:)]) {
-                            // 相关属性重新赋值
-                            instance.webView = self_weak_;
-                            instance.bridge = self_weak_.bridge;
-                            // ③调用模块实现的方法
-                            [instance evaluateJsHandler:jsHandler];
-                        }
-                    };
-                    
-                    // 执行js方法
-                    if (hookHandler) {
-                        // ②是否自定义实现
-                        [self_weak_.delegate webModule:className hookJsHandler:jsHandler callback:^(SSHelpWebObjcHandler * _Nonnull jsHandler) {
-                            // 转一圈还是调用模块实现...
-                            moduleCallback(jsHandler);
-                        }];
+    
+    // 接口实现
+    void(^registerHandler)(NSString *, NSString *)  = ^(NSString *class, NSString *api) {
+        [self_weak_.bridge registerHandler:api handler:^(id data, WVJBResponseCallback jsCallback) {
+            // 封装
+            SSHelpWebObjcHandler *handler = [SSHelpWebObjcHandler handlerWithApi:api data:data callBack:^(id  _Nonnull response) {
+                if (jsCallback && response) {
+                    NSString *jsonString = @"";
+                    if ([response isKindOfClass:[SSHelpWebObjcResponse class]]) {
+                        jsonString = [(SSHelpWebObjcResponse *)response toJsonString];
+                    } else if([response isKindOfClass:[NSDictionary class]]) {
+                        jsonString = ((NSDictionary *)response).ss_jsonStringEncoded;
+                    } else if([response isKindOfClass:[NSArray class]]) {
+                        jsonString = ((NSArray *)response).ss_jsonStringEncoded;
+                    } else if([response isKindOfClass:[NSString class]]) {
+                        jsonString = response;
                     } else {
-                        // ②调用模块实现
-                        moduleCallback(jsHandler);
+                        jsonString = [[SSHelpWebObjcResponse failedWithError:@"未知数据类型"] toJsonString];
                     }
-                }];
+                    jsCallback(jsonString);
+                }
             }];
+            
+            // 模块调用
+            SSBlockId moduleCallback = ^(SSHelpWebObjcHandler *handler){
+                Class objc = NSClassFromString(class);
+                SSHelpWebBaseModule *instance = [self_weak_.moduleInstancesByClassKey objectForKey:class];
+                if (instance && [instance isKindOfClass:SSHelpWebBaseModule.class]) {
+                    // 已经构造过模块对象
+                } else {
+                    // 构造模块对象并持有
+                    if ([class respondsToSelector:@selector(sharedInstance)]) {
+                        instance = [objc sharedInstance];
+                    } else {
+                        instance = [[objc alloc] init];
+                    }
+                    [self_weak_.moduleInstancesByClassKey setObject:instance forKey:class];
+                }
+                // 执行js方法
+                if ([instance respondsToSelector:@selector(evaluateJsHandler:)]) {
+                    // 相关属性重新赋值
+                    instance.webView = self_weak_;
+                    instance.bridge = self_weak_.bridge;
+                    // 调用模块实现的方法
+                    [instance evaluateJsHandler:handler];
+                }
+            };
+            
+            // 执行js方法
+            if (hookHandler) {
+                // 自定义实现
+                [self_weak_.delegate webModule:class hookJsHandler:handler callback:moduleCallback];
+            } else {
+                // 模块实现
+                moduleCallback(handler);
+            }
+        }];
+    };
+    
+    // 模块类遍历注册
+    [self.moduleInstancesByClassKey enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull class, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        Class objc = NSClassFromString(class);
+        if ([objc conformsToProtocol:@protocol(SSHelpWebModuleProtocol)]) {
+            if ([objc respondsToSelector:@selector(suppertJsNames)]) {
+                [[objc suppertJsNames] enumerateObjectsUsingBlock:^(NSString * _Nonnull api, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if (hookApi) {
+                        api = [self_weak_.delegate webModule:class hookJsName:api];
+                    }
+                    // 注册接口
+                    registerHandler(class,api);
+                }];
+            }
         }
     }];
 }
@@ -372,11 +374,8 @@
         textField.placeholder = defaultText;
     }];
     [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        UITextField *tf = [alert.textFields firstObject];
+        UITextField *tf = [alert_weak_.textFields firstObject];
         completionHandler(tf.text);
-        if (alert_weak_) {
-            [alert_weak_ dismissViewControllerAnimated:YES completion:nil];
-        }
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         completionHandler(defaultText);
@@ -432,7 +431,7 @@
 - (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
 {
     if (self.logEnable) {
-        SSLog(@"需要响应身份验证: %@ ... ",challenge);
+        SSLog(@"需要响应身份验证: %@ ... ",challenge.protectionSpace);
     }
     SEL sel = @selector(webView:didReceiveAuthenticationChallenge:completionHandler:);
     if (_delegate && [_delegate respondsToSelector:sel]) {
@@ -447,11 +446,7 @@
     }
 }
 
-/*! @abstract Invoked when a main frame navigation starts.
- @param webView The web view invoking the delegate method.
- @param navigation The navigation.
- 开始加载
- */
+/// 页面开始加载时调用
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation
 {
     if (self.logEnable) {
@@ -463,7 +458,7 @@
     }
 }
 
-/// 重定向
+/// 主机地址被重定向时调用
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(null_unspecified WKNavigation *)navigation
 {
     if (self.logEnable) {
@@ -486,7 +481,7 @@
     }
 }
 
-///开始接收Web内容
+/// 开始接收Web内容
 - (void)webView:(WKWebView *)webView didCommitNavigation:(null_unspecified WKNavigation *)navigation
 {
     if (self.logEnable) {
@@ -501,16 +496,16 @@
 /// 加载完成
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
-    SEL sel = @selector(webView:didFinishNavigation:);
-    if (_delegate && [_delegate respondsToSelector:sel]) {
-        void_objc_msgSend_id_id(_delegate, sel, webView, navigation);
-    }
-    
     if (self.logEnable) {
         SSLog(@"加载导航完成: ... ");
         [webView evaluateJavaScript:@"window.location.href" completionHandler:^(id _Nullable urlStr, NSError * _Nullable error) {
             SSLog(@"页面最终地址:%@",urlStr);
         }];
+    }
+    
+    SEL sel = @selector(webView:didFinishNavigation:);
+    if (_delegate && [_delegate respondsToSelector:sel]) {
+        void_objc_msgSend_id_id(_delegate, sel, webView, navigation);
     }
 }
 
@@ -527,7 +522,7 @@
     }
 }
 
-/// web内容进程终止时调用
+/// Web进程终止时调用
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
 {
     if (self.logEnable) {

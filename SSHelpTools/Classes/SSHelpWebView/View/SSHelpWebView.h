@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-/// 是否要自定义api
+/// 是否要自定义api名
 /// @param className 模块类
 /// @param api jsName
 - (NSString *)webModule:(NSString *)className hookJsName:(NSString *)api;
@@ -47,11 +47,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// 日志输出
 @property(nonatomic, assign) BOOL logEnable;
 
-/// 总代理
+/// 复合代理
 @property(nonatomic, weak) id <SSHelpWebViewDelegate> delegate;
 
 /// 注册js接口模块类-推荐
-- (void)registerJsHandlerImpClasses:(NSArray <Class> *)classes;
+- (void)registerWebModuleClasses:(NSArray <Class> *)classes;
 
 /// 注册js接口
 /// @param handlerName js方法名称
