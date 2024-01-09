@@ -200,6 +200,10 @@
     // 接口实现
     void(^registerHandler)(NSString *, NSString *)  = ^(NSString *class, NSString *api) {
         [self_weak_.bridge registerHandler:api handler:^(id data, WVJBResponseCallback jsCallback) {
+            // 日志
+            if (self_weak_.logEnable) {
+                SSLog(@"页面调用源生接口: %@ 参数：%@ 回调：%@ ;",api, data, jsCallback);
+            }
             // 封装
             SSHelpWebObjcHandler *handler = [SSHelpWebObjcHandler handlerWithApi:api data:data callBack:^(id  _Nonnull response) {
                 if (jsCallback && response) {
@@ -214,6 +218,10 @@
                         jsonString = response;
                     } else {
                         jsonString = [[SSHelpWebObjcResponse failedWithError:@"未知数据类型"] toJsonString];
+                    }
+                    // 日志
+                    if (self_weak_.logEnable) {
+                        SSLog(@"源生回调页面接口: %@ 报文：%@ 回调：%@ ;",api, jsonString, jsCallback);
                     }
                     jsCallback(jsonString);
                 }

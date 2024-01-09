@@ -1,33 +1,78 @@
 //
 //  SSHelpListViewModel.m
-//  SSHelpTools
+//  Pods
 //
-//  Created by 宋直兵 on 2023/11/15.
+//  Created by 宋直兵 on 2024/1/9.
 //
 
 #import "SSHelpListViewModel.h"
-#import "SSHelpListHeader.h"
-#import "SSHelpListFooter.h"
+#import "SSHelpListSupplementaryView.h"
 #import "SSHelpListCell.h"
 
-NSString *const _kSSListCellEventsDidSelect        = @"_kSSListCellEventsDidSelect";
-NSString *const _kSSListCellEventsDidDeselect      = @"_kSSListCellEventsDidDeselect";
-NSString *const _kSSListCellEventsWillDisplay      = @"_kSSListCellEventsWillDisplay";
-NSString *const _kSSListCellEventsDidEndDisplaying = @"_kSSListCellEventsDidEndDisplaying";
+/// Header数据模型
+@implementation SSListHeaderModel
 
-//******************************************************************************
-
-@implementation SSHelpListViewModel
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.viewClass = SSListHeader.class;
+    }
+    return self;
+}
 
 @end
 
-//******************************************************************************
+/// Footer数据模型
+@implementation SSListFooterModel
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.viewClass = SSListFooter.class;
+    }
+    return self;
+}
+
+@end
+
+/// Backer数据模型
+@implementation SSListBackerModel
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.height = 0;
+        self.viewClass = SSListBacker.class;
+    }
+    return self;
+}
+
+@end
+
+/// Cell数据模型
+@implementation SSListCellModel
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.viewClass = SSListCell.class;
+    }
+    return self;
+}
+
+@end
+
+
+/// Section数据模型
 @implementation SSListSectionModel
 
 + (instancetype)ss_new
 {
-    SSListSectionModel *section = [[SSListSectionModel alloc] init];
+    SSListSectionModel *section = [[self alloc] init];
     return section;
 }
 
@@ -44,82 +89,34 @@ NSString *const _kSSListCellEventsDidEndDisplaying = @"_kSSListCellEventsDidEndD
     return self;
 }
 
-@end
-
-//******************************************************************************
-
-@implementation SSListHeaderModel
-
-- (instancetype)init
+- (SSListHeaderModel *)headerModel
 {
-    self = [super init];
-    if (self) {
-        self.identifier = NSStringFromClass(SSHelpListHeader.class);
-        self.class = SSHelpListHeader.class;
+    if (!_headerModel) {
+        _headerModel = SSListHeaderModel.ss_new;
     }
-    return self;
+    return _headerModel;
 }
 
-@end
-
-//******************************************************************************
-
-@implementation SSListFooterModel
-
-- (instancetype)init
+- (SSListFooterModel *)footerModel
 {
-    self = [super init];
-    if (self) {
-        self.identifier = NSStringFromClass(SSHelpListFooter.class);
-        self.class = SSHelpListFooter.class;
+    if (!_footerModel) {
+        _footerModel = SSListFooterModel.ss_new;
     }
-    return self;
+    return _footerModel;
+}
+
+- (SSListBackerModel *)backerModel
+{
+    if (!_backerModel) {
+        _backerModel = SSListBackerModel.ss_new;
+    }
+    return _backerModel;
 }
 
 @end
 
-//******************************************************************************
-
-@implementation SSListCellModel
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        self.identifier = NSStringFromClass(SSHelpListCell.class);
-        self.class = SSHelpListCell.class;
-        self.size = CGSizeZero;
-    }
-    return self;
-}
-
-@end
-
-//******************************************************************************
-
-@implementation SSListReusableViewModel
-
-/// 初始化
-+ (instancetype)ss_new
-{
-    id model = [[self.class alloc] init];
-    return model;
-}
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        self.height = 44;
-        self.callback = ^(NSString *event) {};
-        
-        self.isDebug = NO;
-        #ifdef DEBUG
-        self.isDebug = YES;
-        #endif
-    }
-    return self;
-}
+/// ViewModel
+@implementation SSHelpListViewModel
 
 @end
 

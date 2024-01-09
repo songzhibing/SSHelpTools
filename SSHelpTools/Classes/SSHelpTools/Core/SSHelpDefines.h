@@ -93,19 +93,19 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 //设备
 
-#define _kDeviceIsiPad    ([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
+#define _kDeviceIsiPad         ([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
 
-#define _kScreenWidth     (MIN([UIScreen mainScreen].bounds.size.width, \
-                            [UIScreen mainScreen].bounds.size.height))
+#define _kScreenWidth          (MIN([UIScreen mainScreen].bounds.size.width, \
+                                    [UIScreen mainScreen].bounds.size.height))
 
-#define _kScreenHeight    (MAX([UIScreen mainScreen].bounds.size.width, \
-                            [UIScreen mainScreen].bounds.size.height))
+#define _kScreenHeight         (MAX([UIScreen mainScreen].bounds.size.width, \
+                                    [UIScreen mainScreen].bounds.size.height))
 
-#define _kStatusBarHeight ([SSHelpToolsConfig sharedConfig].statusBarHeight)
+#define _kStatusBarHeight      ([SSHelpToolsConfig sharedConfig].statusBarHeight)
 
-#define _kNavBarHeight    (44.f)
+#define _kNavBarHeight         (44.f)
 
-#define _kToolBarHeight   (49.f)
+#define _kToolBarHeight        (49.f)
 
 #define _kHomeIndicatorHeight  ([SSHelpToolsConfig sharedConfig].homeIndicatorHeight) // "home键"高度
 
@@ -127,7 +127,7 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 #define _kColorFromHexNumber(hexNumber)   [UIColor ss_colorWithHex:hexNumber alpha:1]
 
-#define _kRandomColor  [[UIColor ss_randomColor] colorWithAlphaComponent:0.75f]
+#define _kRandomColor  [[UIColor ss_randomColor] colorWithAlphaComponent:0.35f]
 
 #define _kClearColor   [UIColor clearColor]
 
@@ -164,6 +164,10 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 #ifndef dispatch_once_safe
     #define dispatch_once_safe(block) static dispatch_once_t onceToken; dispatch_once(&onceToken, block);
 #endif
+
+// Error
+
+#define _kLocalError(fmt, ...)    [NSError errorWithDomain:@"localhost.com" code:0 userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:fmt, ##__VA_ARGS__]}]
 
 //日志
 

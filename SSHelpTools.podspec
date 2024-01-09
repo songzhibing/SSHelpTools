@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SSHelpTools'
-  s.version          = '0.2.2'
+  s.version          = '0.2.3'
   s.summary          = '常用工具'
 
 # This description is used to generate tags and improve search results.
@@ -52,7 +52,7 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     web.source_files = 'SSHelpTools/Classes/SSHelpWebView/**/*'
     web.public_header_files = 'SSHelpTools/Classes/SSHelpWebView/*.h'
     web.frameworks = 'WebKit'
-    web.dependency 'SSHelpTools/SSHelpTools'  #需要用到SSHelpTools库
+    web.dependency 'SSHelpTools/SSHelpTools'
     web.dependency 'WebViewJavascriptBridge'
   end
   
@@ -71,6 +71,15 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     network.frameworks = 'CoreTelephony'
     network.dependency 'AFNetworking'
     network.dependency 'ReactiveObjC', :configurations => ['Debug']
+  end
+  
+  # DLAN 投屏
+  s.subspec 'SSHelpDLAN' do |dlan|
+    dlan.source_files = 'SSHelpTools/Classes/SSHelpDLAN/**/*.{h,m}'
+    dlan.dependency 'SSHelpTools/SSHelpTools'
+    dlan.dependency 'CocoaAsyncSocket'
+    dlan.dependency 'KissXML'
+    #dlan.frameworks = 'QuartzCore','UIKit'
   end
   
   # alibaba/BeeHive 改写

@@ -7,232 +7,185 @@
 
 #import "SSHelpListLayout.h"
 #import "SSHelpDefines.h"
+#import "SSHelpListLayoutAttributes.h"
 
 @interface SSHelpListLayout()
-
-@property(nonatomic, strong) NSMutableArray <NSMutableArray <UICollectionViewLayoutAttributes *> *> *itemLayoutAttributes;
-
-@property(nonatomic, strong) NSMutableArray <UICollectionViewLayoutAttributes *> *headerLayoutAttributes;
-
-@property(nonatomic, strong) NSMutableArray <UICollectionViewLayoutAttributes *> *footerLayoutAttributes;
-
-@property(nonatomic, strong) NSMutableArray <SSListDecorationViewLayoutAttributes *> *decorationViewLayoutAttributes;
-
-@property(nonatomic, assign) CGFloat availableContentHeight;
-
+@property(nonatomic, strong) NSMutableArray <SSListLayoutAttributes *> *headerLayouts;
+@property(nonatomic, strong) NSMutableArray <SSListLayoutAttributes *> *footerLayouts;
+@property(nonatomic, strong) NSMutableArray <SSListLayoutAttributes *> *backerLayouts;
+@property(nonatomic, strong) NSMutableArray <NSArray <SSListLayoutAttributes *> *> *cellLayouts;
+@property(nonatomic, assign) CGFloat totalHeight;
 @end
 
 
 @implementation SSHelpListLayout
 
-- (instancetype)init
+- (void)dealloc
 {
-    self = [super init];
-    if (self) {
-        [self registerClass:SSHelpListDecorationView.class forDecorationViewOfKind:_kSSListDecorationViewKind];
-    }
-    return self;
+    SSLifeCycleLog(@"%@ dealloc ... ",self);
 }
 
 - (void)prepareLayout
 {
     [super prepareLayout];
     
-    /// 重置缓存数据
-    [self.headerLayoutAttributes removeAllObjects];
-    [self.itemLayoutAttributes   removeAllObjects];
-    [self.footerLayoutAttributes removeAllObjects];
-    [self.decorationViewLayoutAttributes removeAllObjects];
-    
-    self.availableContentHeight = 0;
-
     UIEdgeInsets contentInset = self.collectionView.contentInset;
-    /// 起始Y轴偏移量
-    CGFloat contentMaxY = contentInset.top;
-    CGFloat contentWidth = CGRectGetWidth(self.collectionView.frame) - contentInset.left - contentInset.right;
-    /// 构造Section布局
-    for (NSInteger section=0; section<self.collectionView.numberOfSections; section++)
-    {
-        /// Section布局风格
-        NSInteger layoutStyle = [self getLayoutStyleInSection:section];
-        /// Section内间距
-        UIEdgeInsets sectionInset = [self getSectionInsetInSection:section];
-        /// Section宽度
-        CGFloat sectionWidth = contentWidth - sectionInset.left - sectionInset.right;
+    CGFloat originX = contentInset.left;
+    CGFloat originY = contentInset.top;
+    CGFloat width = CGRectGetWidth(self.collectionView.frame) - contentInset.left - contentInset.right;
+    self.totalHeight = originY;
+    [self.headerLayouts removeAllObjects];
+    [self.footerLayouts removeAllObjects];
+    [self.backerLayouts removeAllObjects];
+    [self.cellLayouts removeAllObjects];
 
-        /// 获取header布局
-        CGFloat headerHeight = [self getHeightForHeaderInSection:section];
-        CGRect headerFrame = CGRectMake(sectionInset.left, sectionInset.top+contentMaxY, sectionWidth, headerHeight);
-        NSIndexPath *headerIndexPath = [NSIndexPath indexPathForItem:0 inSection:section];
-        UICollectionViewLayoutAttributes *headerLayout = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader withIndexPath:headerIndexPath];
+    for (NSInteger section=0; section<self.collectionView.numberOfSections; section++) {
+        SSListSectionModel *sectionModel = [self.delegate layout:self getSectionModelAtSection:section];
+        UIEdgeInsets sectionInset = sectionModel.sectionInset;
+
+        // 计算Header
+        CGFloat x = originX+sectionInset.left;
+        CGFloat y = self.totalHeight + sectionInset.top;
+        CGFloat w = width-sectionInset.left-sectionInset.right;
+        CGFloat h = sectionModel.headerModel.height;
+        
+        CGRect headerFrame = CGRectMake(x,y,w,h);
+        SSHelpListLayoutAttributes *headerLayout;
+        headerLayout = [SSHelpListLayoutAttributes ss_headerWithSection:section];
         headerLayout.frame = headerFrame;
-        /// 缓存header布局
-        [self.headerLayoutAttributes addObject:headerLayout];
         
-        /// 更新Y轴偏移量
-        contentMaxY += sectionInset.top + headerHeight;
-        
-        /// 内容内间距
-        UIEdgeInsets contentInset = [self getContentInsetInSection:section];
-        /// 行间距
-        CGFloat minimumLineSpacing = [self getMinimumLineSpacingInSection:section];
-        /// 列间距
-        CGFloat minimumInteritemSpacing = [self getMinimumInteritemSpacingInSection:section];
-        /// 元素个数
-        NSInteger itemsCount = [self getNumberOfItemsInSection:section];
-        
-        /// items布局方式：默认布局
-        if (layoutStyle==SLSectionLayoutStyleDefault)
+        [self.headerLayouts addObject:headerLayout];
+        self.totalHeight = headerFrame.origin.y + headerFrame.size.height;
+
+        // 计算Cells
+        x = headerFrame.origin.x + sectionModel.contentInset.left;
+        y = self.totalHeight + sectionModel.contentInset.top;
+        w = headerFrame.size.width - sectionModel.contentInset.left - sectionModel.contentInset.right;
+        h = 0;
+        NSMutableArray *cellLayouatAttributes = NSMutableArray.array;
+        if (SLSectionLayoutStyleDefault == sectionModel.layoutStyle)
         {
-            /// 列数
-            NSInteger columnsCount = [self getNumberOfColumnInSection:section];
-            /// 内容有效宽度
-            CGFloat contentWidth = sectionWidth-contentInset.left-contentInset.right;
-            /// item宽度
-            CGFloat itemWidth = (contentWidth-(columnsCount-1)*minimumInteritemSpacing) / columnsCount;
-            
-            /// 先更新总高度
-            contentMaxY += contentInset.top;
-            
-            /// 初始每列Y轴偏移量
-            CGFloat offsetY[columnsCount];
-            for (NSInteger i=0; i<columnsCount; i++) {
-                offsetY[i] = contentMaxY;
+            // 竖向瀑布流排版
+            NSInteger columns = sectionModel.columnsCount;
+            __block NSMutableArray <NSNumber *> *offsetY = [NSMutableArray arrayWithCapacity:columns];
+            for (NSInteger i=0; i<columns; i++) {
+                    offsetY[i] = [NSNumber numberWithFloat:y];
             }
-            
-            NSMutableArray *attributes = [NSMutableArray arrayWithCapacity:itemsCount];
-            for (NSInteger index=0; index<itemsCount; index++) {
-                /// 找到最小Y偏移列
+            // 单个cell宽度
+            CGFloat itemW = (w-(columns-1)*sectionModel.minimumInteritemSpacing) / columns;
+            for (NSInteger idx=0; idx<sectionModel.cellModels.count; idx++) {
+                SSListCellModel *cellModel = sectionModel.cellModels[idx];
+                // 找到最小Y偏移列
                 NSInteger minColumn = 0;
-                for (NSInteger i=1; i<columnsCount; i++) {
-                    if (offsetY[minColumn] > offsetY[i]) {
+                for (NSInteger i=1; i<columns; i++) {
+                    if (offsetY[minColumn].floatValue > offsetY[i].floatValue) {
                         minColumn = i;
                     }
                 }
-                /// item布局
-                NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:section];
-                CGFloat itemHeight = [self getHeightForItemAtIndexPath:indexPath];
-                CGFloat x = contentInset.left + itemWidth*minColumn + minimumInteritemSpacing*minColumn;
-                CGFloat y = offsetY[minColumn] + (index>=columnsCount ? minimumLineSpacing : 0.0);
-                CGRect itemFrame = CGRectMake(x, y, itemWidth, itemHeight);
-                UICollectionViewLayoutAttributes *layout = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
-                layout.frame = itemFrame;
-                [attributes addObject:layout];
-                
-                /// 更新偏移量
-                offsetY[minColumn] = (y + itemHeight);
+                //单个cell尺寸
+                CGFloat itemX = x + itemW*minColumn + sectionModel.minimumInteritemSpacing*minColumn;
+                CGFloat itemY = offsetY[minColumn].floatValue + (idx>=columns ? sectionModel.minimumLineSpacing : 0.0);
+                CGFloat itemH = cellModel.height;
+                CGRect itemFrame = CGRectMake(itemX, itemY, itemW, itemH);
+                SSListLayoutAttributes *itemLayout;
+                itemLayout = [SSListLayoutAttributes ss_cellForItem:idx inSection:section];
+                itemLayout.frame = itemFrame;
+                // 更新最小Y偏移列值
+                offsetY[minColumn] = [NSNumber numberWithFloat:itemY + itemH];
+                // 存储
+                [cellLayouatAttributes addObject:itemLayout];
             }
-            /// 缓存items布局
-            [self.itemLayoutAttributes addObject:attributes];
-            
-            /// 找到所有列中最大Y轴偏移量
-            CGFloat maxOffset = offsetY[0];
-            for (int i=1; i<columnsCount; i++) {
-                if (offsetY[i] > maxOffset) {
-                    maxOffset = offsetY[i];
+            // 存储
+            [self.cellLayouts addObject:cellLayouatAttributes];
+            // 找到所有列中最大Y轴偏移量
+            CGFloat maxOffsetY = offsetY.firstObject.floatValue;
+            for (int i=0; i<columns; i++) {
+                CGFloat value = offsetY[i].floatValue;
+                if (value > maxOffsetY) {
+                    maxOffsetY = value;
                 }
             }
-            /// 后更新总高度
-            contentMaxY = maxOffset+contentInset.bottom;
-            
+            // 更新总高度
+            self.totalHeight = maxOffsetY + sectionModel.contentInset.bottom;
         }
-        /// items布局方式：横向有限布局,类似搜索历史记录布局样式
-        else if (layoutStyle==SLSectionLayoutStyleHorizontalFinite)
+        else if (SLSectionLayoutStyleHorizontalFinite == sectionModel.layoutStyle)
         {
-            /// 内容有效宽度
-            CGFloat contentWidth = sectionWidth-contentInset.left-contentInset.right;
-            CGFloat originX = sectionInset.left+contentInset.left;
-            CGFloat originY = contentMaxY+contentInset.top;
-            
-            NSMutableArray *attributes = [NSMutableArray arrayWithCapacity:itemsCount];
-            for (NSInteger index=0; index<itemsCount; index++) {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:section];
-                CGSize itemSize = [self getSizeForItemAtIndexPath:indexPath];
+            // 横向排版
+            CGFloat itemX = x;
+            CGFloat itemY = y;
+            NSMutableArray *cellLayouatAttributes = NSMutableArray.array;
+
+            for (NSInteger index=0; index<sectionModel.cellModels.count; index++) {
+                SSListCellModel *cellModel = sectionModel.cellModels[index];
+                CGFloat itemW = cellModel.size.width;
+                CGFloat itemH = cellModel.size.height;
                 if (index==0) {
                     // 第一个元素，限制宽度
-                    if (originX+itemSize.width>contentWidth) {
-                        itemSize.width = contentWidth;
-                    }
+                    itemW = itemX+itemW>w?w:itemW;
                 } else {
-                    if (originX+itemSize.width+minimumInteritemSpacing*index > contentWidth) {
+                    if (itemX+itemW> x+w) {
                         // 横向超出，则换行
-                        originX = sectionInset.left+contentInset.left;
-                        if (originX+itemSize.width>contentWidth) {
-                            // 如果单独一行都超，则限制宽度
-                            itemSize.width = contentWidth;
-                        }
-                        originY += itemSize.height+minimumLineSpacing;
+                        itemX = x;
+                        itemY += itemH+sectionModel.minimumLineSpacing;
+                        itemW = itemX+itemW>w?w:itemW;
                     }
                 }
-                CGRect itemFrame = CGRectMake(originX, originY, itemSize.width, itemSize.height);
-                UICollectionViewLayoutAttributes *layout = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+                CGRect itemFrame = CGRectMake(itemX, itemY, itemW, itemH);
+                SSListLayoutAttributes *layout;
+                layout = [SSListLayoutAttributes ss_cellForItem:index inSection:section];
                 layout.frame = itemFrame;
-                [attributes addObject:layout];
-                
-                /// 下个元素起点设置
-                originX += itemSize.width+minimumInteritemSpacing;
-                
-                /// (以最后一个元素位置)更新总高度
-                contentMaxY = originY+itemSize.height+contentInset.bottom;
+                // 存储
+                [cellLayouatAttributes addObject:layout];
+                // 下个元素起点设置
+                itemX += itemW+sectionModel.minimumInteritemSpacing;
+                // 更新总高度
+                self.totalHeight = itemY+itemH+sectionModel.contentInset.bottom;
             }
-            /// 缓存item布局
-            [self.itemLayoutAttributes addObject:attributes];
+            // 存储
+            [self.cellLayouts addObject:cellLayouatAttributes];
         }
-        /// items布局方式：横向无限布局,由另外Layou绘制
-        else if (layoutStyle==SLSectionLayoutStyleHorizontalInfinitely)
+        else if (SLSectionLayoutStyleHorizontalInfinitely == sectionModel.layoutStyle)
         {
-            /// 横向无限布局：
-            /// 由另外Layou绘制，这里提供一个占位即可
-            CGFloat contentWidth = sectionWidth-contentInset.left-contentInset.right;
-            CGFloat originX = sectionInset.left+contentInset.left;
-            CGFloat originY = contentMaxY+contentInset.top;
-            
-            CGFloat maxHeight = 0;
-            for (NSInteger index=0; index<itemsCount; index++) {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:section];
-                CGSize itemSize = [self getSizeForItemAtIndexPath:indexPath];
-                if (itemSize.height>maxHeight) {
-                    maxHeight = itemSize.height;
-                }
-            }
-            CGRect itemFrame = CGRectMake(originX, originY, contentWidth, maxHeight);
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:section];
-            UICollectionViewLayoutAttributes *layout = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
-            layout.frame = itemFrame;
-            
-            [self.itemLayoutAttributes addObject:@[layout].mutableCopy];
-            
-            /// 更新总高度
-            contentMaxY += contentInset.top+maxHeight+contentInset.bottom;
+            // 横向无限排版
+            // 由另外Layou绘制，这里提供一个占位即可
+            h = sectionModel.cellModels.firstObject.height;
+            CGRect itemFrame = CGRectMake(x, y, w, h);
+            SSListLayoutAttributes *itemLayout;
+            itemLayout = [SSListLayoutAttributes ss_cellForItem:0 inSection:section];
+            itemLayout.frame = itemFrame;
+            // 存储布局
+            [self.cellLayouts addObject:@[itemLayout]];
+            // 更新总高度
+            self.totalHeight = y + h + sectionModel.contentInset.bottom;
         }
         
-        /// 获取footer布局
-        CGFloat footerHeight = [self getHeightForFooterInSection:section];
-        CGRect footerFrame = CGRectMake(sectionInset.left, contentMaxY, contentWidth, footerHeight);
-        NSIndexPath *footerIndexPath = [NSIndexPath indexPathForItem:0 inSection:section];
-        UICollectionViewLayoutAttributes *footerLayout= [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionFooter withIndexPath:footerIndexPath];
+        // 计算Footer
+        x = headerFrame.origin.x;
+        y = self.totalHeight;
+        w = headerFrame.size.width;
+        h = sectionModel.footerModel.height;
+        CGRect footerFrame = CGRectMake(x, y, w, h);
+        SSListLayoutAttributes *footerLayout;
+        footerLayout = [SSListLayoutAttributes ss_footerWithSection:section];
         footerLayout.frame = footerFrame;
-        /// 缓存footer布局
-        [self.footerLayoutAttributes addObject:footerLayout];
         
-        /// 更新Y轴偏移量
-        contentMaxY += footerHeight+sectionInset.bottom;
-        
-        
-        /// 最后处理装饰图(Section背景)
-        CGFloat originY = CGRectGetMinY(headerLayout.frame) - sectionInset.top;
-        SSListDecorationViewLayoutAttributes *decorationViewLayout = nil;
-        decorationViewLayout = [SSListDecorationViewLayoutAttributes layoutAttributesForDecorationViewOfKind:_kSSListDecorationViewKind withIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
-        decorationViewLayout.frame = CGRectMake(contentInset.left,originY, contentWidth, CGRectGetMaxY(footerLayout.frame)-originY);
-        decorationViewLayout.zIndex = -1;
-        decorationViewLayout.applyCallback = [self getDecorationViewApplyInSection:section];
-        [self.decorationViewLayoutAttributes addObject:decorationViewLayout];
-    }
-    
-    /// 最终Y轴偏移量
-    contentMaxY += contentInset.bottom;
+        [self.footerLayouts addObject:footerLayout];
+        self.totalHeight = footerFrame.origin.y + footerFrame.size.height + sectionInset.bottom;
 
-    self.availableContentHeight  = contentMaxY;
+        // 计算Backer
+        x = headerFrame.origin.x-sectionInset.left;
+        y = headerFrame.origin.y-sectionInset.top;
+        w = width;
+        h = self.totalHeight - y;
+        CGRect backFrame = CGRectMake(x, y, w, h);
+        SSListLayoutAttributes *backerLayout;
+        backerLayout = [SSListLayoutAttributes ss_backerWithSection:section];
+        backerLayout.zIndex = -1;
+        backerLayout.frame = backFrame;
+        [self.backerLayouts addObject:backerLayout];
+    }
+    // 最终总高度
+    self.totalHeight += contentInset.bottom;
 }
 
 // Subclasses must override this method and use it to return the width and height of the collection view’s content. These values represent the width and height of all the content, not just the content that is currently visible. The collection view uses this information to configure its own content size to facilitate scrolling.
@@ -242,7 +195,7 @@
     width = width - self.collectionView.contentInset.left- self.collectionView.contentInset.right;
 
     CGFloat height = CGRectGetHeight(self.collectionView.frame);
-    height = MAX(height, self.availableContentHeight);
+    height = MAX(height, self.totalHeight);
     
     return CGSizeMake(width, height);
 }
@@ -250,201 +203,111 @@
 // return an array layout attributes instances for all the views in the given rect
 - (NSArray<UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect
 {
-    NSMutableArray<UICollectionViewLayoutAttributes *> *result = [NSMutableArray array];
-    [self.itemLayoutAttributes enumerateObjectsUsingBlock:^(NSMutableArray<UICollectionViewLayoutAttributes *> *layoutAttributeOfSection, NSUInteger idx, BOOL *stop) {
-        [layoutAttributeOfSection enumerateObjectsUsingBlock:^(UICollectionViewLayoutAttributes *attribute, NSUInteger idx, BOOL *stop) {
-            if (CGRectIntersectsRect(rect, attribute.frame)) {
-                [result addObject:attribute];
+    NSMutableArray *result = NSMutableArray.array;
+    [self.cellLayouts enumerateObjectsUsingBlock:^(NSArray <SSListLayoutAttributes *> * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj enumerateObjectsUsingBlock:^(SSListLayoutAttributes * _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (CGRectIntersectsRect(rect, item.frame)) {
+                [result addObject:item];
             }
         }];
     }];
-    
-    [self.headerLayoutAttributes enumerateObjectsUsingBlock:^(UICollectionViewLayoutAttributes *attribute, NSUInteger idx, BOOL *stop) {
-        if (attribute.frame.size.height && CGRectIntersectsRect(rect, attribute.frame)) {
-            [result addObject:attribute];
+    [self.footerLayouts enumerateObjectsUsingBlock:^(SSListLayoutAttributes * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (CGRectIntersectsRect(rect, obj.frame)) {
+            [result addObject:obj];
         }
     }];
-    
-    [self.footerLayoutAttributes enumerateObjectsUsingBlock:^(UICollectionViewLayoutAttributes *attribute, NSUInteger idx, BOOL *stop) {
-        if (attribute.frame.size.height && CGRectIntersectsRect(rect, attribute.frame)) {
-            [result addObject:attribute];
+    [self.backerLayouts enumerateObjectsUsingBlock:^(SSListLayoutAttributes * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (CGRectIntersectsRect(rect, obj.frame)) {
+            [result addObject:obj];
         }
     }];
-    
-    [self.decorationViewLayoutAttributes enumerateObjectsUsingBlock:^(UICollectionViewLayoutAttributes *attribute, NSUInteger idx, BOOL *stop) {
-        if (attribute.frame.size.height && CGRectIntersectsRect(rect, attribute.frame)) {
-            [result addObject:attribute];
+    NSMutableArray *headerResult = NSMutableArray.array;
+    [self.headerLayouts enumerateObjectsUsingBlock:^(SSListLayoutAttributes * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (CGRectIntersectsRect(rect, obj.frame)) {
+            [headerResult addObject:obj];
         }
     }];
-    
     
     // Section.Header 悬浮
     if (self.sectionHeadersPinToVisibleBounds) {
-        [result enumerateObjectsUsingBlock:^(UICollectionViewLayoutAttributes * _Nonnull header, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([header.representedElementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-                NSInteger section = header.indexPath.section;
-                
-                CGFloat originY = CGRectGetMinY(header.frame);
-                CGFloat offsetY = self.collectionView.contentOffset.y;
-                CGFloat dynamicY = MAX(originY,offsetY);
-               
-                UICollectionViewLayoutAttributes *footer= self.footerLayoutAttributes[section];
-                CGFloat maxY = CGRectGetMinY(footer.frame)-CGRectGetHeight(header.frame);
+        @Tweakify(self);
+        [headerResult enumerateObjectsUsingBlock:^(UICollectionViewLayoutAttributes *header, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSInteger section = header.indexPath.section;
+            CGFloat originY = CGRectGetMinY(self_weak_.headerLayouts[section].frame);
+            CGFloat offsetY = self.collectionView.contentOffset.y;
+            CGFloat dynamicY = MAX(originY,offsetY);
 
-                CGRect frame = header.frame;
-                frame.origin.y = MIN(dynamicY,maxY);
-                header.frame = frame;
-                header.zIndex = 99;
-            }
+            SSListLayoutAttributes *footer = self_weak_.footerLayouts[section];
+            CGFloat maxY = CGRectGetMinY(footer.frame)-CGRectGetHeight(header.frame);
+
+            CGRect frame = header.frame;
+            frame.origin.y = MIN(dynamicY,maxY);
+            header.frame = frame;
+            header.zIndex = 99+idx;
         }];
     }
+    
+    [result addObjectsFromArray:headerResult];
     return result;
+}
+
+- (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return self.cellLayouts[indexPath.section][indexPath.item];
+}
+
+- (nullable UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath
+{
+    if ([elementKind isEqualToString:_kSSListElementKindSectionFooter]) {
+        return self.footerLayouts[indexPath.section];
+    } else if ([elementKind isEqualToString:_kSSListElementKindSectionBack]) {
+        return self.backerLayouts[indexPath.section];
+    } else if ([elementKind isEqualToString:_kSSListElementKindSectionHeader]) {
+        return self.headerLayouts[indexPath.section];
+    }
+    return nil;
 }
 
 /// return YES to cause the collection view to requery the layout for geometry information
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
 {
-    //BOOL result = [super shouldInvalidateLayoutForBoundsChange:newBounds];
     return YES;
-}
-
-#pragma mark -
-#pragma mark - Private Method
-
-- (SSListLayoutDelegateReturn *)delegateByOption:(NSInteger)option indexPath:(NSIndexPath *)indexPath
-{
-    SSListLayoutDelegateReturn *returnModel = nil;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(layout:option:indexPath:)]) {
-        returnModel = [self.delegate layout:self option:option indexPath:indexPath];
-    }
-    return returnModel;
-}
-
-- (SSListDecorationViewApply)getDecorationViewApplyInSection:(NSInteger)section
-{
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:section];
-    SSListLayoutDelegateReturn *model = [self delegateByOption:SSListSectionOfDecorationViewApply indexPath:indexPath];
-    return model?model.decorationViewApply:nil;
-}
-
-- (NSInteger)getLayoutStyleInSection:(NSInteger)section
-{
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:section];
-    SSListLayoutDelegateReturn *model = [self delegateByOption:SSListSectionOfLayoutStyle indexPath:indexPath];
-    return  model?model.integeValue:SLSectionLayoutStyleDefault;
-}
-
-- (UIEdgeInsets)getSectionInsetInSection:(NSInteger)section
-{
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:section];
-    SSListLayoutDelegateReturn *model = [self delegateByOption:SSListSectionOfSectionInset indexPath:indexPath];
-    return  model?model.insetsValue:UIEdgeInsetsZero;
-}
-
-- (UIEdgeInsets)getContentInsetInSection:(NSInteger)section
-{
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:section];
-    SSListLayoutDelegateReturn *model = [self delegateByOption:SSListSectionOfContentInset indexPath:indexPath];
-    return  model?model.insetsValue:UIEdgeInsetsZero;
-}
-
-- (CGFloat)getMinimumLineSpacingInSection:(NSInteger)section
-{
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:section];
-    SSListLayoutDelegateReturn *model = [self delegateByOption:SSListSectionOfMinimumLineSpacing indexPath:indexPath];
-    return  model?model.floatValue:0;
-}
-
-- (CGFloat)getMinimumInteritemSpacingInSection:(NSInteger)section
-{
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:section];
-    SSListLayoutDelegateReturn *model = [self delegateByOption:SSListSectionOfMinimumInteritemSpacing indexPath:indexPath];
-    return  model?model.floatValue:0;
-}
-
-- (NSInteger)getNumberOfColumnInSection:(NSInteger)section
-{
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:section];
-    SSListLayoutDelegateReturn *model = [self delegateByOption:SSListSectionOfNumberOfColumn indexPath:indexPath];
-    return MAX(model.integeValue, 1);
-}
-
-- (NSInteger)getNumberOfItemsInSection:(NSInteger)section
-{
-    return [self.collectionView numberOfItemsInSection:section];
-}
-
-- (CGFloat)getHeightForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    SSListLayoutDelegateReturn *model = [self delegateByOption:SSListSectionOfHeightForItem indexPath:indexPath];
-    return  model?model.floatValue:44;
-}
-
-- (CGSize)getSizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    SSListLayoutDelegateReturn *model = [self delegateByOption:SSListSectionOfSizeForItem indexPath:indexPath];
-    return  model?model.sizeValue:CGSizeZero;
-}
-
-#pragma mark - header
-
-- (CGFloat)getHeightForHeaderInSection:(NSInteger)section
-{
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:section];
-    SSListLayoutDelegateReturn *model = [self delegateByOption:SSListSectionOfHeightForHeader indexPath:indexPath];
-    return  model?model.floatValue:0;
-}
-
-#pragma mark - footer
-
-- (CGFloat)getHeightForFooterInSection:(NSInteger)section
-{
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:section];
-    SSListLayoutDelegateReturn *model = [self delegateByOption:SSListSectionOfHeightForFooter indexPath:indexPath];
-    return  model?model.floatValue:0;
 }
 
 #pragma mark -
 #pragma mark - Getter Method
 
-- (NSMutableArray<NSMutableArray<UICollectionViewLayoutAttributes *> *> *)itemLayoutAttributes
+- (NSMutableArray *)headerLayouts
 {
-    if (!_itemLayoutAttributes) {
-        _itemLayoutAttributes = NSMutableArray.array;
+    if (!_headerLayouts) {
+        _headerLayouts = NSMutableArray.array;
     }
-    return _itemLayoutAttributes;
+    return _headerLayouts;
 }
 
-- (NSMutableArray<UICollectionViewLayoutAttributes *> *)headerLayoutAttributes
+- (NSMutableArray *)footerLayouts
 {
-    if (!_headerLayoutAttributes){
-        _headerLayoutAttributes = NSMutableArray.array;
+    if (!_footerLayouts) {
+        _footerLayouts = NSMutableArray.array;
     }
-    return _headerLayoutAttributes;
+    return _footerLayouts;
 }
 
-- (NSMutableArray<UICollectionViewLayoutAttributes *> *)footerLayoutAttributes
+- (NSMutableArray *)backerLayouts
 {
-    if (!_footerLayoutAttributes){
-        _footerLayoutAttributes = NSMutableArray.array;
+    if (!_backerLayouts) {
+        _backerLayouts = NSMutableArray.array;
     }
-    return _footerLayoutAttributes;
+    return _backerLayouts;
 }
 
-- (NSMutableArray<SSListDecorationViewLayoutAttributes *> *)decorationViewLayoutAttributes
+- (NSMutableArray *)cellLayouts
 {
-    if (!_decorationViewLayoutAttributes){
-        _decorationViewLayoutAttributes = NSMutableArray.array;
+    if (!_cellLayouts) {
+        _cellLayouts = NSMutableArray.array;
     }
-    return _decorationViewLayoutAttributes;
+    return _cellLayouts;
 }
 
 @end
 
-
-///*****************************************************************************
-///*****************************************************************************
-
-@implementation SSListLayoutDelegateReturn
-
-@end

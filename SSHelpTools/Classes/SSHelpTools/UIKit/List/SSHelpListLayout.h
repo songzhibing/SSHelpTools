@@ -7,36 +7,22 @@
 
 #import <UIKit/UIKit.h>
 #import "SSHelpListViewModel.h"
-#import "SSHelpListDecorationView.h"
-
-@class SSHelpListLayout;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SSListLayoutDelegateReturn : NSObject
-@property(nonatomic, assign) NSInteger    integeValue;
-@property(nonatomic, assign) CGFloat      floatValue;
-@property(nonatomic, assign) UIEdgeInsets insetsValue;
-@property(nonatomic, assign) CGSize       sizeValue;
-@property(nonatomic, strong) SSListDecorationViewApply decorationViewApply;
-@end
-
-
-/// 布局协议
+/// 协议
 @protocol SSListLayoutDelegate <NSObject>
 
-@optional
+@required
 
-- (SSListLayoutDelegateReturn *)layout:(SSHelpListLayout *)layout option:(SSListLayoutDelegateOptions)option indexPath:(NSIndexPath *)indexPath;
+/// 返回指定Section数据模型
+- (SSListSectionModel *)layout:(__kindof UICollectionViewLayout *)layout getSectionModelAtSection:(NSInteger)section;
 
 @end
 
 
 /// 自定义布局
 @interface SSHelpListLayout : UICollectionViewLayout
-
-/// 初始化
-- (instancetype)init;
 
 /// 代理
 @property(nonatomic, weak) id <SSListLayoutDelegate> delegate;

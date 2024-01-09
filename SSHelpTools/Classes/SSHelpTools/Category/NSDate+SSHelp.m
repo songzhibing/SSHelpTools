@@ -19,7 +19,6 @@
         [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT+0800"]];
         //地区
         [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-        //[dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"]];
         //公历
         [dateFormatter setCalendar:[[NSCalendar  alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian]];
     });
@@ -62,6 +61,15 @@
 {
     NSString *timeString = [NSDate ss_stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:[NSDate timeIntervalSinceReferenceDate]] withFormat:@"yyyyMMddHHmmss"];
     return timeString;
+}
+
+/// 格式化秒数  60s -> 00:01:00
++ (NSString *)ss_formatSeconds:(NSInteger)totalSeconds
+{
+    NSInteger hour = totalSeconds / 3600;
+    NSInteger minute = (totalSeconds % 3600) / 60;
+    NSInteger second = (totalSeconds % 3600) % 60;
+    return [NSString stringWithFormat:@"%02ld:%02ld:%02ld", hour, minute, second];
 }
 
 @end

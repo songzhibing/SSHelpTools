@@ -10,15 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// Cell视图
+/// 自定义Cell视图
 @interface SSHelpListCell : UICollectionViewCell
 
 /// 模型数据
 @property(nonatomic, weak) SSListCellModel *cellModel;
 
-/// 复用准备
-- (void)prepareForReuse NS_REQUIRES_SUPER;
-
 /// 刷新
 - (void)refresh;
 
@@ -26,15 +23,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-/// 特殊的横向无限布局视图
-@interface SSListHorizontalFlowCell : UICollectionViewCell
+/// 自定义Cell视图 [别名...]
+@interface SSListCell : SSHelpListCell
 
-/// Section模型数据
+@end
+
+
+
+/// 自定义横向排版占位Cell视图
+@interface SSListCellDirectionHorizontal : SSHelpListCell
+
+/// Section数据模型
 @property(nonatomic, weak) SSListSectionModel *sectionModel;
-
-/// 刷新
-- (void)refresh;
 
 @end
 
 NS_ASSUME_NONNULL_END
+
+

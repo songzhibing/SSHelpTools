@@ -8,12 +8,12 @@
 #import <UIKit/UIKit.h>
 #import "SSHelpListViewModel.h"
 #import "SSHelpListLayout.h"
-#import "SSHelpListFooter.h"
-#import "SSHelpListHeader.h"
+#import "SSHelpListSupplementaryView.h"
 #import "SSHelpListCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// 自定义列表视图
 @interface SSHelpListView : UICollectionView
 
 /// 初始化
@@ -24,6 +24,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 分组数据模型
 @property(nonatomic, strong) NSMutableArray <SSListSectionModel *> *sections;
+
+@end
+
+
+/// 自定义列表视图 [别名...]
+@interface SSListView : SSHelpListView
 
 @end
 

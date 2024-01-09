@@ -5,15 +5,21 @@
 //  Created by 宋直兵 on 2023/11/15.
 //
 
+#import <Masonry/Masonry.h>
 #import "SSHelpListView.h"
-#import "SSHelpDefines.h"
 
-@interface SSHelpListView() <UICollectionViewDataSource,UICollectionViewDelegate,SSListLayoutDelegate>
+/// 自定义列表视图 [别名...]
+@implementation SSListView
+
+@end
+
+
+/// 自定义列表视图
+@interface SSHelpListView()<UICollectionViewDataSource,UICollectionViewDelegate,SSListLayoutDelegate>
 
 @property(nonatomic, strong) NSMutableArray *reusableViewIdentifiers;
 
 @end
-
 
 
 @implementation SSHelpListView
@@ -48,6 +54,13 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [self.reusableViewIdentifiers removeAllObjects];
+    self.layout.delegate = nil;
+    self.layout = nil;
+}
+
 #pragma mark -
 #pragma mark - Private Method
 
@@ -74,66 +87,9 @@
 #pragma mark -
 #pragma mark - SSListLayoutDelegate Method
 
-- (SSListLayoutDelegateReturn *)layout:(SSHelpListLayout *)layout
-                                option:(SSListLayoutDelegateOptions)option
-                             indexPath:(NSIndexPath *)indexPath
+- (SSListSectionModel *)layout:(__kindof UICollectionViewLayout *)layout getSectionModelAtSection:(NSInteger)section
 {
-    SSListSectionModel *sectionModel = [self getSectionModelAtSection:indexPath.section];
-    SSListCellModel *cellModel = [self getCellModelAtIndexPath:indexPath];
-    SSListLayoutDelegateReturn *returnModel = SSListLayoutDelegateReturn.new;
-
-    switch (option) {
-        case SSListSectionOfLayoutStyle:
-            /// 布局风格
-            returnModel.integeValue = sectionModel.layoutStyle;
-            break;
-        case SSListSectionOfNumberOfColumn:
-            /// 列数
-            returnModel.integeValue = sectionModel.columnsCount;
-            break;
-        case SSListSectionOfSizeForItem:
-            /// item尺寸
-            returnModel.sizeValue = cellModel.size;
-            break;
-        case SSListSectionOfHeightForItem:
-            /// item高度
-            returnModel.floatValue = cellModel.height;
-            break;
-            
-        case SSListSectionOfSectionInset:
-            /// 内间距
-            returnModel.insetsValue = sectionModel.sectionInset;
-            break;
-        case SSListSectionOfContentInset:
-            /// 内容内间距
-            returnModel.insetsValue = sectionModel.contentInset;
-            break;
-        case SSListSectionOfMinimumLineSpacing:
-            /// 行间距
-            returnModel.floatValue = sectionModel.minimumLineSpacing;
-            break;
-        case SSListSectionOfMinimumInteritemSpacing:
-            /// 列间距
-            returnModel.floatValue = sectionModel.minimumInteritemSpacing;
-            break;
-            
-        case SSListSectionOfHeightForHeader:
-            /// Header 高度
-            returnModel.floatValue = sectionModel.headerModel.height;
-            break;
-        case SSListSectionOfHeightForFooter:
-            /// Footer 高度
-            returnModel.floatValue = sectionModel.footerModel.height;
-            break;
-        case SSListSectionOfDecorationViewApply:
-            /// DecorationView 布局自定义回调
-            returnModel.decorationViewApply = sectionModel.decorationViewApply;
-            break;
-        default:
-            returnModel = nil;
-            break;
-    }
-    return returnModel;
+    return [self getSectionModelAtSection:section];
 }
 
 #pragma mark -
@@ -155,101 +111,115 @@
 // The view that is returned must be retrieved from a call to -dequeueReusableSupplementaryViewOfKind:withReuseIdentifier:forIndexPath:
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
+    @Tweakify(self);
+    __kindof UICollectionReusableView *(^__register)(SSHelpListReusableViewModel *) = ^(SSHelpListReusableViewModel *model){
+        if ([self_weak_.reusableViewIdentifiers containsObject:model.identifier]==NO){
+            [self_weak_.reusableViewIdentifiers addObject:model.identifier];
+            [collectionView registerClass:model.viewClass forSupplementaryViewOfKind:kind withReuseIdentifier:model.identifier];
+        }
+        id view = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:model.identifier forIndexPath:indexPath];
+        return view;
+
+    };
     SSListSectionModel *sectionModel = [self getSectionModelAtSection:indexPath.section];
     if (sectionModel) {
-        
-        if (kind == UICollectionElementKindSectionHeader && sectionModel.headerModel) {
+        if ([kind isEqualToString:_kSSListElementKindSectionHeader]) {
             sectionModel.headerModel.indexPath = indexPath;
-            if (![self.reusableViewIdentifiers containsObject:sectionModel.headerModel.identifier]) {
-                [self.reusableViewIdentifiers addObject:sectionModel.headerModel.identifier];
-                [collectionView registerClass:sectionModel.headerModel.class
-                   forSupplementaryViewOfKind:kind
-                          withReuseIdentifier:sectionModel.headerModel.identifier];
-            }
-            SSHelpListHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:sectionModel.headerModel.identifier forIndexPath:indexPath];
+            SSListHeader *header = __register(sectionModel.headerModel);
             header.headerModel = sectionModel.headerModel;
             [header refresh];
             return header;
-        } else if (kind == UICollectionElementKindSectionFooter && sectionModel.footerModel) {
+        } else if ([kind isEqualToString:_kSSListElementKindSectionFooter]) {
             sectionModel.footerModel.indexPath = indexPath;
-            if (![self.reusableViewIdentifiers containsObject:sectionModel.footerModel.identifier]) {
-                [self.reusableViewIdentifiers addObject:sectionModel.footerModel.identifier];
-                [collectionView registerClass:sectionModel.footerModel.class
-                   forSupplementaryViewOfKind:kind
-                          withReuseIdentifier:sectionModel.footerModel.identifier];
-            }
-            SSHelpListFooter *footer = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:sectionModel.footerModel.identifier forIndexPath:indexPath];
+            SSListFooter *footer = __register(sectionModel.footerModel);
             footer.footerModel = sectionModel.footerModel;
             [footer refresh];
             return footer;
+        } else if ([kind isEqualToString:_kSSListElementKindSectionBack]) {
+            sectionModel.backerModel.indexPath = indexPath;
+            SSListBacker *backer = __register(sectionModel.backerModel);
+            backer.backerModel = sectionModel.backerModel;
+            [backer refresh];
+            return backer;
         }
     }
-    return nil;
+    // 异常
+    SSHelpListReusableViewModel *emptyModel = SSHelpListReusableViewModel.ss_new;
+    emptyModel.viewClass = UICollectionReusableView.class;
+    return __register(emptyModel);;
 }
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    /// 获取model
-    SSListSectionModel *sectionModel = [self getSectionModelAtSection:indexPath.section];
-    SSListCellModel *model = [self getCellModelAtIndexPath:indexPath];
-    model.indexPath = indexPath;
-    
-    /// 注册class
-    if (![self.reusableViewIdentifiers containsObject:model.identifier]) {
-        [self.reusableViewIdentifiers addObject:model.identifier];
-        [collectionView registerClass:model.class forCellWithReuseIdentifier:model.identifier];
-    }
-    
-    if (sectionModel && sectionModel.layoutStyle==SLSectionLayoutStyleHorizontalInfinitely) {
-        NSString *ids = @"_SSListHorizontalFlowCell";
-        if (![self.reusableViewIdentifiers containsObject:ids]) {
-            [self.reusableViewIdentifiers addObject:ids];
-            [collectionView registerClass:SSListHorizontalFlowCell.class forCellWithReuseIdentifier:ids];
+    @Tweakify(self);
+    __kindof UICollectionViewCell *(^__register)(NSString *, Class) = ^(NSString *fier, Class viewClass){
+        if ([self_weak_.reusableViewIdentifiers containsObject:fier]==NO){
+            [self_weak_.reusableViewIdentifiers addObject:fier];
+            [collectionView registerClass:viewClass forCellWithReuseIdentifier:fier];
         }
-        /// 刷新cell
-        SSListHorizontalFlowCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:ids forIndexPath:indexPath];
-        cell.sectionModel = sectionModel;
-        [cell refresh];
+        id cell = [collectionView dequeueReusableCellWithReuseIdentifier:fier forIndexPath:indexPath];
         return cell;
+    };
+    
+    SSListSectionModel *sectionModel = [self getSectionModelAtSection:indexPath.section];
+    if (sectionModel) {
+        if (sectionModel.layoutStyle == SLSectionLayoutStyleHorizontalInfinitely) {
+            // 处理indexPath值
+            [sectionModel.cellModels enumerateObjectsUsingBlock:^(SSListCellModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                obj.indexPath = [NSIndexPath indexPathForItem:idx inSection:indexPath.section];
+            }];
+            NSString *ids = @"_SSListCellDirectionHorizontal";
+            SSListCellDirectionHorizontal *cell = __register(ids,SSListCellDirectionHorizontal.class);
+            cell.sectionModel = sectionModel;
+            [cell refresh];
+            return cell;
+        } else {
+            SSListCellModel *cellModel = [self getCellModelAtIndexPath:indexPath];
+            cellModel.indexPath = indexPath;
+            SSListCell *cell = __register(cellModel.identifier, cellModel.viewClass);
+            cell.cellModel = cellModel;
+            [cell refresh];
+            return cell;
+        }
     }
-    /// 刷新cell
-    SSHelpListCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:model.identifier forIndexPath:indexPath];
-    cell.cellModel = model;
-    [cell refresh];
+    // 异常
+    UICollectionViewCell *cell =__register(@"_SSListEmptyCell",UICollectionViewCell.class);
     return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     SSListCellModel *model = [self getCellModelAtIndexPath:indexPath];
-    if (model.callback) {
-        model.callback(_kSSListCellEventsDidSelect);
-    }
+    model.eventHandler(_kSSListCellEventsDidSelect);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     SSListCellModel *model = [self getCellModelAtIndexPath:indexPath];
-    if (model.callback) {
-        model.callback(_kSSListCellEventsDidDeselect);
-    }
+    model.eventHandler(_kSSListCellEventsDidDeselect);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(8.0))
 {
     SSListCellModel *model = [self getCellModelAtIndexPath:indexPath];
-    if (model.callback) {
-        model.callback(_kSSListCellEventsWillDisplay);
-    }
+    model.eventHandler(_kSSListCellEventsWillDisplay);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
     SSListCellModel *model = [self getCellModelAtIndexPath:indexPath];
-    if (model.callback) {
-        model.callback(_kSSListCellEventsDidEndDisplaying);
-    }
+    model.eventHandler(_kSSListCellEventsDidEndDisplaying);
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplaySupplementaryView:(SSHelpListSupplementaryView *)view forElementKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath API_AVAILABLE(ios(8.0))
+{
+    [view willDisplay];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingSupplementaryView:(SSHelpListSupplementaryView *)view forElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath
+{
+    [view didEndDisplaying];
 }
 
 @end
