@@ -164,7 +164,7 @@
     
     SSListSectionModel *sectionModel = [self getSectionModelAtSection:indexPath.section];
     if (sectionModel) {
-        if (sectionModel.layoutStyle == SLSectionLayoutStyleHorizontalInfinitely) {
+        if (sectionModel.layoutStyle == SSListSectionLayoutStyleHorizontalInfinitely) {
             // 处理indexPath值
             [sectionModel.cellModels enumerateObjectsUsingBlock:^(SSListCellModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 obj.indexPath = [NSIndexPath indexPathForItem:idx inSection:indexPath.section];

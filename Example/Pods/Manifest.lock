@@ -26,9 +26,6 @@ PODS:
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
   - FLEX (5.22.10)
-  - GCDWebServer (3.5.4):
-    - GCDWebServer/Core (= 3.5.4)
-  - GCDWebServer/Core (3.5.4)
   - GPUImage (0.1.7)
   - KissXML (5.3.1):
     - KissXML/All (= 5.3.1)
@@ -44,31 +41,27 @@ PODS:
   - SDWebImage (5.18.2):
     - SDWebImage/Core (= 5.18.2)
   - SDWebImage/Core (5.18.2)
-  - SSHelpTools (0.2.3):
-    - SSHelpTools/SSHelpBeeHive (= 0.2.3)
-    - SSHelpTools/SSHelpDLAN (= 0.2.3)
-    - SSHelpTools/SSHelpLog (= 0.2.3)
-    - SSHelpTools/SSHelpNetwork (= 0.2.3)
-    - SSHelpTools/SSHelpTools (= 0.2.3)
-    - SSHelpTools/SSHelpWebView (= 0.2.3)
-  - SSHelpTools/SSHelpBeeHive (0.2.3)
-  - SSHelpTools/SSHelpDLAN (0.2.3):
+  - SSHelpTools (0.3.0):
+    - SSHelpTools/SSHelpBeeHive (= 0.3.0)
+    - SSHelpTools/SSHelpDLAN (= 0.3.0)
+    - SSHelpTools/SSHelpNetwork (= 0.3.0)
+    - SSHelpTools/SSHelpTools (= 0.3.0)
+    - SSHelpTools/SSHelpWebView (= 0.3.0)
+  - SSHelpTools/SSHelpBeeHive (0.3.0)
+  - SSHelpTools/SSHelpDLAN (0.3.0):
     - CocoaAsyncSocket
     - KissXML
     - SSHelpTools/SSHelpTools
-  - SSHelpTools/SSHelpLog (0.2.3):
-    - CocoaLumberjack
-    - GCDWebServer
-  - SSHelpTools/SSHelpNetwork (0.2.3):
+  - SSHelpTools/SSHelpNetwork (0.3.0):
     - AFNetworking
     - ReactiveObjC
-  - SSHelpTools/SSHelpTools (0.2.3):
+  - SSHelpTools/SSHelpTools (0.3.0):
     - Masonry
     - MBProgressHUD
     - ReactiveObjC
     - SDWebImage
     - UICKeyChainStore
-  - SSHelpTools/SSHelpWebView (0.2.3):
+  - SSHelpTools/SSHelpWebView (0.3.0):
     - SSHelpTools/SSHelpTools
     - WebViewJavascriptBridge
   - UICKeyChainStore (2.2.1)
@@ -99,7 +92,6 @@ SPEC REPOS:
     - DateTools
     - FBSnapshotTestCase
     - FLEX
-    - GCDWebServer
     - GPUImage
     - KissXML
     - Masonry
@@ -122,14 +114,13 @@ SPEC CHECKSUMS:
   DateTools: 933ac9c490f21f92127cf690ccd8c397e0126caf
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   FLEX: f21ee4f498eed3f8a1eded66b21939fd3b7a22ce
-  GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
   KissXML: 5c8e0f2e8b9f071d3e1ae123dec3eb5da615c10c
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SDWebImage: c0de394d7cf7f9838aed1fd6bb6037654a4572e4
-  SSHelpTools: 20544c0b766b96b7997049b6e2a151219b8a945b
+  SSHelpTools: d24c1c70403cc9ae6e55612891b235393c3b612a
   UICKeyChainStore: ba3bff2c762b12db1e516f395c837dd25298b05e
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7

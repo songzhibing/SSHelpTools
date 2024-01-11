@@ -16,20 +16,23 @@ NS_ASSUME_NONNULL_BEGIN
 /// Section布局风格
 typedef NS_ENUM(NSInteger, SSListSectionLayoutStyle) {
     /// 默认瀑布流多列布局
-    SLSectionLayoutStyleDefault = 0,
+    SSListSectionLayoutStyleDefault = 0,
     /// 横向有限布局,类似搜索历史记录
-    SLSectionLayoutStyleHorizontalFinite = 1,
+    SSListSectionLayoutStyleHorizontalFinite = 1,
     /// 横向无限布局
-    SLSectionLayoutStyleHorizontalInfinitely = 2,
+    SSListSectionLayoutStyleHorizontalInfinitely = 2,
 };
+
 
 /// Header数据模型
 @interface SSListHeaderModel : SSHelpListReusableViewModel
 @end
 
+
 /// Footer数据模型
 @interface SSListFooterModel : SSHelpListReusableViewModel
 @end
+
 
 /// Backer数据模型
 @interface SSListBackerModel : SSHelpListReusableViewModel
@@ -58,10 +61,10 @@ typedef NS_ENUM(NSInteger, SSListSectionLayoutStyle) {
 /// 布局风格
 @property(nonatomic, assign) SSListSectionLayoutStyle layoutStyle;
 
-/// 整体内间距 (header+cells+footer)
+/// 内间距 [section整体]
 @property(nonatomic, assign) UIEdgeInsets sectionInset;
 
-/// 内容内间距 (cells)
+/// 内间距 [cells整体]
 @property(nonatomic, assign) UIEdgeInsets contentInset;
 
 /// 列数

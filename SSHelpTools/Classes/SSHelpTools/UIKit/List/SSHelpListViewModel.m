@@ -23,6 +23,7 @@
 
 @end
 
+
 /// Footer数据模型
 @implementation SSListFooterModel
 
@@ -36,6 +37,7 @@
 }
 
 @end
+
 
 /// Backer数据模型
 @implementation SSListBackerModel
@@ -51,6 +53,7 @@
 }
 
 @end
+
 
 /// Cell数据模型
 @implementation SSListCellModel
@@ -80,7 +83,7 @@
 {
     self = [super init];
     if (self) {
-        self.layoutStyle  = SLSectionLayoutStyleDefault;
+        self.layoutStyle  = SSListSectionLayoutStyleDefault;
         self.sectionInset = UIEdgeInsetsZero;
         self.contentInset = UIEdgeInsetsZero;
         self.cellModels   = NSMutableArray.array;
@@ -114,6 +117,7 @@
 }
 
 @end
+
 
 /// ViewModel
 @implementation SSHelpListViewModel

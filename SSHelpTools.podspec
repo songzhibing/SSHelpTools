@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SSHelpTools'
-  s.version          = '0.2.3'
+  s.version          = '0.3.0'
   s.summary          = '常用工具'
 
 # This description is used to generate tags and improve search results.
@@ -45,6 +45,8 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     tools.dependency 'UICKeyChainStore'
     tools.dependency 'MBProgressHUD'
     tools.dependency 'ReactiveObjC', :configurations => ['Debug']
+    # tools.dependency 'CocoaLumberjack'
+    # tools.dependency 'GCDWebServer', :configurations => ['Debug']
   end
   
   # SSHelpWebView 库
@@ -55,15 +57,7 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     web.dependency 'SSHelpTools/SSHelpTools'
     web.dependency 'WebViewJavascriptBridge'
   end
-  
-  # SSHelpLog 日志系统库
-  s.subspec 'SSHelpLog' do |log|
-    log.source_files = 'SSHelpTools/Classes/SSHelpLog/**/*'
-    log.public_header_files = 'SSHelpTools/Classes/SSHelpLog/*.h'
-    log.dependency 'CocoaLumberjack'
-    log.dependency 'GCDWebServer', :configurations => ['Debug','Release']
-  end
-  
+    
   # SSHelpNetwork 网络封装库
   s.subspec 'SSHelpNetwork' do |network|
     network.source_files = 'SSHelpTools/Classes/SSHelpNetwork/**/*'

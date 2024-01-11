@@ -17,7 +17,7 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    SSLifeCycleLog(@"%@ dealloc %td...",self,_kRetainCount(self));
+    //SSLifeCycleLog(@"%@ dealloc %td...",self,_kRetainCount(self));
 }
 
 - (instancetype)initWithRootViewController:(UIViewController *)rootViewController

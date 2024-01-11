@@ -226,7 +226,7 @@
     [hud hideAnimated:YES afterDelay:duration];
 }
 
-+ (MBProgressHUD *_Nullable)showActivityMessage:(NSString*)message
++ (SSProgressHUD *_Nullable)showActivityMessage:(NSString*)message
 {
     return [self showActivityMessage:message toView:__kApplicationWindow];
 }
@@ -279,7 +279,7 @@
 + (void)hideHUDForView:(UIView *)view
 {
     if (view) {
-        [MBProgressHUD hideHUDForView:view animated:YES];
+        [SSProgressHUD hideHUDForView:view animated:YES];
     }
 }
 

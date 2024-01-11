@@ -87,7 +87,7 @@
     }
     
     // 构建WKWebview
-    SSHelpWebView *webView = [[self.class alloc] initWithFrame:UIScreen.mainScreen.bounds configuration:config];
+    SSHelpWebView *webView = [[self alloc] initWithFrame:UIScreen.mainScreen.bounds configuration:config];
     return webView;
 }
 
@@ -178,11 +178,10 @@
         return;
     }
     
-    @Tweakify(self);
-    
     self.bridge = [WKWebViewJavascriptBridge bridgeForWebView:self];
     [self.bridge setWebViewDelegate:self];
 
+    @Tweakify(self);
     // 非模块化接口注册
     [self.messageHandlers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, SSBridgeHandler  _Nonnull callBack, BOOL * _Nonnull stop) {
         [self_weak_.bridge registerHandler:key handler:^(id data, WVJBResponseCallback responseCallback) {
@@ -410,6 +409,10 @@
             //跳转别的应用如系统浏览器
             if ([[UIApplication sharedApplication] canOpenURL:url]) {
                 [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+            } else {
+                if (self.logEnable) {
+                    SSLog(@"链接无法加载: %@ ... ",url);
+                }
             }
             decisionHandler(WKNavigationActionPolicyCancel);
         } else {

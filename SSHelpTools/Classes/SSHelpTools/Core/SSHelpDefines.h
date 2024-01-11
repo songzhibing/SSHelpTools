@@ -83,7 +83,7 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 #define _kAppVersion           ([[[NSBundle mainBundle] infoDictionary] \
                                     objectForKey:@"CFBundleShortVersionString"])
 
-#define _kRetainCount(obj)     (CFGetRetainCount((__bridge CFTypeRef)(obj))) /// 引用计数值
+#define _kRetainCount(obj)     (CFGetRetainCount((__bridge CFTypeRef)(obj))) // 引用计数值
 
 #define _kUserDefaults         [NSUserDefaults standardUserDefaults]
 
@@ -167,7 +167,7 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 // Error
 
-#define _kLocalError(fmt, ...)    [NSError errorWithDomain:@"localhost.com" code:0 userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:fmt, ##__VA_ARGS__]}]
+#define _kLocalError(fmt, ...)    [NSError errorWithDomain:@"error.localhost.com" code:0 userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:fmt, ##__VA_ARGS__]}]
 
 //日志
 

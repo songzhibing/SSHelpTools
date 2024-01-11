@@ -13,11 +13,10 @@
 #ifdef __OBJC__
     @import UIKit;
     @import Foundation;
+    //#import <BeeHive/BeeHive.h>
     #import <SSHelpTools/SSHelpTools.h>
     #import <SSHelpTools/SSHelpNetwork.h>
     #import <SSHelpTools/SSHelpWebViewController.h>
-    #import <SSHelpTools/SSHelpLog.h>
     #import <YYKit/YYKit.h>
-//    #import <BeeHive/BeeHive.h>
     #import <SSHelpTools/SSBeeHive.h>
 #endif

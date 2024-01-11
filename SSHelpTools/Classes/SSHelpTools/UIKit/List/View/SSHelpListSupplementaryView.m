@@ -17,7 +17,6 @@
 
 @implementation SSHelpListSupplementaryView
 
-/// 刷新
 - (void)refresh
 {
 }
@@ -68,7 +67,6 @@
 
 - (void)refresh
 {
-    [super refresh];
     #ifdef DEBUG
     self.debugLab.text = [NSString stringWithFormat:@"Footer(%td)",self.footerModel.indexPath.section];
     #endif
@@ -83,7 +81,6 @@
 
 - (void)refresh
 {
-    [super refresh];
     #ifdef DEBUG
     self.debugLab.text = [NSString stringWithFormat:@"Backer(%ld)",self.backerModel.indexPath.section];
     #endif

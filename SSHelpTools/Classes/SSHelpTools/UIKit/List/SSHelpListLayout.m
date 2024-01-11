@@ -50,8 +50,8 @@
         CGFloat h = sectionModel.headerModel.height;
         
         CGRect headerFrame = CGRectMake(x,y,w,h);
-        SSHelpListLayoutAttributes *headerLayout;
-        headerLayout = [SSHelpListLayoutAttributes ss_headerWithSection:section];
+        SSListLayoutAttributes *headerLayout;
+        headerLayout = [SSListLayoutAttributes ss_headerWithSection:section];
         headerLayout.frame = headerFrame;
         
         [self.headerLayouts addObject:headerLayout];
@@ -63,7 +63,7 @@
         w = headerFrame.size.width - sectionModel.contentInset.left - sectionModel.contentInset.right;
         h = 0;
         NSMutableArray *cellLayouatAttributes = NSMutableArray.array;
-        if (SLSectionLayoutStyleDefault == sectionModel.layoutStyle)
+        if (SSListSectionLayoutStyleDefault == sectionModel.layoutStyle)
         {
             // 竖向瀑布流排版
             NSInteger columns = sectionModel.columnsCount;
@@ -108,7 +108,7 @@
             // 更新总高度
             self.totalHeight = maxOffsetY + sectionModel.contentInset.bottom;
         }
-        else if (SLSectionLayoutStyleHorizontalFinite == sectionModel.layoutStyle)
+        else if (SSListSectionLayoutStyleHorizontalFinite == sectionModel.layoutStyle)
         {
             // 横向排版
             CGFloat itemX = x;
@@ -144,7 +144,7 @@
             // 存储
             [self.cellLayouts addObject:cellLayouatAttributes];
         }
-        else if (SLSectionLayoutStyleHorizontalInfinitely == sectionModel.layoutStyle)
+        else if (SSListSectionLayoutStyleHorizontalInfinitely == sectionModel.layoutStyle)
         {
             // 横向无限排版
             // 由另外Layou绘制，这里提供一个占位即可

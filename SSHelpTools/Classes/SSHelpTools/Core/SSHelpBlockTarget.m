@@ -16,9 +16,6 @@
 - (void)dealloc
 {
     _block = nil;
-#ifdef DEBUG
-    //SSLifeCycleLog(@"%@ dealloc ... ", self);
-#endif
 }
 
 - (id)initWithBlock:(void (^)(id sender))block events:(UIControlEvents)event
