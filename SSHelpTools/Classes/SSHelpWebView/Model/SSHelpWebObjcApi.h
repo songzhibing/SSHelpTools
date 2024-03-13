@@ -10,13 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define kWebApiTestJSBridge     @"ObjcTestBridge"
+#define kWebApiTestJSBridge     @"objcTestBridge"
 
-#define kWebApiTelNumber        @"ObjcTelNumber"
+#define kWebApiTelNumber        @"objcTelNumber"
 
-#define kWebApiGetLocation      @"ObjcGetLocation"
+#define kWebApiGetLocation      @"objcGetLocation"
 
-#define kWebApiTakePhoto        @"ObjcTakePhoto"
+#define kWebApiTakePhoto        @"objcTakePhoto"
 
 
 @interface SSHelpWebObjcApi : NSObject

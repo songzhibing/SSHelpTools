@@ -7,9 +7,9 @@
 //
 
 @import UIKit;
+#import <SSHelpTools/SSBeeHive.h>
 
-@interface SSAppDelegate : UIResponder <UIApplicationDelegate>
+@interface SSAppDelegate : SSBHAppDelegate
 
-@property (strong, nonatomic) UIWindow *window;
 
 @end

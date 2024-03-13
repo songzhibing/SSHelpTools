@@ -15,6 +15,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// block定义
 typedef void(^ _Nullable SSBlockVoid)(void);
 typedef void(^ _Nullable SSBlockId)(id _Nullable object);
 typedef void(^ _Nullable SSBlockInt)(int number);
@@ -25,11 +26,17 @@ typedef void(^ _Nullable SSBlockString)(__kindof NSString * _Nullable string);
 typedef void(^ _Nullable SSBlockData)(__kindof NSData * _Nullable data);
 typedef void(^ _Nullable SSBlockCallback)(id _Nullable response, NSError * _Nullable error);
 
-static void (*void_objc_msgSend_id)(id, SEL, id, ...) = (void (*)(id, SEL, id, ...)) objc_msgSend;
-static void (*void_objc_msgSend_id_id)(id, SEL, id, id, ...)  = (void (*)(id, SEL, id, id, ...)) objc_msgSend;
-static void (*void_objc_msgSend_id_id_id)(id, SEL, id, id, id, ...) = (void (*)(id, SEL, id, id, id, ...)) objc_msgSend;
+// 必须定义函数声明
+static void (*void_objc_msgSend_id)(id, SEL, id, ...) =
+                                      (void (*)(id, SEL, id, ...)) objc_msgSend;
 
-//安全调用Block
+static void (*void_objc_msgSend_id_id)(id, SEL, id, id, ...)  =
+                                  (void (*)(id, SEL, id, id, ...)) objc_msgSend;
+
+static void (*void_objc_msgSend_id_id_id)(id, SEL, id, id, id, ...) =
+                              (void (*)(id, SEL, id, id, id, ...)) objc_msgSend;
+
+// 安全调用Block
 #define _kSafeBlock(blockName,...) ({(!blockName) ? nil : blockName(__VA_ARGS__);})
 
 /// 字符串读取
@@ -67,6 +74,7 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyArray(id array);
 /// 非空字典
 FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
+
 //缩写
 
 #define _kApplicationWindow    ([SSHelpToolsConfig sharedConfig].window)
@@ -78,7 +86,7 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 #define _kAppVersion           ([[[NSBundle mainBundle] infoDictionary] \
                                     objectForKey:@"CFBundleShortVersionString"])
 
-#define _kRetainCount(obj)     (CFGetRetainCount((__bridge CFTypeRef)(obj))) /// 引用计数值
+#define _kRetainCount(obj)     (CFGetRetainCount((__bridge CFTypeRef)(obj))) // 引用计数值
 
 #define _kUserDefaults         [NSUserDefaults standardUserDefaults]
 
@@ -86,23 +94,25 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 #define _kAppBundleIdentifier  NSBundle.mainBundle.bundleIdentifier
 
+
 //设备
 
-#define _kDeviceIsiPad    ([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
+#define _kDeviceIsiPad         ([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
 
-#define _kScreenWidth     (MIN([UIScreen mainScreen].bounds.size.width, \
-                            [UIScreen mainScreen].bounds.size.height))
+#define _kScreenWidth          (MIN([UIScreen mainScreen].bounds.size.width, \
+                                    [UIScreen mainScreen].bounds.size.height))
 
-#define _kScreenHeight    (MAX([UIScreen mainScreen].bounds.size.width, \
-                            [UIScreen mainScreen].bounds.size.height))
+#define _kScreenHeight         (MAX([UIScreen mainScreen].bounds.size.width, \
+                                    [UIScreen mainScreen].bounds.size.height))
 
-#define _kStatusBarHeight ([SSHelpToolsConfig sharedConfig].statusBarHeight)
+#define _kStatusBarHeight      ([SSHelpToolsConfig sharedConfig].statusBarHeight)
 
-#define _kNavBarHeight    (44.f)
+#define _kNavBarHeight         (44.f)
 
-#define _kToolBarHeight   (49.f)
+#define _kToolBarHeight        (49.f)
 
-#define _kHomeIndicatorHeight  ([SSHelpToolsConfig sharedConfig].homeIndicatorHeight) //"home键"高度
+#define _kHomeIndicatorHeight  ([SSHelpToolsConfig sharedConfig].homeIndicatorHeight) // "home键"高度
+
 
 //颜色
 
@@ -122,7 +132,7 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 
 #define _kColorFromHexNumber(hexNumber)   [UIColor ss_colorWithHex:hexNumber alpha:1]
 
-#define _kRandomColor  [[UIColor ss_randomColor] colorWithAlphaComponent:0.75f]
+#define _kRandomColor  [[UIColor ss_randomColor] colorWithAlphaComponent:0.35f]
 
 #define _kClearColor   [UIColor clearColor]
 
@@ -159,6 +169,10 @@ FOUNDATION_EXTERN BOOL SSEqualToNotEmptyDictionary(id dictionary);
 #ifndef dispatch_once_safe
     #define dispatch_once_safe(block) static dispatch_once_t onceToken; dispatch_once(&onceToken, block);
 #endif
+
+// Error
+
+#define _kLocalError(fmt, ...)    [NSError errorWithDomain:@"error.localhost.com" code:0 userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:fmt, ##__VA_ARGS__]}]
 
 //日志
 

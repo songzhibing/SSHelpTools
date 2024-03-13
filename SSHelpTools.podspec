@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SSHelpTools'
-  s.version          = '0.2.1'
+  s.version          = '0.3.0'
   s.summary          = '常用工具'
 
 # This description is used to generate tags and improve search results.
@@ -34,7 +34,10 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     tools.source_files = 'SSHelpTools/Classes/SSHelpTools/**/*.{h,m}'
     tools.public_header_files = 'SSHelpTools/Classes/SSHelpTools/**/*.h'
     tools.resource_bundles = {
-      'SSHelpTools'=> ['SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.bundle','SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.xcassets']
+      'SSHelpTools'=> [
+        'SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.bundle',
+        'SSHelpTools/Classes/SSHelpTools/Bundle/SSHelpTools.xcassets'
+      ]
     }
     tools.frameworks = 'UIKit','Foundation','CoreLocation','AVFoundation','PhotosUI','CoreTelephony','NetworkExtension','SystemConfiguration','QuickLook','MobileCoreServices'
     tools.dependency 'Masonry'
@@ -42,6 +45,8 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     tools.dependency 'UICKeyChainStore'
     tools.dependency 'MBProgressHUD'
     tools.dependency 'ReactiveObjC', :configurations => ['Debug']
+    # tools.dependency 'CocoaLumberjack'
+    # tools.dependency 'GCDWebServer', :configurations => ['Debug']
   end
   
   # SSHelpWebView 库
@@ -49,18 +54,10 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     web.source_files = 'SSHelpTools/Classes/SSHelpWebView/**/*'
     web.public_header_files = 'SSHelpTools/Classes/SSHelpWebView/*.h'
     web.frameworks = 'WebKit'
-    web.dependency 'SSHelpTools/SSHelpTools'  #需要用到SSHelpTools库
+    web.dependency 'SSHelpTools/SSHelpTools'
     web.dependency 'WebViewJavascriptBridge'
   end
-  
-  # SSHelpLog 日志系统库
-  s.subspec 'SSHelpLog' do |log|
-    log.source_files = 'SSHelpTools/Classes/SSHelpLog/**/*'
-    log.public_header_files = 'SSHelpTools/Classes/SSHelpLog/*.h'
-    log.dependency 'CocoaLumberjack'
-    log.dependency 'GCDWebServer', :configurations => ['Debug','Release']
-  end
-  
+    
   # SSHelpNetwork 网络封装库
   s.subspec 'SSHelpNetwork' do |network|
     network.source_files = 'SSHelpTools/Classes/SSHelpNetwork/**/*'
@@ -68,6 +65,22 @@ TODO: 代码逐渐完善中，欢迎提出问题.
     network.frameworks = 'CoreTelephony'
     network.dependency 'AFNetworking'
     network.dependency 'ReactiveObjC', :configurations => ['Debug']
+  end
+  
+  # DLAN 投屏
+  s.subspec 'SSHelpDLAN' do |dlan|
+    dlan.source_files = 'SSHelpTools/Classes/SSHelpDLAN/**/*.{h,m}'
+    dlan.dependency 'SSHelpTools/SSHelpTools'
+    dlan.dependency 'CocoaAsyncSocket'
+    dlan.dependency 'KissXML'
+    #dlan.frameworks = 'QuartzCore','UIKit'
+  end
+  
+  # alibaba/BeeHive 改写
+  s.subspec 'SSHelpBeeHive' do |beehive|
+    beehive.source_files = 'SSHelpTools/Classes/SSHelpBeeHive/*.{h,m}'
+    #beehive.resource = 'SSHelpTools/Classes/SSHelpBeeHive/*.bundle'
+    beehive.frameworks = 'QuartzCore','UIKit'
   end
   
 end

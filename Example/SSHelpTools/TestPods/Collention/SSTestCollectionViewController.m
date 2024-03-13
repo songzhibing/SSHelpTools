@@ -9,7 +9,7 @@
 #import "SSTestPodsModel.h"
 #import "SSTestPodsCell.h"
 #import <SSHelpTools/SSHelpCycleCollectionView.h>
-
+#import <SSHelpTools/SSHelpTools-umbrella.h>
 @interface SSTestCollectionViewController ()
 
 @end

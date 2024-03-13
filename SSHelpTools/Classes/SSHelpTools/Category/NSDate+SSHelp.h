@@ -24,7 +24,7 @@ static NSString *_kNSDateFormatSQLDateWithTime     = @"yyyy-MM-dd HH:mm:ss";
 
 @interface NSDate (SSHelp)
 
-/// 默认时间格式 时区'GMT+0800'+地区'zh_CN'+公历'NSCalendarIdentifierGregorian'
+/// 默认时间格式 时区'GMT+0800'+地区'en_US_POSIX'+公历'NSCalendarIdentifierGregorian'
 + (NSDateFormatter *)ss_dateFormatter;
 
 /// 字符串转时间
@@ -42,6 +42,9 @@ static NSString *_kNSDateFormatSQLDateWithTime     = @"yyyy-MM-dd HH:mm:ss";
 
 /// 当前时分秒 yyyyMMddHHmmss
 + (NSString *)ss_currentTime;
+
+/// 格式化秒数  60 -> 00:01:00
++ (NSString *)ss_formatSeconds:(NSInteger)totalSeconds;
 
 @end
 

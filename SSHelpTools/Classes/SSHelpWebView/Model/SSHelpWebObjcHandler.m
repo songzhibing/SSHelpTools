@@ -17,4 +17,13 @@
     jsHandler.callback = [block copy];
     return jsHandler;
 }
+
++ (instancetype )handlerWithApi:(NSString *)api data:(id)data callBack:(SSBridgeCallback)block
+{
+    SSHelpWebObjcHandler *handler = [[SSHelpWebObjcHandler alloc] init];
+    handler.api = api;
+    handler.data = data;
+    handler.callback = [block copy];
+    return handler;
+}
 @end

@@ -14,46 +14,54 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
+  - BeeHive (1.6.0)
   - CocoaAsyncSocket (7.6.5)
-  - CocoaHTTPServer (2.3):
-    - CocoaAsyncSocket
-    - CocoaLumberjack
-  - CocoaLumberjack (3.7.4):
-    - CocoaLumberjack/Core (= 3.7.4)
-  - CocoaLumberjack/Core (3.7.4)
+  - CocoaLumberjack (3.8.1):
+    - CocoaLumberjack/Core (= 3.8.1)
+  - CocoaLumberjack/Core (3.8.1)
+  - DateTools (2.0.0)
   - FBSnapshotTestCase (2.1.4):
     - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
   - FLEX (5.22.10)
-  - GCDWebServer (3.5.4):
-    - GCDWebServer/Core (= 3.5.4)
-  - GCDWebServer/Core (3.5.4)
+  - GPUImage (0.1.7)
+  - KissXML (5.3.1):
+    - KissXML/All (= 5.3.1)
+  - KissXML/Additions (5.3.1):
+    - KissXML/Core
+  - KissXML/All (5.3.1):
+    - KissXML/Additions
+    - KissXML/Core
+  - KissXML/Core (5.3.1)
   - Masonry (1.1.0)
   - MBProgressHUD (1.2.0)
   - ReactiveObjC (3.1.1)
-  - SDWebImage (5.13.2):
-    - SDWebImage/Core (= 5.13.2)
-  - SDWebImage/Core (5.13.2)
-  - SSHelpTools (0.2.1):
-    - SSHelpTools/SSHelpLog (= 0.2.1)
-    - SSHelpTools/SSHelpNetwork (= 0.2.1)
-    - SSHelpTools/SSHelpTools (= 0.2.1)
-    - SSHelpTools/SSHelpWebView (= 0.2.1)
-  - SSHelpTools/SSHelpLog (0.2.1):
-    - CocoaLumberjack
-    - GCDWebServer
-  - SSHelpTools/SSHelpNetwork (0.2.1):
+  - SDWebImage (5.18.2):
+    - SDWebImage/Core (= 5.18.2)
+  - SDWebImage/Core (5.18.2)
+  - SSHelpTools (0.3.0):
+    - SSHelpTools/SSHelpBeeHive (= 0.3.0)
+    - SSHelpTools/SSHelpDLAN (= 0.3.0)
+    - SSHelpTools/SSHelpNetwork (= 0.3.0)
+    - SSHelpTools/SSHelpTools (= 0.3.0)
+    - SSHelpTools/SSHelpWebView (= 0.3.0)
+  - SSHelpTools/SSHelpBeeHive (0.3.0)
+  - SSHelpTools/SSHelpDLAN (0.3.0):
+    - CocoaAsyncSocket
+    - KissXML
+    - SSHelpTools/SSHelpTools
+  - SSHelpTools/SSHelpNetwork (0.3.0):
     - AFNetworking
     - ReactiveObjC
-  - SSHelpTools/SSHelpTools (0.2.1):
+  - SSHelpTools/SSHelpTools (0.3.0):
     - Masonry
     - MBProgressHUD
     - ReactiveObjC
     - SDWebImage
     - UICKeyChainStore
-  - SSHelpTools/SSHelpWebView (0.2.1):
+  - SSHelpTools/SSHelpWebView (0.3.0):
     - SSHelpTools/SSHelpTools
     - WebViewJavascriptBridge
   - UICKeyChainStore (2.2.1)
@@ -63,23 +71,29 @@ PODS:
   - YYKit/no-arc (1.0.9)
 
 DEPENDENCIES:
-  - CocoaHTTPServer
+  - BeeHive
+  - CocoaLumberjack (~> 3.8.1)
+  - DateTools
   - FBSnapshotTestCase
   - FLEX
+  - GPUImage
   - ReactiveObjC
   - SDWebImage
   - SSHelpTools (from `../`)
+  - SSHelpTools/SSHelpBeeHive (from `../`)
   - YYKit
 
 SPEC REPOS:
   trunk:
     - AFNetworking
+    - BeeHive
     - CocoaAsyncSocket
-    - CocoaHTTPServer
     - CocoaLumberjack
+    - DateTools
     - FBSnapshotTestCase
     - FLEX
-    - GCDWebServer
+    - GPUImage
+    - KissXML
     - Masonry
     - MBProgressHUD
     - ReactiveObjC
@@ -94,21 +108,23 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
+  BeeHive: 64c01ddec33b9ef8813701e075eeb732327d0f75
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  CocoaHTTPServer: 5624681fc3473d43b18202f635f9b3abb013b530
-  CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
+  CocoaLumberjack: 5c7e64cdb877770859bddec4d3d5a0d7c9299df9
+  DateTools: 933ac9c490f21f92127cf690ccd8c397e0126caf
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   FLEX: f21ee4f498eed3f8a1eded66b21939fd3b7a22ce
-  GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
+  GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
+  KissXML: 5c8e0f2e8b9f071d3e1ae123dec3eb5da615c10c
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
-  SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
-  SSHelpTools: 5425ea39ac01fdf0bcd2d128ac8d6f2a9290d083
+  SDWebImage: c0de394d7cf7f9838aed1fd6bb6037654a4572e4
+  SSHelpTools: d24c1c70403cc9ae6e55612891b235393c3b612a
   UICKeyChainStore: ba3bff2c762b12db1e516f395c837dd25298b05e
   WebViewJavascriptBridge: 7f5bc4d3581e672e8f32bd0f812d54bc69bb8e29
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: 9031dbf2b7fc4132534e46ed86ca37cd751162a2
+PODFILE CHECKSUM: 931fd4f793a03cbfa57884c7a534863c7a55c201
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.14.3

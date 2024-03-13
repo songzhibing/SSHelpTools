@@ -12,6 +12,7 @@
 #import "SSTestDocViewController.h"
 #import "SSTestPodsModel.h"
 #import "SSTestPodsCell.h"
+#import "HomeServiceProtocol.h"
 
 #import <FLEX/FLEX.h>
 
@@ -132,6 +133,17 @@
     };
     [_testData addObject:docModel];
     
+    // BeeHive
+    SSTestPodsModel *bhModel = [[SSTestPodsModel alloc] init];
+    bhModel.title = @"BeeHive";
+    bhModel.push = ^{
+        id<HomeServiceProtocol> homeVc = [[SSBeeHive shareInstance] createService:@protocol(HomeServiceProtocol)];
+        [self_weak_.navigationController pushViewController:homeVc animated:YES];
+    };
+    [_testData addObject:bhModel];
+    
+    
+
     
     
     SSCollectionViewSectionModel *section = [[SSCollectionViewSectionModel alloc] init];

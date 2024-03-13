@@ -7,10 +7,15 @@
 //
 
 #import "SSHelpWebBaseModule.h"
+#import <SSHelpTools/SSHelpPhotoManager.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SSHelpWebPhotoModule : SSHelpWebBaseModule
+
++ (id)sharedInstance;
+
+- (void)evaluateJsHandler:(SSHelpWebObjcHandler *)handler;
 
 @end
 

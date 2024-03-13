@@ -5,7 +5,7 @@
 //  Created by 宋直兵 on 2022/2/21.
 //
 
-#import <SSHelpTools/SSHelpTools.h>
+#import <SSHelpTools/SSHelpViewController.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

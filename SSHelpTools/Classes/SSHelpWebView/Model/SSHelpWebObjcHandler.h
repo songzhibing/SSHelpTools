@@ -28,6 +28,8 @@ typedef void (^SSBridgeHandler)(NSString *api, id data, SSBridgeCallback callbac
 /// 快速构建对象
 + (instancetype )handlerWithData:(id)data callBack:(SSBridgeCallback)block;
 
++ (instancetype )handlerWithApi:(NSString *)api data:(id)data callBack:(SSBridgeCallback)block;
+
 @end
 
 NS_ASSUME_NONNULL_END

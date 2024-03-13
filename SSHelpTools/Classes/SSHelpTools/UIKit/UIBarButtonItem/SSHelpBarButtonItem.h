@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, weak, nullable) SSHelpButton *customButton;
 
+
++ (instancetype)ss_newBy:(NSString *)title onClick:(void(^)(SSHelpBarButtonItem *item))click;
+
 @end
 
 NS_ASSUME_NONNULL_END

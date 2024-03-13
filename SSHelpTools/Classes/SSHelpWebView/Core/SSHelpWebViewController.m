@@ -25,7 +25,7 @@
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(goRefresh)];
     
-    self.webView = [SSHelpWebView defauleWebView];
+    self.webView = [SSHelpWebView ss_new];
     [self.view addSubview:self.webView];
 
     if (SSEqualToNotEmptyString(self.indexString)) {
@@ -54,7 +54,6 @@
         }];
     }
 }
-
 
 - (void)goBack
 {

@@ -21,7 +21,7 @@
 
 - (void)dealloc
 {
-    SSLifeCycleLog(@"%@ dealloc ... ",self);
+    //SSLifeCycleLog(@"%@ dealloc ... ",self);
 }
 
 - (void)viewDidLoad
@@ -32,6 +32,12 @@
     #ifdef DEBUG
     self.debugBackView.alpha = 0.5f;
     #endif
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self adjustUI];
 }
 
 - (void)viewSafeAreaInsetsDidChange
@@ -129,10 +135,15 @@
 - (void)resetDeviceOrientation:(UIDeviceOrientation)orientation
 {
     // 方式1：
-    UIDevice *device = [UIDevice currentDevice];
-    if([device respondsToSelector:@selector(setOrientation:)]) {
-        [device setValue:[NSNumber numberWithInteger:orientation] forKey:@"orientation"];
+    @try {
+        UIDevice *device = [UIDevice currentDevice];
+        if([device respondsToSelector:@selector(setOrientation:)]) {
+            [device setValue:[NSNumber numberWithInteger:orientation] forKey:@"orientation"];
+        }
+    } @catch (NSException *exception) {
+    } @finally {
     }
+
     /*
     // 方式2：
     if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {

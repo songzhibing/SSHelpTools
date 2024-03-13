@@ -9,11 +9,16 @@
 
 @implementation SSHelpWebTestBridgeModule
 
-- (void)moduleRegisterJsHandler
++ (NSArray<NSString *> *)suppertJsNames
 {
-    [self baseRegisterHandler:kWebApiTestJSBridge handler:^(NSString * _Nonnull api, id  _Nonnull data, SSBridgeCallback  _Nonnull callback) {
-        callback([SSHelpWebObjcResponse successWithData:nil]);
-    }];
+    return @[kWebApiTestJSBridge];
+}
+
+- (void)evaluateJsHandler:(SSHelpWebObjcHandler *)handler
+{
+    if ([handler.api isEqualToString:kWebApiTestJSBridge]) {
+        handler.callback([SSHelpWebObjcResponse successWithData:nil]);
+    }
 }
 
 @end

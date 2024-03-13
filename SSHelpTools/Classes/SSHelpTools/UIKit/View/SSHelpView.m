@@ -11,7 +11,7 @@
 
 - (void)dealloc
 {
-    SSLifeCycleLog(@"%@ dealloc ... ",self)
+    //SSLifeCycleLog(@"%@ dealloc ... ",self)
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
