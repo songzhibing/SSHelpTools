@@ -56,9 +56,14 @@
 
 - (void)dealloc
 {
-    [self.reusableViewIdentifiers removeAllObjects];
-    self.layout.delegate = nil;
-    self.layout = nil;
+    if (_reusableViewIdentifiers) {
+        [_reusableViewIdentifiers removeAllObjects];
+        _reusableViewIdentifiers = nil;
+    }
+    if (_layout) {
+        _layout.delegate = nil;
+        _layout = nil;
+    }
 }
 
 #pragma mark -

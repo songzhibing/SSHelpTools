@@ -76,7 +76,7 @@
     if (self.code == 1) {
         [dict setValue:[NSNumber numberWithInteger:1] forKey:@"code"];
         [dict setValue:@"success" forKey:@"state"];
-    }else{
+    } else {
         [dict setValue:[NSNumber numberWithInteger:0] forKey:@"code"];
         [dict setValue:@"failure" forKey:@"state"];
     }
@@ -85,7 +85,8 @@
         [dict setValue:_error forKey:@"error"];
     }
     
-    if (_data && ([_data isKindOfClass:[NSDictionary class]] || [_data isKindOfClass:[NSArray class]])) {
+    if (_data && ([_data isKindOfClass:[NSDictionary class]] || [_data isKindOfClass:[NSArray class]]))
+    {
         [dict setValue:_data forKey:@"data"];
     }
     

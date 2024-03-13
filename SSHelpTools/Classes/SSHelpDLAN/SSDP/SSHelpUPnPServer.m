@@ -31,11 +31,9 @@
 {
     if (!self.socket) {
         // 多播地址
-        self.ip = @"239.255.255.250";
+        self.ip = self.isIPv6Enable?@"[2FF02::1:2]":@"239.255.255.250";
         self.port = 1900;
-        if (self.isIPv6Enable) {
-            self.ip = @"[2FF02::1:2]";
-        }
+
         // 构建Socket
         GCDAsyncUdpSocket *socket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
         // 绑定端口
@@ -83,7 +81,7 @@
     NSString *host = [NSString stringWithFormat:@"HOST: %@:%d\r\n",self.ip,self.port];
     NSString *st   = [NSString stringWithFormat:@"ST: %@\r\n",_kUPnPServiceType_AVTransport];
     
-    NSMutableString *message = @"".mutableCopy;
+    NSString *message = @"";
     message = [message stringByAppendingString:@"M-SEARCH * HTTP/1.1\r\n"];
     message = [message stringByAppendingString:@"MAN: \"ssdp:discover\"\r\n"];
     message = [message stringByAppendingString:@"MX: 3\r\n"];
@@ -107,8 +105,7 @@
  */
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didSendDataWithTag:(long)tag
 {
-    
-    SSLog(@"Socket发送消息成功：%lld",tag);
+    SSLog(@"Socket发送消息成功：%ld",tag);
 }
 
 /**
@@ -117,7 +114,7 @@
  */
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError * _Nullable)error
 {
-    SSLog(@"Socket发送消息失败：%lld 错误：%@",tag,error.localizedDescription);
+    SSLog(@"Socket发送消息失败：%ld 错误：%@",tag,error.localizedDescription);
 }
 
 /**

@@ -7,6 +7,7 @@
 //
 
 #import "SSHelpWebBaseModule.h"
+#import <SSHelpTools/SSHelpPhotoManager.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -50,7 +50,7 @@
 		callbackButton.onclick = function(e) {
 			e.preventDefault()
 			//log('JS calling handler "testObjcCallback"')
-			bridge.callHandler('ObjcTestBridge', {'foo': 'bar'}, function(response) {
+			bridge.callHandler('objcTestBridge', {'foo': 'bar'}, function(response) {
 				log('JS got response', response)
 			})
 		}
@@ -61,7 +61,7 @@
         photo.onclick = function(e) {
             e.preventDefault()
             //log('JS calling handler "testObjcCallback"')
-            bridge.callHandler('ObjcGetLocation', {'foo': 'bar'}, function(response) {
+            bridge.callHandler('objcGetLocation', {'foo': 'bar'}, function(response) {
                 log('JS got response', response)
             })
         }
@@ -71,7 +71,7 @@
         photo.onclick = function(e) {
             e.preventDefault()
             //log('JS calling handler "testObjcCallback"')
-            bridge.callHandler('ObjcTakePhoto', {'foo': 'bar'}, function(response) {
+            bridge.callHandler('objcTakePhoto', {'foo': 'bar'}, function(response) {
                 log('JS got response', response)
             })
         }

@@ -282,10 +282,14 @@
 /// 弹出视图控制器
 - (void)presentViewController:(UIViewController *)alert animated: (BOOL)flag completion:(SSBlockVoid)completion;
 {
-    if (self.ss_viewController) {
-        dispatch_main_async_safe(^{
-            [self.ss_viewController presentViewController:alert animated:flag completion:completion];
-        });
+    @try {
+        if (self.ss_viewController) {
+            dispatch_main_async_safe(^{
+                [self.ss_viewController presentViewController:alert animated:flag completion:completion];
+            });
+        }
+    } @catch (NSException *exception) {
+    } @finally {
     }
 }
 

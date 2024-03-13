@@ -135,10 +135,15 @@
 - (void)resetDeviceOrientation:(UIDeviceOrientation)orientation
 {
     // 方式1：
-    UIDevice *device = [UIDevice currentDevice];
-    if([device respondsToSelector:@selector(setOrientation:)]) {
-        [device setValue:[NSNumber numberWithInteger:orientation] forKey:@"orientation"];
+    @try {
+        UIDevice *device = [UIDevice currentDevice];
+        if([device respondsToSelector:@selector(setOrientation:)]) {
+            [device setValue:[NSNumber numberWithInteger:orientation] forKey:@"orientation"];
+        }
+    } @catch (NSException *exception) {
+    } @finally {
     }
+
     /*
     // 方式2：
     if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {

@@ -6,7 +6,6 @@
 //
 
 #import "SSHelpUPnPControl.h"
-#import <KissXML/KissXML.h>
 
 NSString * SSUPnPBodyKeyInActionResponse(SSUPnPActionType type) {
     switch (type) {
@@ -43,7 +42,7 @@ NSDictionary * SSUPnPPrsedActionResponse(NSData *data, SSUPnPActionType type) {
     NSError *error;
     DDXMLDocument *doc = [[DDXMLDocument alloc] initWithData:data options:0 error:&error];
     if (doc && doc.rootElement && doc.rootElement.children) {
-        __block DDXMLElement *bodyElement = nil;
+        __block DDXMLNode *bodyElement = nil;
         [doc.rootElement.children enumerateObjectsUsingBlock:^(DDXMLNode * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj.name hasSuffix:@":Body"]) {
                 if (obj.children) {
@@ -52,7 +51,7 @@ NSDictionary * SSUPnPPrsedActionResponse(NSData *data, SSUPnPActionType type) {
                 *stop = YES;
             }
         }];
-        __block DDXMLElement *resElement = nil;
+        __block DDXMLNode *resElement = nil;
         NSString *bodyKey = SSUPnPBodyKeyInActionResponse(type);
         [bodyElement.children enumerateObjectsUsingBlock:^(DDXMLNode * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (obj.name && [obj.name hasSuffix:bodyKey]) {
@@ -418,7 +417,7 @@ NSDictionary * SSUPnPPrsedActionResponse(NSData *data, SSUPnPActionType type) {
     [[NSURLSession.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
-                NSHTTPURLResponse *httpResponse = response;
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                 if (httpResponse.statusCode == 200) {
                     callback(data, nil);
                     return;

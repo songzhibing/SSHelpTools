@@ -234,7 +234,7 @@
         [headerResult enumerateObjectsUsingBlock:^(UICollectionViewLayoutAttributes *header, NSUInteger idx, BOOL * _Nonnull stop) {
             NSInteger section = header.indexPath.section;
             CGFloat originY = CGRectGetMinY(self_weak_.headerLayouts[section].frame);
-            CGFloat offsetY = self.collectionView.contentOffset.y;
+            CGFloat offsetY = self_weak_.collectionView.contentOffset.y;
             CGFloat dynamicY = MAX(originY,offsetY);
 
             SSListLayoutAttributes *footer = self_weak_.footerLayouts[section];

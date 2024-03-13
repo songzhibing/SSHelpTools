@@ -6,7 +6,6 @@
 //
 
 #import "SSHelpWebPhotoModule.h"
-#import "SSHelpPhotoManager.h"
 
 @implementation SSHelpWebPhotoModule
 

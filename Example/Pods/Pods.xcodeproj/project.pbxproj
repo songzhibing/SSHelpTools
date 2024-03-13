@@ -7840,8 +7840,8 @@
 		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1240;
-				LastUpgradeCheck = 1240;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -9712,6 +9712,26 @@
 			};
 			name = Debug;
 		};
+		663B495FADEF4A6B2507BFAD184A34A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B48CF89380E990D1523CC36D5621165C /* SSHelpTools.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/SSHelpTools";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				EXPANDED_CODE_SIGN_IDENTITY = "";
+				IBSC_MODULE = SSHelpTools;
+				INFOPLIST_FILE = "Target Support Files/SSHelpTools/ResourceBundle-SSHelpTools-SSHelpTools-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = SSHelpTools;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
 		68A2E5BA6CDC3FB069ED38A34E860F1C /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3481527548BE6B430003DD0634411410 /* AFNetworking.release.xcconfig */;
@@ -9787,26 +9807,6 @@
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		74904B604BEBAF13DB8C04657B42EB23 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F2044B4951EBE2C544B12A36E2804BF3 /* SSHelpTools.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGNING_ALLOWED = NO;
-				CODE_SIGNING_REQUIRED = NO;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/SSHelpTools";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				EXPANDED_CODE_SIGN_IDENTITY = "";
-				IBSC_MODULE = SSHelpTools;
-				INFOPLIST_FILE = "Target Support Files/SSHelpTools/ResourceBundle-SSHelpTools-SSHelpTools-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				PRODUCT_NAME = SSHelpTools;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
 			};
 			name = Release;
 		};
@@ -10402,26 +10402,6 @@
 			};
 			name = Release;
 		};
-		AAB6A605F4A3D745B43A9D099A871BAF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B48CF89380E990D1523CC36D5621165C /* SSHelpTools.debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGNING_ALLOWED = NO;
-				CODE_SIGNING_REQUIRED = NO;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/SSHelpTools";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				EXPANDED_CODE_SIGN_IDENTITY = "";
-				IBSC_MODULE = SSHelpTools;
-				INFOPLIST_FILE = "Target Support Files/SSHelpTools/ResourceBundle-SSHelpTools-SSHelpTools-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				PRODUCT_NAME = SSHelpTools;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
 		BFD345885650BD4B3D5D174A744959B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8CCF61F5AE1460735B4ED9E7B7736728 /* YYKit.debug.xcconfig */;
@@ -10694,6 +10674,26 @@
 			};
 			name = Release;
 		};
+		E7F62113B60B8E8A46AC124CE000D4C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F2044B4951EBE2C544B12A36E2804BF3 /* SSHelpTools.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/SSHelpTools";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				EXPANDED_CODE_SIGN_IDENTITY = "";
+				IBSC_MODULE = SSHelpTools;
+				INFOPLIST_FILE = "Target Support Files/SSHelpTools/ResourceBundle-SSHelpTools-SSHelpTools-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = SSHelpTools;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
 		E8C6E72E8664D36FFE6CDC1C39105FA4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F2044B4951EBE2C544B12A36E2804BF3 /* SSHelpTools.release.xcconfig */;
@@ -10796,8 +10796,8 @@
 		3573108F917421F66831EA8AA19FC4A5 /* Build configuration list for PBXNativeTarget "SSHelpTools-SSHelpTools" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AAB6A605F4A3D745B43A9D099A871BAF /* Debug */,
-				74904B604BEBAF13DB8C04657B42EB23 /* Release */,
+				663B495FADEF4A6B2507BFAD184A34A3 /* Debug */,
+				E7F62113B60B8E8A46AC124CE000D4C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
