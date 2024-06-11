@@ -13,6 +13,7 @@
 #import "SSTestPodsModel.h"
 #import "SSTestPodsCell.h"
 #import "HomeServiceProtocol.h"
+#import "SSTestListViewController.h"
 
 #import <FLEX/FLEX.h>
 
@@ -64,6 +65,16 @@
         [self_weak_.navigationController pushViewController:vc animated:YES];
     };
     [_testData addObject:collectionView];
+    
+    
+    //
+    SSTestPodsModel *listView = [[SSTestPodsModel alloc] init];
+    listView.title = @"ListView";
+    listView.push = ^{
+        SSTestListViewController *vc = [[SSTestListViewController alloc] init];
+        [self_weak_.navigationController pushViewController:vc animated:YES];
+    };
+    [_testData addObject:listView];
     
     
     //

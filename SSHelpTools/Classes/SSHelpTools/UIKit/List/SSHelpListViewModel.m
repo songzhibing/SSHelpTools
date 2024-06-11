@@ -46,7 +46,6 @@
 {
     self = [super init];
     if (self) {
-        self.height = 0;
         self.viewClass = SSListBacker.class;
     }
     return self;

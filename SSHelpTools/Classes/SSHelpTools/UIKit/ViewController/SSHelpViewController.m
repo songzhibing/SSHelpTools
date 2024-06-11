@@ -11,9 +11,6 @@
 #import "SSHelpLabel.h"
 
 @interface SSHelpViewController ()
-
-@property(nonatomic, strong, nullable) SSHelpLabel *debugBackView;
-
 @end
 
 
@@ -28,10 +25,6 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = SSHELPTOOLSCONFIG.backgroundColor;
-    
-    #ifdef DEBUG
-    self.debugBackView.alpha = 0.5f;
-    #endif
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -101,10 +94,7 @@
                                      safeAreaInsets.top,
                                      self.view.ss_width-(safeAreaInsets.left+safeAreaInsets.right),
                                      self.view.ss_height-(safeAreaInsets.top+safeAreaInsets.bottom));
-    // 重新赋值
-    if (_debugBackView) {
-        _debugBackView.frame = contentFrame;
-    }
+    // 重新调整位置
     if (_containerView) {
         _containerView.frame = contentFrame;
     }
@@ -211,21 +201,6 @@
     return _containerView;
 }
 
-- (SSHelpLabel *)debugBackView
-{
-    if (!_debugBackView) {
-        _debugBackView = [[SSHelpLabel alloc] initWithFrame:self.view.bounds];
-        _debugBackView.backgroundColor = [UIColor.orangeColor colorWithAlphaComponent:0.5f];
-        _debugBackView.layer.borderWidth = 2;
-        _debugBackView.layer.borderColor = [UIColor.greenColor CGColor];
-        _debugBackView.numberOfLines = 0;
-        _debugBackView.textAlignment = NSTextAlignmentCenter;
-        _debugBackView.text = [NSString stringWithFormat:@"%@",self];
-        [self.view addSubview:_debugBackView];
-    }
-    return _debugBackView;
-}
-
 /*
 #pragma mark - Navigation
 
@@ -237,3 +212,5 @@
 */
 
 @end
+
+

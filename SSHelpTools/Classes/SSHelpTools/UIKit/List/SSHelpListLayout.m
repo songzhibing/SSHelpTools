@@ -29,7 +29,9 @@
 {
     [super prepareLayout];
     
-    UIEdgeInsets contentInset = self.collectionView.contentInset;
+    // 使用源生的self.collectionView.contentInset 会与MJRefresh库冲突
+    // 要想控制Inset，推荐使用SSListSectionModel的属性控制
+    UIEdgeInsets contentInset = UIEdgeInsetsZero; // self.collectionView.contentInset;
     CGFloat originX = contentInset.left;
     CGFloat originY = contentInset.top;
     CGFloat width = CGRectGetWidth(self.collectionView.frame) - contentInset.left - contentInset.right;
@@ -148,7 +150,7 @@
         {
             // 横向无限排版
             // 由另外Layou绘制，这里提供一个占位即可
-            h = sectionModel.cellModels.firstObject.height;
+            h = sectionModel.cellModels.firstObject?sectionModel.cellModels.firstObject.size.height:0;
             CGRect itemFrame = CGRectMake(x, y, w, h);
             SSListLayoutAttributes *itemLayout;
             itemLayout = [SSListLayoutAttributes ss_cellForItem:0 inSection:section];
@@ -230,21 +232,20 @@
     
     // Section.Header 悬浮
     if (self.sectionHeadersPinToVisibleBounds) {
-        @Tweakify(self);
-        [headerResult enumerateObjectsUsingBlock:^(UICollectionViewLayoutAttributes *header, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSInteger section = header.indexPath.section;
-            CGFloat originY = CGRectGetMinY(self_weak_.headerLayouts[section].frame);
-            CGFloat offsetY = self_weak_.collectionView.contentOffset.y;
+        headerResult = self.headerLayouts; // 悬浮需整个数据！
+        for (SSListLayoutAttributes *headerAttributes in headerResult) {
+            CGFloat originY = CGRectGetMinY(headerAttributes.frame);
+            CGFloat offsetY = self.collectionView.contentOffset.y;
             CGFloat dynamicY = MAX(originY,offsetY);
 
-            SSListLayoutAttributes *footer = self_weak_.footerLayouts[section];
-            CGFloat maxY = CGRectGetMinY(footer.frame)-CGRectGetHeight(header.frame);
+            SSListLayoutAttributes *footer = self.footerLayouts[headerAttributes.indexPath.section];
+            CGFloat maxY = CGRectGetMinY(footer.frame)-CGRectGetHeight(headerAttributes.frame);
 
-            CGRect frame = header.frame;
+            CGRect frame = headerAttributes.frame;
             frame.origin.y = MIN(dynamicY,maxY);
-            header.frame = frame;
-            header.zIndex = 99+idx;
-        }];
+            headerAttributes.frame = frame;
+            headerAttributes.zIndex = 999;
+        }
     }
     
     [result addObjectsFromArray:headerResult];

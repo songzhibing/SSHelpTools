@@ -42,7 +42,8 @@ typedef NS_ENUM(NSInteger, SSListSectionLayoutStyle) {
 /// Cell数据模型
 @interface SSListCellModel : SSHelpListReusableViewModel
 
-/// 具体尺寸 [只针对横向无限布局，且都是等高不等宽]
+/// 具体尺寸 [支持SSListSectionLayoutStyleHorizontalInfinitely:且都是等高不等宽、
+///          支持SSListSectionLayoutStyleHorizontalFinite]
 @property(nonatomic, assign) CGSize size;
 
 @end
