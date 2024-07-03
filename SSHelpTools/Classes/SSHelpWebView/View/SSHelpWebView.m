@@ -234,7 +234,7 @@
                     // 已经构造过模块对象
                 } else {
                     // 构造模块对象并持有
-                    if ([class respondsToSelector:@selector(sharedInstance)]) {
+                    if ([objc respondsToSelector:@selector(sharedInstance)]) {
                         instance = [objc sharedInstance];
                     } else {
                         instance = [[objc alloc] init];
